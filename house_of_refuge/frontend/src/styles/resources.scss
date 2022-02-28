@@ -1,0 +1,44 @@
+.column-headers {
+  display: flex;
+
+  .col-head {
+    text-align: center;
+    border-bottom: 1px solid black;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+  }
+}
+
+.resource-row {
+  display: flex;
+  flex-direction: column;
+
+  .base-content {
+    cursor: pointer;
+    display: flex;
+  }
+
+  /* border: 1px solid black;
+  border-bottom: 0; */
+  &:last-child {
+    border-bottom: 1px solid black;
+  }
+}
+
+.sort-active {
+  color: black;
+  cursor: pointer;
+}
+
+.sort-muted {
+  color: grey;
+  cursor: pointer;
+}
+
+.col {
+  padding: 2px;
+  width: 250px;
+  border: 1px solid black;
+  border-bottom: 0;
+}

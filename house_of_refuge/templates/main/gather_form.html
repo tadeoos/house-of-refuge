@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load crispy_forms_filters %}
+
+{% block extrahead %}
+{% endblock extrahead %}
+{% block content %}
+  <div class="row align-items-start">
+  <div class="col mx-auto">
+    <h2 class="text-center mb-4">Grupa Zasoby - ankieta dla udzielających schronienia</h2>
+    <p>Hej. Jesteś tu, bo chcesz pomóc Ukraińcom i Ukrainkom, którzy znaleźli się w trudnej sytuacji materialnej w
+      Polsce.
+      Jedną z podstawowych potrzeb każdego z nas jest miejsce schronienia - dom, choćby tymczasowy, choćby
+      prowizoryczny.
+      Tworzymy oddolną, prywatną bazę danych dotyczącą takich miejsc, udostępnianych przez bliskich i znajomych na
+      terenie
+      Warszawy, mającą w pierwszej kolejności wspierać osoby zgłaszające się do Fundacji Ocalenie, w drugiej
+      indywidualnie.</p>
+    <p>Do bazy ma dostęp jedynie Zofia Jaworowska i Katarzyna Kunda.</p>
+    <p>
+      W przypadku zgłoszenia zapotrzebowania przez Fundację, będziemy łączyć osoby potrzebujące z Wami – osobami
+      zgłaszającymi chęć pomocy (czyli jeśli do Fundacji zgłosi się trzyosobowa rodzina, spróbujemy spośród
+      zgromadzonych
+      ofert wsparcia znaleźć taką przestrzeń, która tę rodzinę pomieści na jak najdłużej). Zakładamy też, że
+      zapotrzebowanie może pojawić się z innych źródeł – od osób prywatnych działających w sprawie.</p>
+
+    <p>Jeśli wyjeżdżacie, zwalniacie mieszkanie na miesiąc - taki zasób na pewno też się przyda. Działamy razem.</p>
+    <p>
+      Dziękujemy, że tu jesteście.
+    </p>
+
+    <div class="resource-form mt-4">
+      <form method="POST" action="{% url 'main:main_form' %}">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <input class="btn btn-primary" type="submit" name="action" value="Submit"/>
+      </form>
+    </div>
+  </div>
+  </div>
+
+
+{% endblock content %}

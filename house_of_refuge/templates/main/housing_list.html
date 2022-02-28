@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load render_bundle from webpack_loader %}
+{% block extrahead %}
+  {% render_bundle 'app' 'css' %}
+{% endblock extrahead %}
+{% block content %}
+ <div id="react"></div>
+
+
+{% endblock content %}
+
+{% block inline_javascript %}
+  {{ props|json_script:"pageProps" }}
+  <script>
+    window.props = JSON.parse(document.getElementById('pageProps').textContent);
+    window.react_mount = document.getElementById('react');
+  </script>
+  {% render_bundle 'app' 'js' %}
+{% endblock inline_javascript %}

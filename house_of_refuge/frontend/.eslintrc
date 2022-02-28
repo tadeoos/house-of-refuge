@@ -1,0 +1,33 @@
+{
+  "parser": "@babel/eslint-parser",
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:react/jsx-runtime"
+  ],
+  "env": {
+    "browser": true,
+    "node": true,
+    "es2021": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 8,
+    "sourceType": "module",
+    "requireConfigFile": false
+  },
+  "rules": {
+    "no-undef": 1,
+    "no-unused-vars": 1,
+    "no-empty": 1,
+    "semi": 2,
+    "react/prop-types": "off",
+    "no-debugger": 1,
+    "no-constant-condition": 1,
+    "react/jsx-key": 1,
+  }
+}
