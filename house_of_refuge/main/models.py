@@ -19,6 +19,14 @@ class TransportRange(models.TextChoices):
     NONE = "none", _("None")
 
 
+class Status(models.TextChoices):
+    NEW = "new", _("Świeżak")
+    VERIFIED = "verified", _("Wiśnia")
+    PROCESSING = "processing", _("W procesie")
+    TAKEN = "taken", _("Zajęta")
+    IGNORE = "ignore", _("Ignoruj")
+
+
 class HousingResource(TimeStampedModel):
     name = models.CharField(max_length=512, null=False, verbose_name="Imię i nazwisko")
     about_info = models.TextField(max_length=2048)
@@ -43,9 +51,14 @@ class HousingResource(TimeStampedModel):
     backup_phone_number = models.CharField(max_length=128)
     email = models.EmailField(unique=False)
     extra = models.CharField(max_length=2048, null=True)
+    status = models.CharField(choices=Status.choices, default=Status.NEW, max_length=32)
 
     def __str__(self):
         return f"{self.name} {self.people_to_accommodate} {self.zip_code}"
+
+    class Meta:
+        verbose_name = "Zasób"
+        verbose_name_plural = "Zasoby"
 
     def as_prop(self):
         return dict(
@@ -66,4 +79,5 @@ class HousingResource(TimeStampedModel):
             backup_phone_number=self.backup_phone_number,
             email=self.email,
             extra=self.extra,
+            status=self.status,
         )

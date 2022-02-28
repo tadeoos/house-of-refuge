@@ -1670,6 +1670,191 @@
       "name": "app.02d907f964c6df25caa4.hot-update.json",
       "path": "/Users/Tadeo/dev/projects/house_of_refuge/house_of_refuge/frontend/build/app.02d907f964c6df25caa4.hot-update.json",
       "publicPath": "http://localhost:9091/app.02d907f964c6df25caa4.hot-update.json"
+    },
+    "app.fa109abd9f0419dd9b5c.hot-update.js": {
+      "name": "app.fa109abd9f0419dd9b5c.hot-update.js",
+      "path": "/Users/Tadeo/dev/projects/house_of_refuge/house_of_refuge/frontend/build/app.fa109abd9f0419dd9b5c.hot-update.js",
+      "publicPath": "http://localhost:9091/app.fa109abd9f0419dd9b5c.hot-update.js"
+    },
+    "app.fa109abd9f0419dd9b5c.hot-update.json": {
+      "name": "app.fa109abd9f0419dd9b5c.hot-update.json",
+      "path": "/Users/Tadeo/dev/projects/house_of_refuge/house_of_refuge/frontend/build/app.fa109abd9f0419dd9b5c.hot-update.json",
+      "publicPath": "http://localhost:9091/app.fa109abd9f0419dd9b5c.hot-update.json"
+    },
+    "app.11bde69b83d65be95a5f.hot-update.js": {
+      "name": "app.11bde69b83d65be95a5f.hot-update.js",
+      "path": "/Users/Tadeo/dev/projects/house_of_refuge/house_of_refuge/frontend/build/app.11bde69b83d65be95a5f.hot-update.js",
+      "publicPath": "http://localhost:9091/app.11bde69b83d65be95a5f.hot-update.js"
+    },
+    "app.11bde69b83d65be95a5f.hot-update.json": {
+      "name": "app.11bde69b83d65be95a5f.hot-update.json",
+      "path": "/Users/Tadeo/dev/projects/house_of_refuge/house_of_refuge/frontend/build/app.11bde69b83d65be95a5f.hot-update.json",
+      "publicPath": "http://localhost:9091/app.11bde69b83d65be95a5f.hot-update.json"
+    },
+    "app.789947c17462c65c32de.hot-update.js": {
+      "name": "app.789947c17462c65c32de.hot-update.js",
+      "path": "/Users/Tadeo/dev/projects/house_of_refuge/house_of_refuge/frontend/build/app.789947c17462c65c32de.hot-update.js",
+      "publicPath": "http://localhost:9091/app.789947c17462c65c32de.hot-update.js"
+    },
+    "vendors-webpack.789947c17462c65c32de.hot-update.js": {
+      "name": "vendors-webpack.789947c17462c65c32de.hot-update.js",
+      "path": "/Users/Tadeo/dev/projects/house_of_refuge/house_of_refuge/frontend/build/vendors-webpack.789947c17462c65c32de.hot-update.js",
+      "publicPath": "http://localhost:9091/vendors-webpack.789947c17462c65c32de.hot-update.js"
+    },
+    "app.789947c17462c65c32de.hot-update.json": {
+      "name": "app.789947c17462c65c32de.hot-update.json",
+      "path": "/Users/Tadeo/dev/projects/house_of_refuge/house_of_refuge/frontend/build/app.789947c17462c65c32de.hot-update.json",
+      "publicPath": "http://localhost:9091/app.789947c17462c65c32de.hot-update.json"
+    },
+    "app.bc5f6f57235af4535fa4.hot-update.js": {
+      "name": "app.bc5f6f57235af4535fa4.hot-update.js",
+      "path": "/Users/Tadeo/dev/projects/house_of_refuge/house_of_refuge/frontend/build/app.bc5f6f57235af4535fa4.hot-update.js",
+      "publicPath": "http://localhost:9091/app.bc5f6f57235af4535fa4.hot-update.js"
+    },
+    "app.bc5f6f57235af4535fa4.hot-update.json": {
+      "name": "app.bc5f6f57235af4535fa4.hot-update.json",
+      "path": "/Users/Tadeo/dev/projects/house_of_refuge/house_of_refuge/frontend/build/app.bc5f6f57235af4535fa4.hot-update.json",
+      "publicPath": "http://localhost:9091/app.bc5f6f57235af4535fa4.hot-update.json"
+    },
+    "app.e9f3b4346b7f263ce2cb.hot-update.js": {
+      "name": "app.e9f3b4346b7f263ce2cb.hot-update.js",
+      "path": "/Users/Tadeo/dev/projects/house_of_refuge/house_of_refuge/frontend/build/app.e9f3b4346b7f263ce2cb.hot-update.js",
+      "publicPath": "http://localhost:9091/app.e9f3b4346b7f263ce2cb.hot-update.js"
+    },
+    "app.e9f3b4346b7f263ce2cb.hot-update.json": {
+      "name": "app.e9f3b4346b7f263ce2cb.hot-update.json",
+      "path": "/Users/Tadeo/dev/projects/house_of_refuge/house_of_refuge/frontend/build/app.e9f3b4346b7f263ce2cb.hot-update.json",
+      "publicPath": "http://localhost:9091/app.e9f3b4346b7f263ce2cb.hot-update.json"
+    },
+    "app.51fb518cbb3bf46f7ecf.hot-update.js": {
+      "name": "app.51fb518cbb3bf46f7ecf.hot-update.js",
+      "path": "/Users/Tadeo/dev/projects/house_of_refuge/house_of_refuge/frontend/build/app.51fb518cbb3bf46f7ecf.hot-update.js",
+      "publicPath": "http://localhost:9091/app.51fb518cbb3bf46f7ecf.hot-update.js"
+    },
+    "app.51fb518cbb3bf46f7ecf.hot-update.json": {
+      "name": "app.51fb518cbb3bf46f7ecf.hot-update.json",
+      "path": "/Users/Tadeo/dev/projects/house_of_refuge/house_of_refuge/frontend/build/app.51fb518cbb3bf46f7ecf.hot-update.json",
+      "publicPath": "http://localhost:9091/app.51fb518cbb3bf46f7ecf.hot-update.json"
+    },
+    "app.d7f46fbafcbb83aae25a.hot-update.js": {
+      "name": "app.d7f46fbafcbb83aae25a.hot-update.js",
+      "path": "/Users/Tadeo/dev/projects/house_of_refuge/house_of_refuge/frontend/build/app.d7f46fbafcbb83aae25a.hot-update.js",
+      "publicPath": "http://localhost:9091/app.d7f46fbafcbb83aae25a.hot-update.js"
+    },
+    "app.d7f46fbafcbb83aae25a.hot-update.json": {
+      "name": "app.d7f46fbafcbb83aae25a.hot-update.json",
+      "path": "/Users/Tadeo/dev/projects/house_of_refuge/house_of_refuge/frontend/build/app.d7f46fbafcbb83aae25a.hot-update.json",
+      "publicPath": "http://localhost:9091/app.d7f46fbafcbb83aae25a.hot-update.json"
+    },
+    "app.4a4e63558c13e6b1db24.hot-update.js": {
+      "name": "app.4a4e63558c13e6b1db24.hot-update.js",
+      "path": "/Users/Tadeo/dev/projects/house_of_refuge/house_of_refuge/frontend/build/app.4a4e63558c13e6b1db24.hot-update.js",
+      "publicPath": "http://localhost:9091/app.4a4e63558c13e6b1db24.hot-update.js"
+    },
+    "app.4a4e63558c13e6b1db24.hot-update.json": {
+      "name": "app.4a4e63558c13e6b1db24.hot-update.json",
+      "path": "/Users/Tadeo/dev/projects/house_of_refuge/house_of_refuge/frontend/build/app.4a4e63558c13e6b1db24.hot-update.json",
+      "publicPath": "http://localhost:9091/app.4a4e63558c13e6b1db24.hot-update.json"
+    },
+    "app.f8c9ba29effeb434e33e.hot-update.js": {
+      "name": "app.f8c9ba29effeb434e33e.hot-update.js",
+      "path": "/Users/Tadeo/dev/projects/house_of_refuge/house_of_refuge/frontend/build/app.f8c9ba29effeb434e33e.hot-update.js",
+      "publicPath": "http://localhost:9091/app.f8c9ba29effeb434e33e.hot-update.js"
+    },
+    "app.f8c9ba29effeb434e33e.hot-update.json": {
+      "name": "app.f8c9ba29effeb434e33e.hot-update.json",
+      "path": "/Users/Tadeo/dev/projects/house_of_refuge/house_of_refuge/frontend/build/app.f8c9ba29effeb434e33e.hot-update.json",
+      "publicPath": "http://localhost:9091/app.f8c9ba29effeb434e33e.hot-update.json"
+    },
+    "app.10edee0445c8b40cd209.hot-update.js": {
+      "name": "app.10edee0445c8b40cd209.hot-update.js",
+      "path": "/Users/Tadeo/dev/projects/house_of_refuge/house_of_refuge/frontend/build/app.10edee0445c8b40cd209.hot-update.js",
+      "publicPath": "http://localhost:9091/app.10edee0445c8b40cd209.hot-update.js"
+    },
+    "app.10edee0445c8b40cd209.hot-update.json": {
+      "name": "app.10edee0445c8b40cd209.hot-update.json",
+      "path": "/Users/Tadeo/dev/projects/house_of_refuge/house_of_refuge/frontend/build/app.10edee0445c8b40cd209.hot-update.json",
+      "publicPath": "http://localhost:9091/app.10edee0445c8b40cd209.hot-update.json"
+    },
+    "app.888fdcf56044d274a2b3.hot-update.js": {
+      "name": "app.888fdcf56044d274a2b3.hot-update.js",
+      "path": "/Users/Tadeo/dev/projects/house_of_refuge/house_of_refuge/frontend/build/app.888fdcf56044d274a2b3.hot-update.js",
+      "publicPath": "http://localhost:9091/app.888fdcf56044d274a2b3.hot-update.js"
+    },
+    "app.888fdcf56044d274a2b3.hot-update.json": {
+      "name": "app.888fdcf56044d274a2b3.hot-update.json",
+      "path": "/Users/Tadeo/dev/projects/house_of_refuge/house_of_refuge/frontend/build/app.888fdcf56044d274a2b3.hot-update.json",
+      "publicPath": "http://localhost:9091/app.888fdcf56044d274a2b3.hot-update.json"
+    },
+    "app.50564dfaf58952fd007d.hot-update.js": {
+      "name": "app.50564dfaf58952fd007d.hot-update.js",
+      "path": "/Users/Tadeo/dev/projects/house_of_refuge/house_of_refuge/frontend/build/app.50564dfaf58952fd007d.hot-update.js",
+      "publicPath": "http://localhost:9091/app.50564dfaf58952fd007d.hot-update.js"
+    },
+    "app.50564dfaf58952fd007d.hot-update.json": {
+      "name": "app.50564dfaf58952fd007d.hot-update.json",
+      "path": "/Users/Tadeo/dev/projects/house_of_refuge/house_of_refuge/frontend/build/app.50564dfaf58952fd007d.hot-update.json",
+      "publicPath": "http://localhost:9091/app.50564dfaf58952fd007d.hot-update.json"
+    },
+    "app.332f7969e7b512b2b970.hot-update.js": {
+      "name": "app.332f7969e7b512b2b970.hot-update.js",
+      "path": "/Users/Tadeo/dev/projects/house_of_refuge/house_of_refuge/frontend/build/app.332f7969e7b512b2b970.hot-update.js",
+      "publicPath": "http://localhost:9091/app.332f7969e7b512b2b970.hot-update.js"
+    },
+    "app.332f7969e7b512b2b970.hot-update.json": {
+      "name": "app.332f7969e7b512b2b970.hot-update.json",
+      "path": "/Users/Tadeo/dev/projects/house_of_refuge/house_of_refuge/frontend/build/app.332f7969e7b512b2b970.hot-update.json",
+      "publicPath": "http://localhost:9091/app.332f7969e7b512b2b970.hot-update.json"
+    },
+    "app.42a42acf86ca46edf985.hot-update.js": {
+      "name": "app.42a42acf86ca46edf985.hot-update.js",
+      "path": "/Users/Tadeo/dev/projects/house_of_refuge/house_of_refuge/frontend/build/app.42a42acf86ca46edf985.hot-update.js",
+      "publicPath": "http://localhost:9091/app.42a42acf86ca46edf985.hot-update.js"
+    },
+    "app.42a42acf86ca46edf985.hot-update.json": {
+      "name": "app.42a42acf86ca46edf985.hot-update.json",
+      "path": "/Users/Tadeo/dev/projects/house_of_refuge/house_of_refuge/frontend/build/app.42a42acf86ca46edf985.hot-update.json",
+      "publicPath": "http://localhost:9091/app.42a42acf86ca46edf985.hot-update.json"
+    },
+    "app.213302f4da546d7cf3d0.hot-update.js": {
+      "name": "app.213302f4da546d7cf3d0.hot-update.js",
+      "path": "/Users/Tadeo/dev/projects/house_of_refuge/house_of_refuge/frontend/build/app.213302f4da546d7cf3d0.hot-update.js",
+      "publicPath": "http://localhost:9091/app.213302f4da546d7cf3d0.hot-update.js"
+    },
+    "app.213302f4da546d7cf3d0.hot-update.json": {
+      "name": "app.213302f4da546d7cf3d0.hot-update.json",
+      "path": "/Users/Tadeo/dev/projects/house_of_refuge/house_of_refuge/frontend/build/app.213302f4da546d7cf3d0.hot-update.json",
+      "publicPath": "http://localhost:9091/app.213302f4da546d7cf3d0.hot-update.json"
+    },
+    "app.4bec2a992329b0a6be13.hot-update.js": {
+      "name": "app.4bec2a992329b0a6be13.hot-update.js",
+      "path": "/Users/Tadeo/dev/projects/house_of_refuge/house_of_refuge/frontend/build/app.4bec2a992329b0a6be13.hot-update.js",
+      "publicPath": "http://localhost:9091/app.4bec2a992329b0a6be13.hot-update.js"
+    },
+    "app.4bec2a992329b0a6be13.hot-update.json": {
+      "name": "app.4bec2a992329b0a6be13.hot-update.json",
+      "path": "/Users/Tadeo/dev/projects/house_of_refuge/house_of_refuge/frontend/build/app.4bec2a992329b0a6be13.hot-update.json",
+      "publicPath": "http://localhost:9091/app.4bec2a992329b0a6be13.hot-update.json"
+    },
+    "app.9b676d5e00f3b80f060d.hot-update.js": {
+      "name": "app.9b676d5e00f3b80f060d.hot-update.js",
+      "path": "/Users/Tadeo/dev/projects/house_of_refuge/house_of_refuge/frontend/build/app.9b676d5e00f3b80f060d.hot-update.js",
+      "publicPath": "http://localhost:9091/app.9b676d5e00f3b80f060d.hot-update.js"
+    },
+    "app.9b676d5e00f3b80f060d.hot-update.json": {
+      "name": "app.9b676d5e00f3b80f060d.hot-update.json",
+      "path": "/Users/Tadeo/dev/projects/house_of_refuge/house_of_refuge/frontend/build/app.9b676d5e00f3b80f060d.hot-update.json",
+      "publicPath": "http://localhost:9091/app.9b676d5e00f3b80f060d.hot-update.json"
+    },
+    "app.80c5320ca571961a87e6.hot-update.js": {
+      "name": "app.80c5320ca571961a87e6.hot-update.js",
+      "path": "/Users/Tadeo/dev/projects/house_of_refuge/house_of_refuge/frontend/build/app.80c5320ca571961a87e6.hot-update.js",
+      "publicPath": "http://localhost:9091/app.80c5320ca571961a87e6.hot-update.js"
+    },
+    "app.80c5320ca571961a87e6.hot-update.json": {
+      "name": "app.80c5320ca571961a87e6.hot-update.json",
+      "path": "/Users/Tadeo/dev/projects/house_of_refuge/house_of_refuge/frontend/build/app.80c5320ca571961a87e6.hot-update.json",
+      "publicPath": "http://localhost:9091/app.80c5320ca571961a87e6.hot-update.json"
     }
   },
   "chunks": {
@@ -1677,10 +1862,10 @@
       "js/vendors-webpack.js",
       "css/app.css",
       "js/app.js",
-      "app.02d907f964c6df25caa4.hot-update.js"
+      "app.80c5320ca571961a87e6.hot-update.js"
     ]
   },
   "publicPath": "http://localhost:9091/",
-  "error": "ModuleBuildError",
-  "message": "Module build failed (from ./node_modules/sass-loader/dist/cjs.js):\nSassError: Undefined variable: \"$primaru\".\n        on line 53 of src/styles/resources.scss\n>>   border-bottom: 2px solid $primaru;\n\n   ---------------------------^\n"
+  "error": "StylelintError",
+  "message": "\nsrc/styles/resources.scss\n 62:15  ✖  Unexpected empty block  block-no-empty\n\n"
 }

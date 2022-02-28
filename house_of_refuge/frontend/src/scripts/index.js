@@ -8,13 +8,42 @@ import {orderBy} from "lodash";
 import Select from "react-dropdown-select";
 
 
+const VISIBLE = [
+    "name", "zip_code", "people_to_accommodate", "availability", "accommodation_length",
+];
+
+const STATUS_OPTIONS = [
+  {label: "Nowy", value: "new"},
+  {label: "Wiśnia", value: "verified"},
+  {label: "W procesie", value: "processing"},
+  {label: "Zajęta", value: "taken"},
+  {label: "Zignoruj", value: "ignore"},
+];
+
 const ResourceRow = ({resource, isExpanded}) => {
   const [expanded, setExpanded] = useState(isExpanded);
-  const attrs = ["name", "zip_code", "people_to_accommodate", "availability", "accommodation_length"];
-  return <div className="resource-row">
+
+  useEffect(() => {
+    return () => {
+      setExpanded(isExpanded);
+    };
+  }, [isExpanded]);
+
+  const updateStatus = (value) => {
+    console.log("Status updated: ", value);
+  };
+
+  return <div className={`resource-row row-${resource.status}`}>
     <div className={"base-content"}>
-      {attrs.map((a) => <div onClick={() => setExpanded(e => !e)} className={"col"}
+      {VISIBLE.map((a) => <div onClick={() => setExpanded(e => !e)} className={"col"}
                              key={`${resource.id}-${a}`}>{resource[a]}</div>)}
+      <div className={`col`}>
+        <Select
+            values={STATUS_OPTIONS.filter((o) => o.value === resource.status)}
+            options={STATUS_OPTIONS}
+            onChange={updateStatus}
+        />
+      </div>
     </div>
     {expanded && <div>
       <Table bordered>
@@ -97,6 +126,7 @@ const ResourceList = ({resources}) => {
     people_to_accommodate: {fieldName: 'people_to_accommodate', display: "Ilu ludzi przyjmie?", sort: "asc"},
     availability: {fieldName: 'availability', display: "Kiedy?", sort: "asc"},
     accommodation_length: {fieldName: 'accommodation_length', display: "Na jak długo?", sort: "asc"},
+    status: {fieldName: 'status', display: "Status", sort: "asc"},
 
   });
 
@@ -171,7 +201,7 @@ const ResourceList = ({resources}) => {
                 (e) => setSearchQuery(e.target.value.toLowerCase())
               } />
             </td>
-
+            <td><Button size={"sm"} onClick={() => setExpandAll(ea => !ea)}>Expand all</Button></td>
           </tr>
           </tbody>
         </Table>
