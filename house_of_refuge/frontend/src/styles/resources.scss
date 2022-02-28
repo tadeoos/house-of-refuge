@@ -5,8 +5,13 @@
     text-align: center;
     border-bottom: 1px solid black;
     display: flex;
-    justify-content: space-around;
-    align-items: center;
+    flex-direction: column;
+
+    .top {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+    }
   }
 }
 
@@ -41,4 +46,15 @@
   width: 250px;
   border: 1px solid black;
   border-bottom: 0;
+}
+
+.search-input {
+  border: 0;
+  border-bottom: 1px solid lightslategray;
+  outline: 0;
+  margin-left: 2px;
+}
+
+.hide {
+  display: none !important;
 }
