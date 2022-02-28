@@ -19,7 +19,7 @@ services:
         fromDatabase:
           name: zasoby
           property: connectionString
-      - key: SECRET_KEY
+      - key: DJANGO_SECRET_KEY
         generateValue: true
       - key: WEB_CONCURRENCY
         value: 4
