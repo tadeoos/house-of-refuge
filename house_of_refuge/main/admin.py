@@ -118,17 +118,20 @@ class HousingRow(resources.ModelResource):
     )
 
     def skip_row(self, instance, original):
-        # Add code here
+        if all([
+            instance.email == original.email,
+            instance.people_to_accommodate_raw == original.people_to_accommodate_raw,
+            instance.extra == original.extra,
+            instance.availability == original.availability,
+        ]):
+            return True
         return super().skip_row(instance, original)
 
     class Meta:
         model = HousingResource
         skip_unchanged = True
         report_skipped = False
-        # widgets = {
-        #     'created': {'format': '%m/%d/%Y %H:%M:%S'},
-        #     'availability': {'format': '%m/%d/%Y'},
-        # }
+        import_id_fields = ["created"]
 
 
 @admin.register(HousingResource)

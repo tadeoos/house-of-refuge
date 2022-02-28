@@ -44,6 +44,9 @@ class HousingResource(TimeStampedModel):
     email = models.EmailField(unique=False)
     extra = models.CharField(max_length=2048, null=True)
 
+    def __str__(self):
+        return f"{self.name} {self.people_to_accommodate} {self.zip_code}"
+
     def as_prop(self):
         return dict(
             id=self.id,
