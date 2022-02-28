@@ -2,11 +2,16 @@ databases:
   - name: zasoby
     databaseName: zasoby
     user: zasoby
+    region: frankfurt
+    plan: free
 
 services:
   - type: web
     name: zasoby
     env: python
+    region: frankfurt
+    branch: master
+    plan: free
     buildCommand: "./build.sh"
     startCommand: "gunicorn config.wsgi:application"
     envVars:
