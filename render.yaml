@@ -6,6 +6,15 @@ databases:
     plan: free
 
 services:
+  - type: pserv
+    name: zasoby
+    env: docker
+    repo: https://github.com/render-examples/redis.git # optional
+    region: frankfurt
+    disk:
+      name: redis-data
+      mountPath: /var/lib/redis
+      sizeGB: 1 # optional
   - type: web
     name: zasoby
     env: python
@@ -25,3 +34,8 @@ services:
         value: 4
       - key: DJANGO_SETTINGS_MODULE
         value: "config.settings.production"
+      - key: REDIS_URL
+        fromService:
+          name: zasoby
+          type: pserv
+          property: hostport
