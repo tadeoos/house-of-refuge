@@ -20,7 +20,7 @@ services:
     env: python
     region: frankfurt
     branch: master
-    plan: free
+    plan: starter
     buildCommand: "./build.sh"
     startCommand: "gunicorn config.wsgi:application"
     envVars:
