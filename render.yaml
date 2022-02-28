@@ -23,3 +23,5 @@ services:
         generateValue: true
       - key: WEB_CONCURRENCY
         value: 4
+      - key: DJANGO_SETTINGS_MODULE
+        value: "config.settings.production"
