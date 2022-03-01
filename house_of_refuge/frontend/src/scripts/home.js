@@ -41,8 +41,10 @@ const ButtonWrap = styled.div`
 
 `;
 
-const App = () => {
+const App = ({userData}) => {
   const [page, setPage] = useState(0);
+  console.log(userData);
+  const [user] = useState(userData);
 
   // const [name, setName] = useState('')
   const [formValues, setFormValues] = useState(null);
@@ -56,7 +58,7 @@ const App = () => {
       about_info: '',
       resource: '',
       // city: '',
-      // zip_code: '', 
+      // zip_code: '',
       // zip_code: '',
       // address: '',
       // people_to_accommodate_raw: '',

@@ -40,7 +40,11 @@ def housing_list(request):
 
 @ensure_csrf_cookie
 def home(request):
-    return render(request, "main/home.html")
+    user = None
+    if not request.user.is_anonymous:
+        user = request.user
+        user = dict(id=user.id, name=user.username)
+    return render(request, "main/home.html", {"props": dict(userData=user)})
 
 
 @require_http_methods(["GET"])
