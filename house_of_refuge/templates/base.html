@@ -1,6 +1,6 @@
 {% load static i18n %}<!DOCTYPE html>
 {% get_current_language as LANGUAGE_CODE %}
-<html lang="{{ LANGUAGE_CODE }}">
+<html lang="{{ LANGUAGE_CODE }}" style="height: 100%">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
@@ -39,7 +39,7 @@
 
   </head>
 
-  <body>
+  <body style="height: 100%">
 
     <!-- <div class="mb-1">
       <nav class="navbar navbar-expand-md navbar-light bg-light">
@@ -85,7 +85,7 @@
 
     </div> -->
 
-    <div class="container-xl">
+    <div class="container-xl" style="height: 100%">
 
       {% if messages %}
         {% for message in messages %}
