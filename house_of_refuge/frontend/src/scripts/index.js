@@ -27,6 +27,8 @@ const STATUS_OPTIONS = [
 const ResourceRow = ({resource, isExpanded}) => {
       const [expanded, setExpanded] = useState(isExpanded);
 
+      console.log('getCookie()',getCookie('csrftoken'));
+
       useEffect(() => {
         return () => {
           setExpanded(isExpanded);
@@ -39,7 +41,7 @@ const ResourceRow = ({resource, isExpanded}) => {
           method: 'POST', // *GET, POST, PUT, DELETE, etc.
           headers: {
             'Content-Type': 'application/json',
-            'X-CSRFToken': getCookie('csrftoken'),
+            'X-CSRFToken': getCookie('csrftoken')
           },
           body: JSON.stringify(value[0]) // body data type must match "Content-Type" header
         }).then(response => response.json()

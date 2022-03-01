@@ -3,6 +3,7 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
 from django.shortcuts import render
 import json
+from django.views.decorators.csrf import ensure_csrf_cookie
 
 from .forms import HousingResourceForm
 # Create your views here.
@@ -37,6 +38,7 @@ def housing_list(request):
     )
 
 
+@ensure_csrf_cookie
 def home(request):
     return render(request, "main/home.html")
 

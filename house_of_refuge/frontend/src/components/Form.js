@@ -99,7 +99,7 @@ const Form = ({ formik }) => {
                 Kanapa
             </label>
 
-            <Label htmlFor="city">Miasto</Label>
+            {/* <Label htmlFor="city">Miasto</Label>
             <Input
                 id="city"
                 name="city"
@@ -114,7 +114,7 @@ const Form = ({ formik }) => {
                 type="text"
                 onChange={formik.handleChange}
                 value={formik.values.zip_code}
-            />
+            /> */}
 
             <Button type="submit">Wyślij</Button>
 

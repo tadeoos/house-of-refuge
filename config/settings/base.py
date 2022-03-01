@@ -44,8 +44,8 @@ LOCALE_PATHS = [str(ROOT_DIR / "locale")]
 DATABASES = {
     "default": env.db(
         "DATABASE_URL",
-        # default="postgres://postgres:postgres@localhost:5432/house_of_refuge",
-        default="postgres:///house_of_refuge",
+        default="postgres://postgres:postgres@localhost:5432/house_of_refuge",
+       #  default="postgres:///house_of_refuge",
     ),
 }
 DATABASES["default"]["ATOMIC_REQUESTS"] = True
