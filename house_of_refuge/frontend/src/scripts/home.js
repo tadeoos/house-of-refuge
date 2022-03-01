@@ -43,7 +43,7 @@ const ButtonWrap = styled.div`
 
 const App = ({userData}) => {
   const [page, setPage] = useState(0);
-  console.log(userData);
+  // console.log(userData)
   const [user] = useState(userData);
 
   // const [name, setName] = useState('')
@@ -57,24 +57,23 @@ const App = ({userData}) => {
       name: '',
       about_info: '',
       resource: '',
-      // city: '',
-      // zip_code: '',
-      // zip_code: '',
-      // address: '',
+      city: '',
+      zip_code: '',
+      address: '',
       // people_to_accommodate_raw: '',
-      // people_to_accommodate: '',
-      // costs: '',
-      // availability: '',
-      // accommodation_length: '',
-      // details: '',
-      // transport: '',
-      // phone_number: '',
-      // backup_phone_number: '',
-      // email: '',
-      // extra: '',
+      people_to_accommodate: '',
+      costs: '',
+      availability: '',
+      accommodation_length: '',
+      details: '',
+      transport: '',
+      phone_number: '',
+      backup_phone_number: '',
+      email: '',
+      extra: '',
 
     },
-    // validationSchema: validationSchema,
+    validationSchema: validationSchema,
     onSubmit: async (values) => {
       return axios({
         method: 'post',
