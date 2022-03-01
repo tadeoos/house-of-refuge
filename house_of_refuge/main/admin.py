@@ -7,7 +7,7 @@ from import_export.admin import ImportExportModelAdmin
 from import_export.fields import Field
 from import_export.widgets import DateTimeWidget, DateWidget, Widget
 
-from .models import HousingResource, HousingType, TransportRange
+from .models import HousingResource, HousingType, TransportRange, Submission
 
 VALUE_MAP = {
     "Tak, na terenie Warszawy": TransportRange.WARSAW,
@@ -138,5 +138,13 @@ class HousingRow(resources.ModelResource):
 class HousingResourceAdmin(ImportExportModelAdmin):
     resource_class = HousingRow
     search_fields = ("about_info", "city_and_zip_code", "email", "details", "extra")
-    list_display = ("name", "email", "resource", "availability", "accommodation_length")
-    list_filter = ("availability", "people_to_accommodate")
+    list_display = ("name", "email", "resource", "availability", "accommodation_length", "status")
+    list_filter = ("status", "availability", "people_to_accommodate")
+
+
+@admin.register(Submission)
+class SubmissionAdmin(ImportExportModelAdmin):
+    # resource_class = HousingRow
+    search_fields = ("name", "source", "languages", "extra", "status", "owner")
+    list_display = ("name", "people", "how_long", "status", "owner")
+    list_filter = ("status", "source")

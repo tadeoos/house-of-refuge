@@ -1,9 +1,12 @@
 from django.db import models
+from django.contrib.auth import get_user_model
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from model_utils.models import TimeStampedModel
 
 # Create your models here.
+
+User = get_user_model()
 
 
 class HousingType(models.TextChoices):
@@ -52,6 +55,7 @@ class HousingResource(TimeStampedModel):
     email = models.EmailField(unique=False)
     extra = models.CharField(max_length=2048, null=True)
     status = models.CharField(choices=Status.choices, default=Status.NEW, max_length=32)
+    owner = models.ForeignKey(User, on_delete=models.SET_NULL, default=None, null=True)
 
     def __str__(self):
         return f"{self.name} {self.people_to_accommodate} {self.zip_code}"
@@ -80,4 +84,61 @@ class HousingResource(TimeStampedModel):
             email=self.email,
             extra=self.extra,
             status=self.status,
+        )
+
+
+class SubSource(models.TextChoices):
+    WEBFORM = "webform", _("Strona")
+    MAIL = "mail", _("Email")
+    TERRAIN = "terrain", _("Zachodni")
+    OTHER = "other", _("Inny")
+
+
+class SubStatus(models.TextChoices):
+    NEW = "new", _("Świeżak")
+    IN_PROGRESS = "in_progress", _("W działaniu")
+    SUCCESS = "success", _("Sukces")
+    CANCELLED = "cancelled", _("Nieaktualne")
+
+
+class Submission(TimeStampedModel):
+    name = models.CharField(max_length=512, null=False, verbose_name="Imię i nazwisko")
+    phone_number = models.CharField(max_length=128)
+    people = models.CharField(max_length=128)
+    how_long = models.CharField(max_length=128)
+    contact_person = models.CharField(max_length=1024, null=True)
+    extra = models.TextField(max_length=2048, null=True)
+    languages = models.CharField(max_length=1024, null=True)
+    source = models.CharField(choices=SubSource.choices, default=SubSource.TERRAIN, max_length=64)
+    priority = models.IntegerField(default=0)
+    when = models.DateField(default=timezone.now, null=True)
+    transport_needed = models.BooleanField(default=False)
+    resource = models.ForeignKey(HousingResource, on_delete=models.SET_NULL, default=None, null=True)
+    owner = models.ForeignKey(User, on_delete=models.SET_NULL, default=None, null=True)
+    note = models.TextField(max_length=2048, null=True)
+    status = models.CharField(choices=SubStatus.choices, default=Status.NEW, max_length=32)
+    person_in_charge_old = models.CharField(max_length=512, default="")
+
+    class Meta:
+        verbose_name = "Zgłoszenie"
+        verbose_name_plural = "Zgłoszenia"
+
+    def as_prop(self):
+        return dict(
+            id=self.id,
+            name=self.name,
+            phone_number=self.phone_number,
+            people=self.people,
+            resource=self.resource,
+            how_long=self.how_long,
+            languages=self.languages,
+            source=self.source,
+            priority=self.priority,
+            when=self.when,
+            contact_person=self.contact_person,
+            transport_needed=self.transport_needed,
+            owner=self.owner,
+            note=self.note,
+            extra=self.extra,
+            status=self.status
         )
