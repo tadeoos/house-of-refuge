@@ -21,3 +21,9 @@ def housing_list(request):
     return render(
         request, "main/housing_list.html", {"props": dict(resources=resources)}
     )
+
+
+def home(request):
+    return render(
+        request, "main/home.html"
+    )
