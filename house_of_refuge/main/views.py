@@ -87,6 +87,14 @@ def create_submission(request):
     return JsonResponse({"data": s.as_prop()})
 
 
+@require_http_methods(["POST"])
+def create_resource(request):
+    # TODO: add some validation
+    data = json.loads(request.body)
+    hr = HousingResource.objects.create(**data)
+    return JsonResponse({"data": hr.as_prop()})
+
+
 @require_http_methods(["GET"])
 @login_required
 def get_submissions(request):

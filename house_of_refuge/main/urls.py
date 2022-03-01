@@ -10,4 +10,5 @@ urlpatterns = [
     path("api/zasoby", views.get_resources, name="zasoby_get"),
     path("api/zgloszenia", views.get_submissions, name="zgloszenia_get"),
     path("api/zglos", views.create_submission, name="zgloszenie_create"),
+    path("api/stworz_zasob", views.create_resource, name="zasob_create"),
 ]
