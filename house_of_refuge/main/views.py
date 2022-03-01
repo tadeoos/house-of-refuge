@@ -37,6 +37,12 @@ def housing_list(request):
     )
 
 
+def home(request):
+    return render(
+        request, "main/home.html"
+    )
+
+
 @require_http_methods(["GET"])
 @login_required
 def get_resources(request):
