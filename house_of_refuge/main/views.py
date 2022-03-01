@@ -38,9 +38,7 @@ def housing_list(request):
 
 
 def home(request):
-    return render(
-        request, "main/home.html"
-    )
+    return render(request, "main/home.html")
 
 
 @require_http_methods(["GET"])

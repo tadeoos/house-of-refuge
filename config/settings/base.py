@@ -42,11 +42,11 @@ LOCALE_PATHS = [str(ROOT_DIR / "locale")]
 # https://docs.djangoproject.com/en/dev/ref/settings/#databases
 
 DATABASES = {
-     "default": env.db(
-         "DATABASE_URL",
-   default="postgres://postgres:postgres@localhost:5432/house_of_refuge",
-        #  default="postgres:///house_of_refuge",
-     ),
+    "default": env.db(
+        "DATABASE_URL",
+        # default="postgres://postgres:postgres@localhost:5432/house_of_refuge",
+        default="postgres:///house_of_refuge",
+    ),
 }
 DATABASES["default"]["ATOMIC_REQUESTS"] = True
 # https://docs.djangoproject.com/en/stable/ref/settings/#std:setting-DEFAULT_AUTO_FIELD
@@ -254,7 +254,7 @@ LOGGING = {
     "formatters": {
         "verbose": {
             "format": "%(levelname)s %(asctime)s %(module)s "
-            "%(process)d %(thread)d %(message)s"
+                      "%(process)d %(thread)d %(message)s"
         }
     },
     "handlers": {
