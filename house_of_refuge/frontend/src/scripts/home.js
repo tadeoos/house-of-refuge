@@ -76,7 +76,7 @@ const App = () => {
     onSubmit: async (values) => {
       return axios({
         method: 'post',
-        url: '/api/zglos',
+        url: '/api/stworz_zasob',
         data: values,
         headers: {
           'Content-Type': 'application/json',
