@@ -35,7 +35,7 @@ export const fields1 = [
         ]
     },
     {
-        name: 'city',
+        name: 'city_and_zip_code',
         label: 'Miasto',
         type: 'text'
     },
@@ -52,6 +52,21 @@ export const fields1 = [
     {
         name: 'people_to_accommodate',
         label: 'Ile osób jesteś w stanie wesprzeć tak, by miały godne warunki pobytu?',
+        type: 'number'
+    },
+    {
+        name: 'age',
+        label: 'Ile masz lat?',
+        type: 'number'
+    },
+    {
+        name: 'languages',
+        label: 'Języki jakie znasz',
+        type: 'text'
+    },
+    {
+        name: 'when_to_call',
+        label: 'W jakich godzinach możemy do Ciebie dzwonić?',
         type: 'text'
     },
     {
@@ -62,7 +77,7 @@ export const fields1 = [
     {
         name: 'availability',
         label: 'Od kiedy udostępniasz nocleg?',
-        type: 'text'
+        type: 'date'
     },
     {
         name: 'accommodation_length',
@@ -119,12 +134,15 @@ export const validationSchema1 = yup.object({
     name: yup.string().required('Pole wymagane'),
     about_info: yup.string().required('Pole wymagane'),
     resource: yup.string().required('Pole wymagane'),
-    city: yup.string().required('Pole wymagane'),
+    city_and_zip_code: yup.string().required('Pole wymagane'),
     zip_code: yup.string().required('Pole wymagane'),
     address: yup.string().required('Pole wymagane'),
-    people_to_accommodate: yup.string().required('Pole wymagane'),
+    people_to_accommodate: yup.number().required('Pole wymagane'),
+    age: yup.number().required('Pole wymagane'),
+    languages: yup.string().required('Pole wymagane'),
+    when_to_call: yup.string().required('Pole wymagane'),
     costs: yup.string().required('Pole wymagane'),
-    availability: yup.string().required('Pole wymagane'),
+    availability: yup.date().required('Pole wymagane'),
     accommodation_length: yup.string().required('Pole wymagane'),
     details: yup.string().required('Pole wymagane'),
     transport: yup.string().required('Pole wymagane'),
