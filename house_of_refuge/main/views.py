@@ -5,6 +5,8 @@ from django.views.decorators.http import require_http_methods
 from django.shortcuts import render
 import json
 from django.views.decorators.csrf import ensure_csrf_cookie
+from rest_framework import status
+from rest_framework.response import Response
 
 from .forms import HousingResourceForm
 # Create your views here.
@@ -125,9 +127,10 @@ def create_submission(request):
     data = json.loads(request.body)
 
     serializer = SubmissionSerializer(data=data)
-    if serializer.is_valid(raise_exception=True):
+    if serializer.is_valid():
         s = serializer.save()
-    return JsonResponse({"data": s.as_prop()})
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @require_http_methods(["POST"])
