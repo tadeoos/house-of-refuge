@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import Logo from './Logo.js';
 import Menu from './Menu.js';
+import { Link } from "react-router-dom";
 
 const StyledHeader = styled.div`
   padding-top: 16px;
@@ -15,14 +16,16 @@ const StyledHeader = styled.div`
 `;
 
 
-const Header = ({ setPage }) => {
+const Header = () => {
 
-    return (
-        <StyledHeader>
-            <Logo className="Logo" onClick={() => setPage(0)} />
-            <Menu className="Menu" />
-        </StyledHeader>
-    );
+  return (
+    <StyledHeader>
+      <Link to="/">
+        <Logo className="Logo" />
+      </Link>
+      <Menu className="Menu" />
+    </StyledHeader>
+  );
 };
 
 export default Header;

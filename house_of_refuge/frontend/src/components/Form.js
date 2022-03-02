@@ -1,18 +1,22 @@
+import { useState } from 'react';
 import styled from 'styled-components';
+import { useFormik } from 'formik';
+import axios from 'axios';
+import { getCookie } from "../scripts/utils";
 
 const StyledForm = styled.form`
   display: flex;
   flex-direction: column;
   margin: auto;
-  width: 360px;
+  width: 400px;
   margin-top: 32px;
   margin-bottom: 32px;
 `;
 
 const Label = styled.label`
   text-align: left;
-  margin-top: 40px;
-  margin-bottom: 10px;
+  margin-top: 28px;
+  margin-bottom: 8px;
 `;
 
 const Input = styled.input`
@@ -23,102 +27,124 @@ const Input = styled.input`
   border: 1px solid #898F9C;
 `;
 
+const Radiolabel = styled.label`
+  cursor: pointer;
+  span {
+      margin-left: 6px;
+  }
+`;
 
 const Radio = styled.input`
   margin-top: 10px;
   margin-bottom: 10px;
 `;
 
-
-
 const Button = styled.button`
-  margin-top: 30px; 
+  margin-top: 32px; 
   padding: 0;
-  margin: 0;
   cursor: pointer;
-  width: 200px;
+  width: 100%;
   height: 40px;
+  border: none;
+  background-color: black;
+  border-radius: 150px;
+  color: #fff;
+  background-color: #000;
+`;
 
-  `;
-const Form = ({ formik }) => {
+const Alert = styled.div`
+  font-size: 13px;
+  margin-top: 6px;
+  color: #d93025;
+`;
+
+const Field = styled.div`
+  display: flex;
+  flex-direction: column;
+  
+  * {
+  color:  ${p => p.alert ? '#d93025' : 'initial'};
+  }
+`;
+
+const Success = styled.div`
+  font-size: 21px;
+  margin: auto;
+  text-align: center;
+`;
+
+const Form = ({ fields, validationSchema, url, successInfo, user }) => {
+    const [success, setSuccess] = useState(false);
+
+    const formik = useFormik({
+        initialValues: fields.reduce((acc, field) => (acc[field.name] = field.type === 'checkbox' ? false : '', acc), {}),
+        validationSchema,
+        onSubmit: async (values) => {
+            const { city, ...rest } = values;
+            const cityZipCodeValues = {
+                ...rest,
+                city_and_zip_code: `${values.city}, ${values.zip_code}`,
+            };
+            return axios({
+                method: 'post',
+                url,
+                data: values.city && values.zip_code ? cityZipCodeValues : values,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken'),
+                },
+            })
+                .catch(error => {
+                    // error && setError(true)
+                })
+                .then(response => {
+                    if (response) {
+                        setSuccess(true);
+                    }
+                });
+        }
+    });
 
     return (
-        <StyledForm onSubmit={formik.handleSubmit} >
-            <Label htmlFor="name">Imię i nazwisko</Label>
-            <Input
-                id="name"
-                name="name"
-                type="text"
-                onChange={formik.handleChange}
-                value={formik.values.name}
-            />
-            <Label htmlFor="about_info">Powiedz coś o sobie - ile masz lat? Z kim mieszkasz (jeśli przyjmujesz kogoś u siebie)?</Label>
-            <Input
-                id="about_info"
-                name="about_info"
-                type="text"
-                onChange={formik.handleChange}
-                value={formik.values.about_info}
-            />
+        success ? <Success> {successInfo} </Success> :
+            <StyledForm onSubmit={formik.handleSubmit} >
+                {fields.filter(field => (user) ? field : !field.loggedUser).map(field => {
+                    return <Field key={field.name} alert={formik.errors[field.name] && formik.touched[field.name]} >
+                        <Label htmlFor={field.name}>{field.label}</Label>
+                        {field.type === 'radio' ?
+                            <>
+                                {field.choice.map(choice => {
+                                    return <Radiolabel key={choice.value} >
+                                        <Radio
+                                            type={field.type}
+                                            name={field.name}
+                                            value={choice.value}
+                                            onChange={formik.handleChange}
+                                        />
+                                        <span>{choice.label}</span>
+                                    </Radiolabel>;
+                                })}
+                            </> :
+                            <Input
+                                id={field.name}
+                                name={field.name}
+                                type={field.type}
+                                onChange={formik.handleChange}
+                                value={formik.values[field.name]}
+                                min={field.type === 'number' ? 1 : null}
+                                max={field.type === 'number' ? 100 : null}
+                            />
+                        }
+                        {formik.errors[field.name] && formik.touched[field.name] ? (
+                            <Alert role="alert"> {formik.errors[field.name]} </Alert>
+                        ) : null}
+                    </Field>;
+                })}
 
-            <Label id="resource">Zasób </Label>
-            <label>
-                <Radio
-                    type="radio"
-                    name="resource"
-                    value="home"
-                    onChange={formik.handleChange}
-                />
-                Dom
-            </label>
-            <label>
-                <Radio
-                    type="radio"
-                    name="resource"
-                    value="flat"
-                    onChange={formik.handleChange}
-                />
-                Mieszkanie
-            </label>
-            <label>
-                <Radio
-                    type="radio"
-                    name="resource"
-                    value="room"
-                    onChange={formik.handleChange}
-                />
-                Pokój
-            </label>
-            <label>
-                <Radio
-                    type="radio"
-                    name="resource"
-                    value="couch"
-                    onChange={formik.handleChange}
-                />
-                Kanapa
-            </label>
+                <Button type="submit">Wyślij</Button>
 
-            {/* <Label htmlFor="city">Miasto</Label>
-            <Input
-                id="city"
-                name="city"
-                type="text"
-                onChange={formik.handleChange}
-                value={formik.values.city}
-            />
-            <Label htmlFor="zip_code">Kod poczotwy</Label>
-            <Input
-                id="zip_code"
-                name="zip_code"
-                type="text"
-                onChange={formik.handleChange}
-                value={formik.values.zip_code}
-            /> */}
+            </StyledForm>
 
-            <Button type="submit">Wyślij</Button>
-
-        </StyledForm>
     );
 };
 

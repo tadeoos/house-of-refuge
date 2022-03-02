@@ -1,6 +1,6 @@
 {% load static i18n %}<!DOCTYPE html>
 {% get_current_language as LANGUAGE_CODE %}
-<html lang="{{ LANGUAGE_CODE }}">
+<html lang="{{ LANGUAGE_CODE }}" style="height: 100%">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
@@ -39,7 +39,7 @@
 
   </head>
 
-  <body>
+  <body style="height: 100%">
 
     <!-- <div class="mb-1">
       <nav class="navbar navbar-expand-md navbar-light bg-light">
@@ -85,16 +85,7 @@
 
     </div> -->
 
-    <div class="container-xl">
-
-      {% if messages %}
-        {% for message in messages %}
-          <div class="alert alert-dismissible {% if message.tags %}alert-{{ message.tags }}{% endif %}">
-            {{ message }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-          </div>
-        {% endfor %}
-      {% endif %}
+    <div class="container-xl" style="height: 100%">
 
       {% block content %}
         <p>Use this document as a way to quick start any new project.</p>

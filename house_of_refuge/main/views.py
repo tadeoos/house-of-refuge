@@ -1,13 +1,18 @@
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
 from django.shortcuts import render
 import json
 from django.views.decorators.csrf import ensure_csrf_cookie
+from rest_framework import status
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
 from .forms import HousingResourceForm
 # Create your views here.
-from .models import HousingResource, Status, Submission
+from .models import HousingResource, Status, Submission, SubStatus
+from .serializers import SubmissionSerializer, HousingResourceSerializer
 
 
 def resource_gathering(request):
@@ -25,22 +30,26 @@ def resource_gathering(request):
 def housing_list(request):
     resources = [
         r.as_prop()
-        for r in HousingResource.objects.filter(status__in=[Status.NEW, Status.VERIFIED])
+        for r in HousingResource.objects.for_remote(request.user)
     ]
     subs = [
         s.as_prop()
-        for s in Submission.objects.filter(status__in=[Status.NEW])
+        for s in Submission.objects.all()
     ]
     return render(
         request, "main/housing_list.html", {"props": dict(
-            initialResources=resources, subs=subs
+            initialResources=resources, subs=subs, userData=request.user.as_json()
         )}
     )
 
 
 @ensure_csrf_cookie
 def home(request):
-    return render(request, "main/home.html")
+    user = None
+    if not request.user.is_anonymous:
+        user = request.user
+        user = dict(id=user.id, name=user.username)
+    return render(request, "main/home.html", {"props": dict(userData=user)})
 
 
 @require_http_methods(["GET"])
@@ -48,9 +57,39 @@ def home(request):
 def get_resources(request):
     resources = [
         r.as_prop()
-        for r in HousingResource.objects.filter(status__in=[Status.NEW, Status.VERIFIED])
+        for r in HousingResource.objects.for_remote(request.user)
     ]
     return JsonResponse({"data": resources})
+
+
+@require_http_methods(["POST"])
+@login_required
+def resource_match_found(request):
+    data = json.loads(request.body)
+    print(f"Data: {data}")
+    resource_id = data["resource"]
+    sub_id = data["sub"]
+    resource = HousingResource.objects.select_for_update().get(id=resource_id)
+    resource.owner = request.user
+    resource.will_pick_up_now = data["transport"]
+    resource.save()
+    sub = Submission.objects.get(id=sub_id)
+    if sub.resource is not None and sub.resource == resource:
+        # error
+        return JsonResponse({
+            "status": "error",
+            "message": f"This submission already have a diiferent resource",
+            "object": sub.as_prop(),
+        }, status=400)
+    assert sub.matcher == request.user
+    sub.resource = resource
+    sub.status = SubStatus.IN_PROGRESS
+    sub.save()
+    return JsonResponse({
+        "status": "success",
+        "message": "Poszło!",
+        "object": sub.as_prop()}
+    )
 
 
 @require_http_methods(["POST"])
@@ -60,39 +99,74 @@ def update_resource_status(request, resource_id, **kwargs):
     data = json.loads(request.body)
     resource = HousingResource.objects.select_for_update().get(id=resource_id)
     new_status = data['value']
-    if resource.status in [Status.NEW, Status.VERIFIED]:
-        resource.status = new_status
-        resource.owner = user
-        resource.save()
-    else:
-        return JsonResponse({
-            "status": "error",
-            "message": f"Can't update from status: {resource.status}",
-            "object": resource.as_prop(),
-        }, status=400)
-
+    resource.status = new_status
+    resource.save()
     return JsonResponse({
         "status": "success",
         "message": "Updated!",
-        "object": resource.as_prop()
-    }
+        "object": resource.as_prop()}
     )
 
 
 @require_http_methods(["POST"])
+@login_required
+def update_resource_note(request, resource_id, **kwargs):
+    data = json.loads(request.body)
+    resource = HousingResource.objects.select_for_update().get(id=resource_id)
+    resource.note = data['note']
+    resource.save()
+    return JsonResponse({
+        "status": "success",
+        "message": "Note updated!",
+        "object": resource.as_prop()}
+    )
+
+
+@api_view(['POST'])
 def create_submission(request):
     # TODO: add some validation
-    data = json.loads(request.body)
-    s = Submission.objects.create(**data)
-    return JsonResponse({"data": s.as_prop()})
+    serializer = SubmissionSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['POST'])
+def create_resource(request):
+    # TODO: add some validation
+    serializer = HousingResourceSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @require_http_methods(["POST"])
-def create_resource(request):
-    # TODO: add some validation
+def update_sub(request, sub_id):
     data = json.loads(request.body)
-    hr = HousingResource.objects.create(**data)
-    return JsonResponse({"data": hr.as_prop()})
+    sub = Submission.objects.get(id=sub_id)
+    for field, value in data['fields'].items():
+        setattr(sub, field, value)
+        sub.save()
+    return JsonResponse({"data": sub.as_prop(), "message": "Updated"})
+
+
+@require_http_methods(["POST"])
+def set_sub_matcher(request):
+    data = json.loads(request.body)
+    sub = Submission.objects.get(id=data['sub_id'])
+    sub.matcher = data["matcher"]
+    sub.save()
+    return JsonResponse({"data": sub.as_prop()})
+
+
+@require_http_methods(["POST"])
+def sub_is_processed(request, sub_id):
+    sub = Submission.objects.get(id=sub_id)
+    sub.matcher = request.user
+    sub.save()
+    return JsonResponse({"data": sub.as_prop()})
 
 
 @require_http_methods(["GET"])
@@ -100,6 +174,6 @@ def create_resource(request):
 def get_submissions(request):
     subs = [
         s.as_prop()
-        for s in Submission.objects.filter(status__in=[Status.NEW])
+        for s in Submission.objects.all()
     ]
     return JsonResponse({"data": subs})
