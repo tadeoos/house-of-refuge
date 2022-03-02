@@ -158,7 +158,7 @@ export const validationSchema1 = yup.object({
         .string()
         .email('Niepoprawny adres email')
         .required('Pole wymagane'),
-    extra: yup.string().required('Pole wymagane'),
+    // extra: yup.string().required('Pole wymagane'),
 });
 
 
@@ -192,22 +192,23 @@ export const fields2 = [
     },
     {
         name: 'origin',
-        label: 'origin',
+        label: 'Narodowość',
         type: 'text'
     },
     {
         name: 'traveling_with_pets',
-        label: 'traveling_with_pets',
-        type: 'checkbox'
+        label: 'Czy podróżujesz ze zwierzętami',
+        type: 'text'
     },
     {
+        publicOnly: true,
         name: 'contact_person',
-        label: 'contact_person',
+        label: 'Osoba do kontaktu',
         type: 'text'
     },
     {
         name: 'languages',
-        label: 'languages',
+        label: 'Języki jakie znasz',
         type: 'text'
     },
     {
@@ -216,17 +217,27 @@ export const fields2 = [
         type: 'date'
     },
     {
+        publicOnly: true,
         name: 'transport_needed',
-        label: 'transport_needed',
+        label: 'Czy potrzebujesz transport?',
         type: 'checkbox',
     },
     // below for logged in
     {
         loggedUser: true,
         name: 'note',
-        label: 'note',
+        label: 'Uwagi',
         type: 'text'
     },
+    // {
+    //     hidden: true,
+    //     loggedUser: true,
+    //     name: 'receiver',
+    //     label: 'receiver',
+    //     type: 'text'
+    // },
+
+    
 
 ];
 
@@ -240,7 +251,8 @@ export const validationSchema2 = yup.object({
     how_long: yup.string().required('Pole wymagane'),
     description: yup.string().required('Pole wymagane'),
     origin: yup.string().required('Pole wymagane'),
-    contact_person: yup.string().required('Pole wymagane'),
+    traveling_with_pets: yup.string().required('Pole wymagane'),
+    // contact_person: yup.string().required('Pole wymagane'),
     languages: yup.string().required('Pole wymagane'),
     when: yup.date().required('Pole wymagane'),
 });

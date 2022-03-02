@@ -40,10 +40,10 @@ const ButtonWrap = styled.div`
 
   > * {
       &:first-child {
-        margin-bottom: 20px;
+        margin-bottom: 40px;
 
         @media (max-width: 600px) {
-          margin-bottom: 10px;
+          margin-bottom: 20px;
         }
       }
   }
