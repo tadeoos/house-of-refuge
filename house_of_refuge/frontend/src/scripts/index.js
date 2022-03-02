@@ -408,14 +408,14 @@ function SubmissionRow({sub, activeHandler, user, isActive = false}) {
   const getActionBtn = () => {
     if (sub.status === "in_progress") {
       if (sub.coordinator) {
-        return isCoordinator ? "status" : <Button disabled>{sub.coordinator.display}</Button>;
+        return isCoordinator ? "" : <Button disabled>{sub.coordinator.display}</Button>;
       } else {
         return <Button onClick={setCoordinator}>Przypisz do siebie</Button>;
       }
     } else if (sub.matcher && !isActive && !isOwner) {
       return <Button disabled>{sub.matcher.display}</Button>;
     } else {
-      return <Button onClick={btnHandler}>{isActive ? "Zwolnij" : "Szukaj"}</Button>;
+      return <Button onClick={btnHandler}>{isActive ? "Zwolnij" : "Szukaj Hosta"}</Button>;
     }
   };
 
@@ -476,12 +476,12 @@ function SubmissionRow({sub, activeHandler, user, isActive = false}) {
         <th>Osoba zgłaszająca:</th>
         <td>{sub.receiver?.display || sub.contact_person}</td>
         <th>Host znaleziony przez:</th>
-        <td>{sub.matcher?.display}</td>
+        <td>{sub.matcher?.display || getActionBtn()}</td>
         <th>Łącznik:</th>
-        <td>{sub.coordinator?.display}</td>
-        <td colSpan={1}>
-          {getActionBtn()}
-        </td>
+        <td>{sub.coordinator?.display || sub.matcher ? getActionBtn() : ""}</td>
+        <th>
+          status
+        </th>
         <td>
           {isCoordinator ? <Select
               values={SUB_STATE_OPTIONS.filter((o) => o.value === sub.status)}

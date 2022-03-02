@@ -187,6 +187,8 @@ class Submission(TimeStampedModel):
     class Meta:
         verbose_name = "Zgłoszenie"
         verbose_name_plural = "Zgłoszenia"
+        ordering = ['-priority', 'created']
+
 
     @property
     def accomodation_in_the_future(self):
