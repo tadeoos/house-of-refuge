@@ -12,7 +12,7 @@ from rest_framework.response import Response
 from .forms import HousingResourceForm
 # Create your views here.
 from .models import HousingResource, Status, Submission, SubStatus
-from .serializers import SubmissionSerializer
+from .serializers import SubmissionSerializer, HousingResourceSerializer
 
 
 def resource_gathering(request):
@@ -127,17 +127,19 @@ def create_submission(request):
     # TODO: add some validation
     serializer = SubmissionSerializer(data=request.data)
     if serializer.is_valid():
-        s = serializer.save()
+        serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@require_http_methods(["POST"])
+@api_view(['POST'])
 def create_resource(request):
     # TODO: add some validation
-    data = json.loads(request.body)
-    hr = HousingResource.objects.create(**data)
-    return JsonResponse({"data": hr.as_prop()})
+    serializer = HousingResourceSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @require_http_methods(["POST"])
