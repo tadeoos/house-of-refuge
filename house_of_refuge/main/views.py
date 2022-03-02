@@ -8,7 +8,7 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 
 from .forms import HousingResourceForm
 # Create your views here.
-from .models import HousingResource, Status, Submission
+from .models import HousingResource, Status, Submission, SubStatus
 
 
 def resource_gathering(request):
@@ -30,7 +30,7 @@ def housing_list(request):
     ]
     subs = [
         s.as_prop()
-        for s in Submission.objects.filter(status__in=[Status.NEW])
+        for s in Submission.objects.all()
     ]
     return render(
         request, "main/housing_list.html", {"props": dict(
@@ -60,26 +60,43 @@ def get_resources(request):
 
 @require_http_methods(["POST"])
 @login_required
+def resource_match_found(request):
+    data = json.loads(request.body)
+    print(f"Data: {data}")
+    resource_id = data["resource"]
+    sub_id = data["sub"]
+    resource = HousingResource.objects.select_for_update().get(id=resource_id)
+    resource.owner = request.user
+    resource.will_pick_up_now = data["transport"]
+    resource.save()
+    sub = Submission.objects.get(id=sub_id)
+    if sub.resource is not None and sub.resource == resource:
+        # error
+        return JsonResponse({
+            "status": "error",
+            "message": f"This submission already have a diiferent resource",
+            "object": sub.as_prop(),
+        }, status=400)
+    assert sub.matcher == request.user
+    sub.resource = resource
+    sub.status = SubStatus.IN_PROGRESS
+    sub.save()
+    return JsonResponse({
+        "status": "success",
+        "message": "Poszło!",
+        "object": sub.as_prop()}
+    )
+
+
+@require_http_methods(["POST"])
+@login_required
 def update_resource_status(request, resource_id, **kwargs):
     user = request.user
     data = json.loads(request.body)
-    # data.get("submission_id")
     resource = HousingResource.objects.select_for_update().get(id=resource_id)
     new_status = data['value']
-    if resource.status in [Status.NEW, Status.VERIFIED, Status.PROCESSING]:
-        resource.status = new_status
-        if new_status not in [Status.NEW, Status.VERIFIED]:
-            resource.owner = user
-        else:
-            resource.owner = None
-        resource.save()
-    else:
-        return JsonResponse({
-            "status": "error",
-            "message": f"Can't update from status: {resource.status}",
-            "object": resource.as_prop(),
-        }, status=400)
-
+    resource.status = new_status
+    resource.save()
     return JsonResponse({
         "status": "success",
         "message": "Updated!",
@@ -118,9 +135,28 @@ def create_resource(request):
 
 
 @require_http_methods(["POST"])
+def update_sub(request, sub_id):
+    data = json.loads(request.body)
+    sub = Submission.objects.get(id=sub_id)
+    for field, value in data['fields'].items():
+        setattr(sub, field, value)
+        sub.save()
+    return JsonResponse({"data": sub.as_prop(), "message": "Updated"})
+
+
+@require_http_methods(["POST"])
+def set_sub_matcher(request):
+    data = json.loads(request.body)
+    sub = Submission.objects.get(id=data['sub_id'])
+    sub.matcher = data["matcher"]
+    sub.save()
+    return JsonResponse({"data": sub.as_prop()})
+
+
+@require_http_methods(["POST"])
 def sub_is_processed(request, sub_id):
     sub = Submission.objects.get(id=sub_id)
-    sub.owner = request.user
+    sub.matcher = request.user
     sub.save()
     return JsonResponse({"data": sub.as_prop()})
 
@@ -130,6 +166,6 @@ def sub_is_processed(request, sub_id):
 def get_submissions(request):
     subs = [
         s.as_prop()
-        for s in Submission.objects.for_remote()
+        for s in Submission.objects.all()
     ]
     return JsonResponse({"data": subs})

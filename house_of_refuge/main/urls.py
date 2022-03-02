@@ -14,5 +14,7 @@ urlpatterns = [
     path("api/zgloszenia", views.get_submissions, name="zgloszenia_get"),
     path("api/zglos", views.create_submission, name="zgloszenie_create"),
     path("api/stworz_zasob", views.create_resource, name="zasob_create"),
-    path("api/sub_start/<int:sub_id>", views.sub_is_processed, name="sub_start"),
+    path("api/set_matcher", views.set_sub_matcher, name="set_matcher"),
+    path("api/match_found", views.resource_match_found, name="match_found"),
+    path("api/sub/update/<int:sub_id>", views.update_sub, name="sub_update"),
 ]

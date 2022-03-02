@@ -84,6 +84,27 @@
 
 .rename-input {
   &:hover {
-    border: 1px solid black;
+    background-color: #d6e9c6;
   }
+}
+
+.transport-btns {
+  display: flex;
+  flex-direction: column;
+
+  button {
+    margin: 30px;
+  }
+}
+
+.sub-in-progress {
+  background-color: #ea4335 !important;
+}
+
+.sub-table {
+  background-color: white;
+}
+
+.sub-in-future {
+  background-color: magenta;
 }

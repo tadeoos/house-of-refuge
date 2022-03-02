@@ -38,6 +38,7 @@ class HousingResourceManager(Manager):
             Q(status__in=[Status.NEW, Status.VERIFIED]) | Q(owner=user)
         )
 
+
 # dodać do formularza zasobowego:
 # - osobno: ile masz lat
 # - osobno: czy masz/przyjmiesz zwierzęta
@@ -90,6 +91,7 @@ class HousingResource(TimeStampedModel):
         verbose_name = "Zasób"
         verbose_name_plural = "Zasoby"
 
+    @property
     def full_address(self):
         return f"{self.address} {self.city_and_zip_code}"
 
@@ -98,7 +100,9 @@ class HousingResource(TimeStampedModel):
             name=self.name,
             address=self.full_address,
             phone_number=self.phone_number,
-            note=self.note
+            note=self.note,
+            will_pick_up_now=self.will_pick_up_now,
+            owner=self.owner.as_json() if self.owner else None,
         )
 
     def as_prop(self):
@@ -164,7 +168,7 @@ class Submission(TimeStampedModel):
     languages = models.CharField(max_length=1024, null=True, blank=True)
     when = models.DateField(default=timezone.now, null=True, blank=True)
     transport_needed = models.BooleanField(default=False)
-   # ponizej dla zalogowanych
+    # ponizej dla zalogowanych
     note = models.TextField(max_length=2048, null=True, blank=True)
     status = models.CharField(choices=SubStatus.choices, default=Status.NEW, max_length=32)
     person_in_charge_old = models.CharField(max_length=512, default="", blank=True)
@@ -172,6 +176,8 @@ class Submission(TimeStampedModel):
                                  related_name="received_subs")
     coordinator = models.ForeignKey(User, on_delete=models.SET_NULL, default=None, blank=True, null=True,
                                     related_name="coord_subs")
+    matcher = models.ForeignKey(User, on_delete=models.SET_NULL, default=None, blank=True, null=True,
+                                related_name="matched_subs")
     resource = models.ForeignKey(HousingResource, on_delete=models.SET_NULL, default=None, blank=True, null=True)
     priority = models.IntegerField(default=0)
     source = models.CharField(choices=SubSource.choices, default=SubSource.WEBFORM, max_length=64)
@@ -181,6 +187,12 @@ class Submission(TimeStampedModel):
     class Meta:
         verbose_name = "Zgłoszenie"
         verbose_name_plural = "Zgłoszenia"
+
+    @property
+    def accomodation_in_the_future(self):
+        if self.when:
+            return self.when > timezone.now().date()
+        return False
 
     def as_prop(self):
         return dict(
@@ -198,7 +210,9 @@ class Submission(TimeStampedModel):
             transport_needed=self.transport_needed,
             receiver=self.receiver.as_json() if self.receiver else None,
             coordinator=self.coordinator.as_json() if self.coordinator else None,
+            matcher=self.matcher.as_json() if self.matcher else None,
             note=self.note,
+            accomodation_in_the_future=self.accomodation_in_the_future,
             status=self.status,
             origin=self.origin,
             traveling_with_pets=self.traveling_with_pets,
