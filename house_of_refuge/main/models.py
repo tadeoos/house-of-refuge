@@ -38,7 +38,6 @@ class HousingResourceManager(Manager):
             Q(status__in=[Status.NEW, Status.VERIFIED]) | Q(owner=user)
         )
 
-
 class HousingResource(TimeStampedModel):
     name = models.CharField(max_length=512, null=False, verbose_name="Imię i nazwisko")
     about_info = models.TextField(max_length=2048)
@@ -151,6 +150,7 @@ class Submission(TimeStampedModel):
     languages = models.CharField(max_length=1024, null=True, blank=True)
     when = models.DateField(default=timezone.now, null=True, blank=True)
     transport_needed = models.BooleanField(default=False)
+   # ponizej dla zalogowanych
     note = models.TextField(max_length=2048, null=True, blank=True)
     status = models.CharField(choices=SubStatus.choices, default=Status.NEW, max_length=32)
     person_in_charge_old = models.CharField(max_length=512, default="", blank=True)
@@ -160,7 +160,7 @@ class Submission(TimeStampedModel):
                                     related_name="coord_subs")
     resource = models.ForeignKey(HousingResource, on_delete=models.SET_NULL, default=None, blank=True, null=True)
     priority = models.IntegerField(default=0)
-    source = models.CharField(choices=SubSource.choices, default=SubSource.TERRAIN, max_length=64)
+    source = models.CharField(choices=SubSource.choices, default=SubSource.WEBFORM, max_length=64)
 
     objects = SubmissionManager()
 
