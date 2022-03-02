@@ -6,6 +6,7 @@ from django.shortcuts import render
 import json
 from django.views.decorators.csrf import ensure_csrf_cookie
 from rest_framework import status
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from .forms import HousingResourceForm
@@ -121,12 +122,10 @@ def update_resource_note(request, resource_id, **kwargs):
     )
 
 
-@require_http_methods(["POST"])
+@api_view(['POST'])
 def create_submission(request):
     # TODO: add some validation
-    data = json.loads(request.body)
-
-    serializer = SubmissionSerializer(data=data)
+    serializer = SubmissionSerializer(data=request.data)
     if serializer.is_valid():
         s = serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)

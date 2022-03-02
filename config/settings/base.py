@@ -318,3 +318,9 @@ WEBPACK_LOADER = {
         "STATS_FILE": str(APPS_DIR / "frontend" / "webpack-stats.json"),
     },
 }
+
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+    ]
+}
