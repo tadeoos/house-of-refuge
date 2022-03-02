@@ -9,6 +9,7 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 from .forms import HousingResourceForm
 # Create your views here.
 from .models import HousingResource, Status, Submission, SubStatus
+from .serializers import SubmissionSerializer
 
 
 def resource_gathering(request):
@@ -122,7 +123,10 @@ def update_resource_note(request, resource_id, **kwargs):
 def create_submission(request):
     # TODO: add some validation
     data = json.loads(request.body)
-    s = Submission.objects.create(**data)
+
+    serializer = SubmissionSerializer(data=data)
+    if serializer.is_valid(raise_exception=True):
+        s = serializer.save()
     return JsonResponse({"data": s.as_prop()})
 
 
