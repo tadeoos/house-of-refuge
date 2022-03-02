@@ -38,6 +38,14 @@ class HousingResourceManager(Manager):
             Q(status__in=[Status.NEW, Status.VERIFIED]) | Q(owner=user)
         )
 
+# dodać do formularza zasobowego:
+# - osobno: ile masz lat
+# - osobno: czy masz/przyjmiesz zwierzęta
+# - języki: osobno
+# - kiedy można do ciebie dzwonić/czy można dzwonić do ciebie po północy
+# -
+
+
 class HousingResource(TimeStampedModel):
     name = models.CharField(max_length=512, null=False, verbose_name="Imię i nazwisko")
     about_info = models.TextField(max_length=2048)
@@ -49,6 +57,12 @@ class HousingResource(TimeStampedModel):
     people_to_accommodate = models.IntegerField(
         default=0
     )  # Ile osób jesteś w stanie wesprzeć tak, by miały godne warunki pobytu?
+    age = models.CharField(max_length=512)
+    languages = models.CharField(max_length=512)
+    when_to_call = models.CharField(max_length=1024)
+    living_with_pets = models.CharField(max_length=1024, null=True, blank=True)
+    can_take_person_with_pets = models.CharField(max_length=512, null=True, blank=True)
+
     costs = models.CharField(max_length=1024)
     availability = models.DateField(default=timezone.now)
     accommodation_length = models.CharField(
