@@ -6,7 +6,7 @@ import BigButton from '../components/BigButton.js';
 import Form from '../components/Form.js';
 import Footer from '../components/Footer.js';
 import { useFormik } from 'formik';
-import { validationSchema } from './validationSchema';
+import { fields1, validationSchema1 } from './formSchema';
 import axios from 'axios';
 import { getCookie } from "./utils";
 
@@ -38,42 +38,19 @@ const ButtonWrap = styled.div`
         }
       }
   }
-
 `;
 
-const App = ({userData}) => {
-  const [page, setPage] = useState(0);
-  // console.log(userData)
-  const [user] = useState(userData);
 
-  // const [name, setName] = useState('')
-  const [formValues, setFormValues] = useState(null);
 
-  console.log('getCookie()', getCookie('csrftoken'));
 
+
+const App = ({ userData }) => {
+  const [page, setPage] = useState(1);
+  // const [user] = useState(userData)
 
   const formik = useFormik({
-    initialValues: {
-      name: '',
-      about_info: '',
-      resource: '',
-      city: '',
-      zip_code: '',
-      address: '',
-      // people_to_accommodate_raw: '',
-      people_to_accommodate: '',
-      costs: '',
-      availability: '',
-      accommodation_length: '',
-      details: '',
-      transport: '',
-      phone_number: '',
-      backup_phone_number: '',
-      email: '',
-      extra: '',
-
-    },
-    validationSchema: validationSchema,
+    initialValues: fields1.reduce((acc, curr) => (acc[curr.name] = '', acc), {}),
+    validationSchema: validationSchema1,
     onSubmit: async (values) => {
       return axios({
         method: 'post',
@@ -94,8 +71,6 @@ const App = ({userData}) => {
         });
     }
   });
-
-  // console.log(formik.values);
 
   return (
     <StyledApp>
@@ -118,6 +93,7 @@ const App = ({userData}) => {
       </ButtonWrap>}
 
       {page === 1 && <Form
+        fields={fields1}
         formik={formik}
       />}
 
