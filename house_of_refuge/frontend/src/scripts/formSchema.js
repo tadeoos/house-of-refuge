@@ -35,7 +35,7 @@ export const fields1 = [
         ]
     },
     {
-        name: 'city_and_zip_code',
+        name: 'city',
         label: 'Miasto',
         type: 'text'
     },
@@ -134,7 +134,7 @@ export const validationSchema1 = yup.object({
     name: yup.string().required('Pole wymagane'),
     about_info: yup.string().required('Pole wymagane'),
     resource: yup.string().required('Pole wymagane'),
-    city_and_zip_code: yup.string().required('Pole wymagane'),
+    city: yup.string().required('Pole wymagane'),
     zip_code: yup.string().required('Pole wymagane'),
     address: yup.string().required('Pole wymagane'),
     people_to_accommodate: yup.number().required('Pole wymagane'),
@@ -159,6 +159,90 @@ export const validationSchema1 = yup.object({
         .email('Niepoprawny adres email')
         .required('Pole wymagane'),
     extra: yup.string().required('Pole wymagane'),
+});
+
+
+
+
+export const fields2 = [
+    {
+        name: 'name',
+        label: 'Imię i nazwisko',
+        type: 'text'
+    },
+    {
+        name: 'phone_number',
+        label: 'Twój numer telefonu',
+        type: 'text'
+    },
+    {
+        name: 'people',
+        label: 'Liczba osób',
+        type: 'number'
+    },
+    {
+        name: 'how_long',
+        label: 'Jak dlugo',
+        type: 'text'
+    },
+    {
+        name: 'description',
+        label: 'Opisz grupę, podaj wiek wszystkich osób',
+        type: 'text'
+    },
+    {
+        name: 'origin',
+        label: 'origin',
+        type: 'text'
+    },
+    {
+        name: 'traveling_with_pets',
+        label: 'traveling_with_pets',
+        type: 'checkbox'
+    },
+    {
+        name: 'contact_person',
+        label: 'contact_person',
+        type: 'text'
+    },
+    {
+        name: 'languages',
+        label: 'languages',
+        type: 'text'
+    },
+    {
+        name: 'when',
+        labe: 'when',
+        type: 'date'
+    },
+    {
+        name: 'transport_needed',
+        label: 'transport_needed',
+        type: 'checkbox',
+    },
+    // below for logged in
+    {
+        loggedUser: true,
+        name: 'note',
+        label: 'note',
+        type: 'text'
+    },
+
+];
+
+export const validationSchema2 = yup.object({
+    name: yup.string().required('Pole wymagane'),
+    phone_number: yup
+        .string()
+        .matches(/[\s#0-9_\-+/().]/, 'Niepoprawny numer telefonu')
+        .required('Pole wymagane'),
+    people: yup.number().required('Pole wymagane'),
+    how_long: yup.string().required('Pole wymagane'),
+    description: yup.string().required('Pole wymagane'),
+    origin: yup.string().required('Pole wymagane'),
+    contact_person: yup.string().required('Pole wymagane'),
+    languages: yup.string().required('Pole wymagane'),
+    when: yup.date().required('Pole wymagane'),
 });
 
 

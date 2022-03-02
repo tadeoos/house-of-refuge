@@ -1,7 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
 import { useFormik } from 'formik';
-import { fields1, validationSchema1 } from '../scripts/formSchema';
 import axios from 'axios';
 import { getCookie } from "../scripts/utils";
 
@@ -51,7 +50,6 @@ const Button = styled.button`
   border-radius: 150px;
   color: #fff;
   background-color: #000;
-
 `;
 
 const Alert = styled.div`
@@ -60,7 +58,6 @@ const Alert = styled.div`
   color: #d93025;
 `;
 
-
 const Field = styled.div`
   display: flex;
   flex-direction: column;
@@ -68,7 +65,6 @@ const Field = styled.div`
   * {
   color:  ${p => p.alert ? '#d93025' : 'initial'};
   }
-
 `;
 
 const Success = styled.div`
@@ -76,17 +72,23 @@ const Success = styled.div`
   margin: auto;
   text-align: center;
 `;
-const Form = ({ fields }) => {
+
+const Form = ({ fields, validationSchema, url, successInfo, user }) => {
     const [success, setSuccess] = useState(false);
 
     const formik = useFormik({
-        initialValues: fields1.reduce((acc, curr) => (acc[curr.name] = '', acc), {}),
-        validationSchema: validationSchema1,
+        initialValues: fields.reduce((acc, field) => (acc[field.name] = field.type === 'checkbox' ? false : '', acc), {}),
+        validationSchema,
         onSubmit: async (values) => {
+            const { city, ...rest } = values;
+            const cityZipCodeValues = {
+                ...rest,
+                city_and_zip_code: `${values.city}, ${values.zip_code}`,
+            };
             return axios({
                 method: 'post',
-                url: '/api/stworz_zasob',
-                data: values,
+                url,
+                data: values.city && values.zip_code ? cityZipCodeValues : values,
                 headers: {
                     'Content-Type': 'application/json',
                     'X-CSRFToken': getCookie('csrftoken'),
@@ -103,13 +105,10 @@ const Form = ({ fields }) => {
         }
     });
 
-
-
-
     return (
-        success ? <Success > Dziękujemy za zgłoszenie.  </Success> :
+        success ? <Success> {successInfo} </Success> :
             <StyledForm onSubmit={formik.handleSubmit} >
-                {fields.map(field => {
+                {fields.filter(field => (user) ? field : !field.loggedUser).map(field => {
                     return <Field key={field.name} alert={formik.errors[field.name] && formik.touched[field.name]} >
                         <Label htmlFor={field.name}>{field.label}</Label>
                         {field.type === 'radio' ?
