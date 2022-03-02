@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
 from django.shortcuts import render
@@ -25,7 +26,7 @@ def resource_gathering(request):
 def housing_list(request):
     resources = [
         r.as_prop()
-        for r in HousingResource.objects.filter(status__in=[Status.NEW, Status.VERIFIED])
+        for r in HousingResource.objects.for_remote(request.user)
     ]
     subs = [
         s.as_prop()
@@ -33,7 +34,7 @@ def housing_list(request):
     ]
     return render(
         request, "main/housing_list.html", {"props": dict(
-            initialResources=resources, subs=subs
+            initialResources=resources, subs=subs, userData=request.user.as_json()
         )}
     )
 
@@ -52,7 +53,7 @@ def home(request):
 def get_resources(request):
     resources = [
         r.as_prop()
-        for r in HousingResource.objects.filter(status__in=[Status.NEW, Status.VERIFIED])
+        for r in HousingResource.objects.for_remote(request.user)
     ]
     return JsonResponse({"data": resources})
 
@@ -62,11 +63,15 @@ def get_resources(request):
 def update_resource_status(request, resource_id, **kwargs):
     user = request.user
     data = json.loads(request.body)
+    # data.get("submission_id")
     resource = HousingResource.objects.select_for_update().get(id=resource_id)
     new_status = data['value']
-    if resource.status in [Status.NEW, Status.VERIFIED]:
+    if resource.status in [Status.NEW, Status.VERIFIED, Status.PROCESSING]:
         resource.status = new_status
-        resource.owner = user
+        if new_status not in [Status.NEW, Status.VERIFIED]:
+            resource.owner = user
+        else:
+            resource.owner = None
         resource.save()
     else:
         return JsonResponse({
@@ -78,8 +83,21 @@ def update_resource_status(request, resource_id, **kwargs):
     return JsonResponse({
         "status": "success",
         "message": "Updated!",
-        "object": resource.as_prop()
-    }
+        "object": resource.as_prop()}
+    )
+
+
+@require_http_methods(["POST"])
+@login_required
+def update_resource_note(request, resource_id, **kwargs):
+    data = json.loads(request.body)
+    resource = HousingResource.objects.select_for_update().get(id=resource_id)
+    resource.note = data['note']
+    resource.save()
+    return JsonResponse({
+        "status": "success",
+        "message": "Note updated!",
+        "object": resource.as_prop()}
     )
 
 
@@ -99,11 +117,19 @@ def create_resource(request):
     return JsonResponse({"data": hr.as_prop()})
 
 
+@require_http_methods(["POST"])
+def sub_is_processed(request, sub_id):
+    sub = Submission.objects.get(id=sub_id)
+    sub.owner = request.user
+    sub.save()
+    return JsonResponse({"data": sub.as_prop()})
+
+
 @require_http_methods(["GET"])
 @login_required
 def get_submissions(request):
     subs = [
         s.as_prop()
-        for s in Submission.objects.filter(status__in=[Status.NEW])
+        for s in Submission.objects.for_remote()
     ]
     return JsonResponse({"data": subs})

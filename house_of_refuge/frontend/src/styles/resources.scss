@@ -60,9 +60,30 @@
 }
 
 .row-verified {
-  background-color: #b1e8d5;
+  background-color: #f0f;
 }
 
 .row-processing {
-  background-color: #ec7070;
+  background-color: #ff6d01;
+}
+
+.row-success {
+  background-color: #34a853;
+}
+
+.row-ignore {
+  background-color: red;
+}
+
+.submission-row {
+  border: 2px solid lightslategray;
+  border-radius: 10px;
+  margin: 20px 2px;
+  padding: 10px;
+}
+
+.rename-input {
+  &:hover {
+    border: 1px solid black;
+  }
 }

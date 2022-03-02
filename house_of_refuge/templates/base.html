@@ -87,15 +87,6 @@
 
     <div class="container-xl" style="height: 100%">
 
-      {% if messages %}
-        {% for message in messages %}
-          <div class="alert alert-dismissible {% if message.tags %}alert-{{ message.tags }}{% endif %}">
-            {{ message }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-          </div>
-        {% endfor %}
-      {% endif %}
-
       {% block content %}
         <p>Use this document as a way to quick start any new project.</p>
       {% endblock content %}
