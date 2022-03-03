@@ -123,7 +123,8 @@ export const fields1 = [
     },
     {
         name: 'backup_phone_number',
-        label: 'Awaryjny numer telefonu (dodatkowa osoba kontaktowa)',
+        label: 'Awaryjny numer telefonu',
+        subHeading: 'Dodatkowa osoba kontaktowa',
         type: 'text'
     },
     {
@@ -198,6 +199,7 @@ export const fields2 = [
     {
         name: 'description',
         label: 'Opisz grupę, podaj wiek wszystkich osób',
+        subHeading: 'Relacje ich łączące (np. rodzina, przyjaciele)',
         type: 'text'
     },
     {
@@ -213,7 +215,7 @@ export const fields2 = [
     {
         name: 'can_stay_with_pets',
         label: 'Czy mozesz spac w miejscu ze zwierzetami?',
-        subHeading: 'Alergie itp.',
+        subHeading: 'Np. alergie',
         type: 'text'
     },
     {
