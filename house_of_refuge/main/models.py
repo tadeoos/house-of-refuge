@@ -1,3 +1,4 @@
+import datetime
 import re
 
 from django.db import models
@@ -249,7 +250,8 @@ class Submission(TimeStampedModel):
     @property
     def accomodation_in_the_future(self):
         if self.when:
-            return self.when > timezone.now().date()
+            when = self.when.date() if isinstance(self.when, datetime.datetime) else self.when
+            return when > timezone.now().date()
         return False
 
     def handle_gone(self):
