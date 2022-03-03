@@ -26,12 +26,14 @@ DATABASES["default"] = env.db("DATABASE_URL")  # noqa F405
 DATABASES["default"]["ATOMIC_REQUESTS"] = True  # noqa F405
 DATABASES["default"]["CONN_MAX_AGE"] = env.int("CONN_MAX_AGE", default=60)  # noqa F405
 
+REDIS_URL = f'redis://{env("REDIS_URL")}'
+
 # CACHES
 # ------------------------------------------------------------------------------
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": env("REDIS_URL"),
+        "LOCATION": REDIS_URL,
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
             # Mimicing memcache behavior.
