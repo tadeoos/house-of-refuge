@@ -12,6 +12,7 @@ const StyledForm = styled.form`
   max-width: 400px;
   margin-top: 32px;
   margin-bottom: 32px;
+  padding: 6px;
 `;
 
 const Label = styled.label`
@@ -28,7 +29,7 @@ const SubHeading = styled.span`
   text-align: left;
   font-size: 13.5px;
   line-height: 19px;
-  opacity: 0.55;
+  opacity: 0.6;
   margin-top: 2px;
 `;
 
@@ -56,6 +57,8 @@ const Input = styled.input.attrs(({ type }) => ({
   min-height:  ${p => p.type === 'textarea' ? '70px' : 'initial'};
   max-height:  ${p => p.type === 'textarea' ? '140px' : 'initial'};
   padding-top:  ${p => p.type === 'textarea' ? '8px' : 'initial'};
+  -webkit-appearance: none;
+  -moz-appearance: none;
 `;
 
 
@@ -95,7 +98,7 @@ const Field = styled.div`
   flex-direction: column;
   
   * {
-  color:  ${p => p.alert ? '#d93025' : 'initial'};
+  color:  ${p => p.alert ? '#d93025' : 'inherit'};
   }
 `;
 
@@ -110,11 +113,19 @@ const Primary = styled.span`
    font-weight: 700;
    margin-top: 80px;
    text-align: center;
+
+   @media (max-width: 600px) {
+      font-size: 24px;
+   }
 `;
 
 const Secondary = styled.div`
    font-size: 18px;
    text-align: center;
+
+   @media (max-width: 600px) {
+    font-size: 16px;
+   }
 `;
 
 
