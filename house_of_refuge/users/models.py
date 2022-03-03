@@ -24,7 +24,12 @@ class User(AbstractUser):
         return {
             "display": str(self),
             "id": self.id,
+            "coordinator": self.is_coordinator()
         }
+
+    def is_coordinator(self):
+        from house_of_refuge.main.models import Coordinator
+        return Coordinator.objects.filter(user=self).exists()
 
     def get_absolute_url(self):
         """Get url for user's detail view.
