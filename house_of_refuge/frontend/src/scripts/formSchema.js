@@ -9,7 +9,7 @@ export const fields1 = [
     {
         name: 'about_info',
         label: 'Powiedz coś o sobie - ile masz lat? Z kim mieszkasz (jeśli przyjmujesz kogoś u siebie)?',
-        type: 'text'
+        type: 'textarea'
     },
     {
         name: 'resource',
@@ -229,15 +229,13 @@ export const fields2 = [
         label: 'Uwagi',
         type: 'text'
     },
-    // {
-    //     hidden: true,
-    //     loggedUser: true,
-    //     name: 'receiver',
-    //     label: 'receiver',
-    //     type: 'text'
-    // },
+    {
+        loggedUser: true,
+        name: 'receiver',
+        type: 'hidden'
+    },
 
-    
+
 
 ];
 

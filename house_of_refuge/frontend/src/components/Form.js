@@ -8,7 +8,7 @@ const StyledForm = styled.form`
   display: flex;
   flex-direction: column;
   margin: auto;
-  width: 400px;
+  max-width: 400px;
   margin-top: 32px;
   margin-bottom: 32px;
 `;
@@ -19,13 +19,19 @@ const Label = styled.label`
   margin-bottom: 8px;
 `;
 
-const Input = styled.input`
+const Input = styled.input.attrs(({ type }) => ({
+    as: type === 'textarea' ? type : 'input'
+  }))`
   height: 40px; 
   padding: 0 8px;
   box-sizing: border-box;
   border-radius: 3px; 
   border: 1px solid #898F9C;
+  min-height:  ${p => p.type === 'textarea' ? '70px' : 'initial'};
+  max-height:  ${p => p.type === 'textarea' ? '140px' : 'initial'};
+  padding-top:  ${p => p.type === 'textarea' ? '8px' : 'initial'};
 `;
+
 
 const Radiolabel = styled.label`
   cursor: pointer;
@@ -77,7 +83,11 @@ const Form = ({ fields, validationSchema, url, successInfo, user }) => {
     const [success, setSuccess] = useState(false);
 
     const formik = useFormik({
-        initialValues: fields.reduce((acc, field) => (acc[field.name] = field.type === 'checkbox' ? false : '', acc), {}),
+        initialValues: fields.reduce((acc, field) => (acc[field.name] =
+            field.type === 'checkbox' ? false :
+                field.type === 'date' ? new Date().toISOString().split('T')[0] :
+                    field.name === 'receiver' ? user.id :
+                        '', acc), {}),
         validationSchema,
         onSubmit: async (values) => {
             const { city, ...rest } = values;
@@ -113,7 +123,7 @@ const Form = ({ fields, validationSchema, url, successInfo, user }) => {
                     .filter(field => !user ? field : !field.publicOnly)
                     .map(field => {
                         return <Field key={field.name} alert={formik.errors[field.name] && formik.touched[field.name]} >
-                            <Label htmlFor={field.name}>{field.label}</Label>
+                            {field.type === 'hidden' ? null : <Label htmlFor={field.name}>{field.label}</Label>}
                             {field.type === 'radio' ?
                                 <>
                                     {field.choice.map(choice => {
