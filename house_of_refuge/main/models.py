@@ -79,7 +79,7 @@ class HousingResource(TimeStampedModel):
     phone_number = models.CharField(max_length=128)
     backup_phone_number = models.CharField(max_length=128)
     email = models.EmailField(unique=False)
-    extra = models.CharField(max_length=2048, null=True)
+    extra = models.CharField(max_length=2048, null=True, default="", blank=True)
     status = models.CharField(choices=Status.choices, default=Status.NEW, max_length=32)
     owner = models.ForeignKey(User, on_delete=models.SET_NULL, default=None, null=True, blank=True)
     will_pick_up_now = models.BooleanField(default=False)
