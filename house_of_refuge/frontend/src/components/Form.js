@@ -54,11 +54,12 @@ const Input = styled.input.attrs(({ type }) => ({
   box-sizing: border-box;
   border-radius: 3px; 
   border: 1px solid #898F9C;
-  min-height:  ${p => p.type === 'textarea' ? '70px' : 'initial'};
-  max-height:  ${p => p.type === 'textarea' ? '140px' : 'initial'};
-  padding-top:  ${p => p.type === 'textarea' ? '8px' : 'initial'};
+  min-height: ${p => p.type === 'textarea' ? '70px' : 'initial'};
+  max-height: ${p => p.type === 'textarea' ? '140px' : 'initial'};
+  padding-top: ${p => p.type === 'textarea' ? '8px' : 'initial'};
    -webkit-appearance: ${p => p.type === 'checkbox' ? 'auto' : 'none'};
-  -moz-appearance:  ${p => p.type === 'checkbox' ? 'auto' : 'none'}; 
+  -moz-appearance: ${p => p.type === 'checkbox' ? 'auto' : 'none'}; 
+  appearance: ${p => p.type === 'checkbox' ? 'auto' : 'none'}; 
 `;
 
 
