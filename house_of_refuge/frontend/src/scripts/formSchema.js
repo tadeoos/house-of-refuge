@@ -8,7 +8,8 @@ export const fields1 = [
     },
     {
         name: 'about_info',
-        label: 'Powiedz coś o sobie - ile masz lat? Z kim mieszkasz (jeśli przyjmujesz kogoś u siebie)?',
+        label: 'Powiedz coś o sobie?',
+        subHeading: 'Ile masz lat? Z kim mieszkasz (jeśli przyjmujesz kogoś u siebie)?',
         type: 'textarea'
     },
     {
@@ -71,6 +72,7 @@ export const fields1 = [
     {
         name: 'when_to_call',
         label: 'W jakich godzinach możemy do Ciebie dzwonić?',
+        subHeading: 'Sporo godzin przybywa po północy. Czy możemy do Ciebie zadzownic pózno w nocy?',
         type: 'text'
     },
     {
@@ -90,13 +92,15 @@ export const fields1 = [
     },
     {
         name: 'details',
-        label: 'Garść informacji o miejscu (obecność zwierząt, języki obce lokatorów i lokatorek, dostępna pościel i ręczniki, inne)',
+        label: 'Garść informacji o miejscu',
+        subHeading: 'Obecność zwierząt, języki obce lokatorów i lokatorek, dostępna pościel i ręczniki, inne',
         type: 'text'
     },
     {
         name: 'transport',
-        label: 'Czy jesteś w stanie przyjechać po osoby, którym udzielisz schronienia na dworzec/w podane miejsce pobytu?',
-        type: 'radio',
+        label: 'Czy jesteś w stanie przyjechać po osoby, którym udzielisz schronienia?',
+        subHeading: 'Np. na dworzec czy w podane miejsce pobytu'
+,         type: 'radio',
         choice: [
             {
                 value: 'warsaw',
@@ -173,6 +177,7 @@ export const fields2 = [
     {
         name: 'name',
         label: 'Imię i nazwisko',
+        subHeading: '',
         type: 'text'
     },
     {
@@ -207,7 +212,8 @@ export const fields2 = [
     },
     {
         name: 'can_stay_with_pets',
-        label: 'Czy mozesz spac w miejscu ze zwierzetami? (np. alergie)',
+        label: 'Czy mozesz spac w miejscu ze zwierzetami?',
+        subHeading: 'Alergie itp.',
         type: 'text'
     },
     {

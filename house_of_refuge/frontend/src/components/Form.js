@@ -16,19 +16,31 @@ const StyledForm = styled.form`
 
 const Label = styled.label`
   text-align: left;
-  margin-bottom: 8px;
   margin-top: 28px;
+  font-size: 17px;
+  line-height: 24px;
   margin-left: ${p => p.type === 'checkbox' ? '20px' : 'initial'};
   position: ${p => p.type === 'checkbox' ? 'absolute' : 'initial'};
   cursor: ${p => p.type === 'checkbox' ? 'pointer' : 'initial'};
 
 `;
 
+
+const SubHeading = styled.span`
+  text-align: left;
+  font-size: 13.5px;
+  line-height: 19px;
+  opacity: 0.55;
+  margin-top: 2px;
+`;
+
+
+
 const Input = styled.input.attrs(({ type }) => ({
     as: type === 'textarea' ? type : 'input'
 }))`
   height: ${p => p.type === 'checkbox' ? '22px' : '44px'};
-  margin-top: ${p => p.type === 'checkbox' ? '28px' : 'initial'};
+  margin-top: ${p => p.type === 'checkbox' ? '28px' : '9px'};
   cursor: ${p => p.type === 'checkbox' ? 'pointer' : 'initial'};
   padding: 0 8px;
   box-sizing: border-box;
@@ -158,7 +170,11 @@ const Form = ({ fields, validationSchema, url, successInfo, user, primaryText, s
                         .filter(field => !user ? field : !field.publicOnly)
                         .map(field => {
                             return <Field key={field.name} alert={formik.errors[field.name] && formik.touched[field.name]} >
-                                {field.type === 'hidden' || field.type === 'checkbox' ? null : <Label htmlFor={field.name}>{field.label}</Label>}
+                                {field.type === 'hidden' || field.type === 'checkbox' ? null :
+                                    <>
+                                        <Label htmlFor={field.name}>{field.label}</Label>
+                                        {field.subHeading && <SubHeading> {field.subHeading}</SubHeading>}
+                                    </>}
                                 {field.type === 'radio' ?
                                     <>
                                         {field.choice.map(choice => {
