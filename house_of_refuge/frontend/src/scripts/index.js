@@ -137,7 +137,7 @@ const ResourceRow = ({resource, isExpanded, statusUpdateHandler, onMatch, compac
       }, body: JSON.stringify({"note": value}) // body data type must match "Content-Type" header
     }).then(response => response.json()).then(data => {
       console.log('Response: ', data);
-      toast(`${data.message}`, {type: data.status});
+      // toast(`${data.message}`, {type: data.status});
     }).catch((error) => {
       console.error('Error:', error);
     });
@@ -285,7 +285,7 @@ const ResourceList = ({initialResources, sub, subHandler, user, clearActiveSub})
       }, body: JSON.stringify(newStatus) // body data type must match "Content-Type" header
     }).then(response => response.json()).then(data => {
       console.log('Response: ', data);
-      toast(`${data.message}`, {type: data.status});
+      // toast(`${data.message}`, {type: data.status});
     }).catch((error) => {
       console.error('Error:', error);
     });
@@ -458,7 +458,7 @@ const updateSub = (sub, fields) => {
     }, body: JSON.stringify({fields: fields}) // body data type must match "Content-Type" header
   }).then(response => response.json()).then(data => {
     console.log('Response: ', data);
-    toast(`${data.message}`, {type: data.status});
+    // toast(`${data.message}`, {type: data.status});
   }).catch((error) => {
     console.error('Error:', error);
   });
@@ -518,7 +518,7 @@ function SubmissionRow({sub, activeHandler, user, isActive = false}) {
       }, body: JSON.stringify({fields: {"coordinator_id": user.id}}) // body data type must match "Content-Type" header
     }).then(response => response.json()).then(data => {
       console.log('Response: ', data);
-      toast(`${data.message}`, {type: data.status});
+      // toast(`${data.message}`, {type: data.status});
     }).catch((error) => {
       console.error('Error:', error);
     });
@@ -615,7 +615,9 @@ function getRandomInt(min, max) {
 }
 
 
-const SubmissionList = ({user, subs, btnHandler, sourceFilter, setStatusFilter, setSourceFilter, statusFilter}) => {
+const SubmissionList = ({user, subs, btnHandler, sourceFilter,
+                          setStatusFilter, setSourceFilter, statusFilter, droppedFilter, setDropped
+}) => {
   const [submissions, setSubmissions] = useState(subs);
   const [droppedHosts, setDroppedHosts] = useState([]);
   const [visibleSubmissions, setVisibleSubmissions] = useState(submissions);
@@ -726,6 +728,17 @@ const SubmissionList = ({user, subs, btnHandler, sourceFilter, setStatusFilter, 
                   onChange={filterStatus}
               />
             </td>
+            <td>
+              zniknięte
+            </td>
+            <td>
+              <BootstrapSwitchButton
+                  size={"sm"}
+                  checked={droppedFilter}
+                  onChange={(checked) => {
+                    setDropped(checked);
+                  }}
+              /></td>
             <td>Tylko moje</td>
             <td>
               <BootstrapSwitchButton
@@ -748,7 +761,7 @@ const SubmissionList = ({user, subs, btnHandler, sourceFilter, setStatusFilter, 
         {/*  {SUB_COLUMNS.map(colName => <div className={"col-head col"}>{colName}</div>)}*/}
         {/*</div>*/}
 
-        {droppedHosts && <div className={"dropped-container"}>{droppedHosts.map(r => <DroppedHost resource={r}
+        {droppedFilter && droppedHosts && <div className={"dropped-container"}>{droppedHosts.map(r => <DroppedHost resource={r}
                                                                                                   key={r.id}/>)}</div>}
         {visibleSubmissions.map(s => <SubmissionRow user={user} sub={s} key={s.id} activeHandler={btnHandler}/>)}
       </>
@@ -781,6 +794,7 @@ const App = ({subs, initialResources, userData, coordinators, helped}) => {
   const [activeSub, setActiveSub] = useState(null);
   const [sourceFilter, setSourceFilter] = useState([{label: "Teren", value: "terrain"}]);
   const [statusFilter, setStatusFilter] = useState([]);
+  const [droppedFilter, setDroppedFilter] = useState(true);
 
   const clearActiveSub = () => setActiveSub(null);
 
@@ -823,6 +837,7 @@ const App = ({subs, initialResources, userData, coordinators, helped}) => {
                          sourceFilter={sourceFilter} setSourceFilter={(v) => setSourceFilter(v)}
                          statusFilter={statusFilter}
                          setStatusFilter={(v) => setStatusFilter(v)}
+                         droppedFilter={droppedFilter} setDropped={(v) => setDroppedFilter(v)}
     />
     }
   </>;

@@ -168,19 +168,21 @@ class HousingRow(resources.ModelResource):
 @admin.register(HousingResource)
 class HousingResourceAdmin(ImportExportModelAdmin):
     resource_class = HousingRow
-    search_fields = ("name", "about_info", "city_and_zip_code", "email", "details", "extra")
+    search_fields = ("pk", "name", "about_info", "city_and_zip_code", "email", "details", "extra")
     list_display = ("id", "name", "email", "resource", "status", "cherry", "verified")
     list_filter = ("status", "cherry", "verified")
     list_editable = ("status", "cherry", "verified",)
+    autocomplete_fields = ['owner']
 
 
 @admin.register(Submission)
 class SubmissionAdmin(ImportExportModelAdmin):
     # resource_class = HousingRow
-    search_fields = ("name", "languages", "receiver__name", "coordinator__name", "note", "contact_person")
+    search_fields = ("pk", "name", "languages", "receiver__name", "coordinator__name", "note", "contact_person")
     list_display = ("name", "people", "how_long", "source", "status", "receiver", "matcher", "coordinator")
     list_filter = ("status", "source")
     list_editable = ("status", "source")
+    autocomplete_fields = ['resource', 'matcher', 'coordinator', 'receiver']
 
 
 @admin.register(Coordinator)
