@@ -88,7 +88,7 @@ export const fields1 = [
     {
         name: 'accommodation_length',
         label: 'Na jak długo udostępniasz nocleg?',
-        type: 'text'
+        type: 'number'
     },
     {
         name: 'details',
@@ -153,7 +153,7 @@ export const validationSchema1 = () => yup.object({
     when_to_call: yup.string().required('Pole wymagane'),
     costs: yup.string().required('Pole wymagane'),
     availability: yup.date().required('Pole wymagane'),
-    accommodation_length: yup.string().required('Pole wymagane'),
+    accommodation_length: yup.number().required('Pole wymagane'),
     details: yup.string().required('Pole wymagane'),
     transport: yup.string().required('Pole wymagane'),
     phone_number: yup
