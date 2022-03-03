@@ -310,7 +310,7 @@ const ResourceList = ({initialResources, sub, subHandler, user, clearActiveSub})
   useEffect(() => {
     const interval = setInterval(() => {
       setDataSemaphore((s) => !s);
-    }, 1000);
+    }, getRandomInt(1200, 4000));
     return () => clearInterval(interval);
   }, []);
 
@@ -608,6 +608,12 @@ const DroppedHost = ({resource}) => {
   </div>;
 };
 
+function getRandomInt(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min) + min); //The maximum is exclusive and the minimum is inclusive
+}
+
 
 const SubmissionList = ({user, subs, btnHandler, sourceFilter, setStatusFilter, setSourceFilter, statusFilter}) => {
   const [submissions, setSubmissions] = useState(subs);
@@ -620,7 +626,7 @@ const SubmissionList = ({user, subs, btnHandler, sourceFilter, setStatusFilter, 
   useEffect(() => {
     const interval = setInterval(() => {
       setDataSemaphore((s) => !s);
-    }, 1000);
+    }, getRandomInt(1200, 4000));
     return () => clearInterval(interval);
   }, []);
 
