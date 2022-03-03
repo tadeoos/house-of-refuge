@@ -1,5 +1,5 @@
 import "../styles/resources.scss";
-import React, {useEffect, useMemo, useRef, useState} from 'react'; // eslint-disable-line
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react'; // eslint-disable-line
 import ReactDOM from 'react-dom';
 import {Button, Table, Modal} from "react-bootstrap";
 import {SortUp, SortDown, Filter, Search} from "react-bootstrap-icons";
@@ -110,7 +110,11 @@ const getResourceDisplay = (r) => {
   return RESOURCE_MAP[r] || r;
 };
 
-const ResourceRow = ({resource, isExpanded, statusUpdateHandler, onMatch}) => {
+const getPickUpDisplay = (v) => {
+  return v ? "Przyjedzie" : "My musimy zawieźć";
+};
+
+const ResourceRow = ({resource, isExpanded, statusUpdateHandler, onMatch, compact = false}) => {
   const [expanded, setExpanded] = useState(isExpanded);
   const [showModal, setShowModal] = useState(false);
   useEffect(() => {
@@ -150,8 +154,10 @@ const ResourceRow = ({resource, isExpanded, statusUpdateHandler, onMatch}) => {
           (a) => <div onClick={() => setExpanded(e => !e)} className={"col"}
                       key={`${resource.id}-${a}`}>{getResourceDisplay(resource[a])}</div>)}
       <div className={"col"}>
-        <input required type="date" min={new Date().toJSON().slice(0, 10)} value={resource.availability}
-               onChange={handleDateChange}/>
+        {compact ? getPickUpDisplay(resource.will_pick_up_now) :
+            <input required type="date" min={new Date().toJSON().slice(0, 10)} value={resource.availability}
+                   onChange={handleDateChange}/>
+        }
       </div>
       {/*<div className={`col`}>*/}
       {/*  <Select*/}
@@ -196,8 +202,12 @@ const ResourceRow = ({resource, isExpanded, statusUpdateHandler, onMatch}) => {
         </tr>
         <tr>
           <th>Notatka</th>
-          <td><EditableField value={resource.note} onRename={updateNote}/></td>
-          <td colSpan="2"><Button onClick={() => setShowModal(true)}>ZGODZIŁ SIĘ PRZYJĄC</Button></td>
+          {compact ? <td>{resource.note}</td> :
+              <>
+                <td><EditableField value={resource.note} onRename={updateNote}/></td>
+                <td colSpan="2"><Button onClick={() => setShowModal(true)}>ZGODZIŁ SIĘ PRZYJĄC</Button></td>
+              </>
+          }
         </tr>
         </tbody>
       </Table>
@@ -243,6 +253,7 @@ const ResourceList = ({initialResources, sub, subHandler, user, clearActiveSub})
   const [sortBy, setSortBy] = useState("name");
   const [sortOrder, setSortOrder] = useState("asc");
   const [expandAll, setExpandAll] = useState(false);
+  const [dataSemaphore, setDataSemaphore] = useState(true);
   const [activeSub] = useState(sub);
 
   const [columnsData] = useState({
@@ -254,16 +265,6 @@ const ResourceList = ({initialResources, sub, subHandler, user, clearActiveSub})
     availability: {fieldName: 'availability', display: "Od kiedy?", sort: "asc"},
 
   });
-
-  const loadData = async () => {
-    const response = await fetch(`/api/zasoby`);
-    const result = await response.json();
-    if (isEqual(resources, result.data)) {
-      console.log("THEY ARE EQUALL");
-      return;
-    }
-    setResources(result.data);
-  };
 
   const updateStatus = (resource, value) => {
 
@@ -305,10 +306,20 @@ const ResourceList = ({initialResources, sub, subHandler, user, clearActiveSub})
 
   useEffect(() => {
     const interval = setInterval(() => {
-      loadData();
+      setDataSemaphore((s) => !s);
     }, 1000);
     return () => clearInterval(interval);
   }, []);
+
+  useEffect(async () => {
+    const response = await fetch(`/api/zasoby`);
+    const result = await response.json();
+    if (isEqual(resources, result.data)) {
+      console.log("THEY ARE EQUALL");
+      return;
+    }
+    setResources(result.data);
+  }, [dataSemaphore]);
 
   const resourceAsString = (r) => {
     return Object.values(r).join(' ').toLowerCase();
@@ -459,6 +470,7 @@ function SubmissionRow({sub, activeHandler, user, isActive = false}) {
 
   const isOwner = user.id === sub.matcher?.id;
   const isCoordinator = user.id === sub.coordinator?.id;
+  const isGroupAdmin = user.coordinator;
 
   const btnHandler = () => {
     activeHandler(sub, isActive);
@@ -483,6 +495,10 @@ function SubmissionRow({sub, activeHandler, user, isActive = false}) {
   const updateStatus = (value) => {
     console.log("Updating value: ", value);
     updateSubStatus(sub, value[0].value);
+  };
+
+  const freeUpMatcher = () => {
+    updateSub(sub, {"matcher": null, "status": "new"});
   };
 
   const setCoordinator = () => {
@@ -539,7 +555,7 @@ function SubmissionRow({sub, activeHandler, user, isActive = false}) {
         <td>{sub.resource.name}</td>
         <td>{sub.resource.address}</td>
         <td>{sub.resource.phone_number}</td>
-        <td>{sub.resource.will_pick_up_now ? "Przyjedzie" : "My musimy zawieźć"}</td>
+        <td>{getPickUpDisplay(sub.resource.will_pick_up_now)}</td>
         <td colSpan={3}>{sub.resource.note}</td>
       </tr>}
       <tr>
@@ -561,15 +577,22 @@ function SubmissionRow({sub, activeHandler, user, isActive = false}) {
           }
         </td>
       </tr>
+      {
+          isGroupAdmin && <tr>
+            <th>Akcje koordynatora</th>
+            {sub.matcher && <td><Button onClick={freeUpMatcher}>Zwolnij hosta</Button></td>}
+            <td><Button>Zmień status</Button></td>
+          </tr>
+      }
       </tbody>
     </Table>
   </div>;
 }
 
-const DroppedHost = (resource) => {
+const DroppedHost = ({resource}) => {
   return <div className={"dropped-row"}>
-    <p>Resource</p>
-    {/*<ResourceRow resource={resource} isExpanded={false} />*/}
+    {/*<p>{resource.compact_display}</p>*/}
+    <ResourceRow resource={resource} compact={true}/>
   </div>;
 };
 
@@ -582,20 +605,31 @@ const SubmissionList = ({user, subs, btnHandler}) => {
   const [statusFilter, setStatusFilter] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [userOnly, setUserOnly] = useState(false);
-
-  const loadData = async () => {
-    const response = await fetch(`/api/zgloszenia`);
-    const result = await response.json();
-    setSubmissions(result.data.submissions);
-    setDroppedHosts(result.data.dropped);
-  };
+  const [dataSemaphore, setDataSemaphore] = useState(true);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      loadData();
+      setDataSemaphore((s) => !s);
     }, 1000);
     return () => clearInterval(interval);
   }, []);
+
+  useEffect(async () => {
+    const response = await fetch(`/api/zgloszenia`);
+    const result = await response.json();
+    console.log("got data", result.data);
+    if (isEqual(submissions, result.data.submissions)) {
+      console.log("Subs  ARE EQUALL");
+    } else {
+      setSubmissions(result.data.submissions);
+    }
+    if (isEqual(droppedHosts, result.data.dropped)) {
+      console.log("Drops  ARE EQUALL");
+    } else {
+      setDroppedHosts(result.data.dropped);
+    }
+  }, [dataSemaphore]);
+
 
   const subBelongsToUser = (s) => {
     if (s.receiver?.id === user.id) {
@@ -698,7 +732,8 @@ const SubmissionList = ({user, subs, btnHandler}) => {
         {/*  {SUB_COLUMNS.map(colName => <div className={"col-head col"}>{colName}</div>)}*/}
         {/*</div>*/}
 
-        {droppedHosts && <div className={"dropped-container"}>{droppedHosts.map(r => <DroppedHost resource={r} key={r.id}/>)}</div>}
+        {droppedHosts && <div className={"dropped-container"}>{droppedHosts.map(r => <DroppedHost resource={r}
+                                                                                                  key={r.id}/>)}</div>}
         {visibleSubmissions.map(s => <SubmissionRow user={user} sub={s} key={s.id} activeHandler={btnHandler}/>)}
       </>
 

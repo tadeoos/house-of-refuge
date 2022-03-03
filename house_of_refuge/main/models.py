@@ -100,6 +100,10 @@ class HousingResource(TimeStampedModel):
     def full_address(self):
         return f"{self.address} {self.city_and_zip_code}"
 
+    @property
+    def compact_display(self):
+        return f"{self.name} {self.get_resource_display()}, {self.full_address}\n{self.extra}"
+
     def sub_representation(self):
         return dict(
             name=self.name,
@@ -133,6 +137,7 @@ class HousingResource(TimeStampedModel):
             status=self.status,
             cherry=self.cherry,
             note=self.note,
+            compact_display=self.compact_display,
             owner=self.owner.as_json() if self.owner else None,
         )
 
@@ -234,9 +239,10 @@ class Submission(TimeStampedModel):
     def handle_gone(self):
         self.status = SubStatus.CANCELLED
         self.resource.is_dropped = True
+        self.resource.owner = None
         self.resource.save()
         self.resource = None
-        self.note += f" Dropped at {timezone.now()}"
+        self.note += f' \nDropped at {timezone.now().strftime("%Y-%m-%d %H:%M:%S")}'
         self.save()
 
     def as_prop(self):
