@@ -62,7 +62,7 @@ const App = ({ userData }) => {
         <Header />
         <Routes>
           <Route index element={<ButtonWrap>
-            <Link to="/form1">
+            <Link to="/share">
               <BigButton
                 primaryText="Udostępniam nocleg"
                 secondaryText="Можу надати житло"
@@ -70,7 +70,7 @@ const App = ({ userData }) => {
                 backgroundColor="#000"
               />
             </Link>
-            <Link to="/form2">
+            <Link to="/find">
               <BigButton
                 primaryText="Потребує житло"
                 secondaryText="Szukam noclegu"
@@ -79,7 +79,7 @@ const App = ({ userData }) => {
               />
             </Link>
           </ButtonWrap>} />
-          <Route path="/form1" element={<Form
+          <Route path="/share" element={<Form
             primaryText="Udostępniam nocleg"
             secondaryText="Можу надати житло"
             fields={fields1}
@@ -87,7 +87,7 @@ const App = ({ userData }) => {
             url='/api/stworz_zasob'
             successInfo='Dziękujemy za zgłoszenie.'
           />} />
-          <Route path="/form2" element={<Form
+          <Route path="/find" element={<Form
             primaryText="Потребує житло"
             secondaryText="Szukam noclegu"
             fields={fields2}
