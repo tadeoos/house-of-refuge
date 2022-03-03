@@ -609,12 +609,10 @@ const DroppedHost = ({resource}) => {
 };
 
 
-const SubmissionList = ({user, subs, btnHandler}) => {
+const SubmissionList = ({user, subs, btnHandler, sourceFilter, setStatusFilter, setSourceFilter, statusFilter}) => {
   const [submissions, setSubmissions] = useState(subs);
   const [droppedHosts, setDroppedHosts] = useState([]);
   const [visibleSubmissions, setVisibleSubmissions] = useState(submissions);
-  const [sourceFilter, setSourceFilter] = useState([{label: "Teren", value: "terrain"}]);
-  const [statusFilter, setStatusFilter] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [userOnly, setUserOnly] = useState(false);
   const [dataSemaphore, setDataSemaphore] = useState(true);
@@ -775,6 +773,8 @@ const CoordinaotrsHeader = ({coordinators, helped}) => {
 
 const App = ({subs, initialResources, userData, coordinators, helped}) => {
   const [activeSub, setActiveSub] = useState(null);
+  const [sourceFilter, setSourceFilter] = useState([{label: "Teren", value: "terrain"}]);
+  const [statusFilter, setStatusFilter] = useState([]);
 
   const clearActiveSub = () => setActiveSub(null);
 
@@ -795,7 +795,7 @@ const App = ({subs, initialResources, userData, coordinators, helped}) => {
       }, body: JSON.stringify({"fields": fields})
     }).then(response => response.json()).then(data => {
       console.log('Response: ', data);
-      toast(`${data.message}`, {type: data.status});
+      // toast(`${data.message}`, {type: data.status});
       if (!isActive) {
         setActiveSub(data.data);
       } else {
@@ -813,7 +813,11 @@ const App = ({subs, initialResources, userData, coordinators, helped}) => {
     {activeSub ? <ResourceList initialResources={initialResources}
                                user={userData} sub={activeSub} subHandler={subIsTaken}
                                clearActiveSub={clearActiveSub}
-    /> : <SubmissionList user={userData} subs={subs} btnHandler={subIsTaken}/>
+    /> : <SubmissionList user={userData} subs={subs} btnHandler={subIsTaken}
+                         sourceFilter={sourceFilter} setSourceFilter={(v) => setSourceFilter(v)}
+                         statusFilter={statusFilter}
+                         setStatusFilter={(v) => setStatusFilter(v)}
+    />
     }
   </>;
 };
