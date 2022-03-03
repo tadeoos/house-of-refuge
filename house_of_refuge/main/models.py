@@ -57,7 +57,7 @@ class HousingResource(TimeStampedModel):
     city_and_zip_code = models.CharField(max_length=512)
     zip_code = models.CharField(max_length=8)
     address = models.CharField(max_length=512)  # ulica numer domu..
-    people_to_accommodate_raw = models.CharField(max_length=1024)
+    people_to_accommodate_raw = models.CharField(max_length=1024, blank=True, default="")
     people_to_accommodate = models.IntegerField(
         default=0
     )  # Ile osób jesteś w stanie wesprzeć tak, by miały godne warunki pobytu?
