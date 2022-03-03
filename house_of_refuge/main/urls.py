@@ -5,6 +5,7 @@ import house_of_refuge.main.views as views
 app_name = "main"
 urlpatterns = [
     path("", views.home, name="home"),
+    path("healthz/", views.healthcheck, name="health"),
     path("share", views.home, name="home"),
     path("find", views.home, name="home"),
     path("privacy/", views.home, name="home"),

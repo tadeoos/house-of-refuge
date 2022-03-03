@@ -21,6 +21,12 @@ services:
     branch: master
     buildCommand: "./build.sh"
     startCommand: "gunicorn config.wsgi:application"
+    healthCheckPath: /healthz
+    scaling:
+      minInstances: 2
+      maxInstances: 6
+      targetMemoryPercent: 60 # optional if targetCPUPercent is set (valid: 1-90)
+      targetCPUPercent: 60 # optional if targetMemory is set (valid: 1-90)
     envVars:
       - key: DATABASE_URL
         fromDatabase:

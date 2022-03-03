@@ -2,7 +2,7 @@ from collections import defaultdict
 
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.views.decorators.http import require_http_methods
 from django.shortcuts import render
 import json
@@ -203,5 +203,10 @@ def get_submissions(request):
         s.as_prop()
         for s in Submission.objects.all()
     ]
-    dropped = [hr.as_prop() for hr in  HousingResource.objects.filter(is_dropped=True)]
+    dropped = [hr.as_prop() for hr in HousingResource.objects.filter(is_dropped=True)]
     return JsonResponse({"data": dict(submissions=subs, dropped=dropped)})
+
+
+def healthcheck(request):
+    HousingResource.objects.first()
+    return HttpResponse("", status=204)
