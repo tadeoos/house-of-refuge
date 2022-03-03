@@ -130,7 +130,7 @@ export const fields1 = [
     },
 ];
 
-export const validationSchema1 = yup.object({
+export const validationSchema1 = () => yup.object({
     name: yup.string().required('Pole wymagane'),
     about_info: yup.string().required('Pole wymagane'),
     resource: yup.string().required('Pole wymagane'),
@@ -236,10 +236,9 @@ export const fields2 = [
     },
 
 
-
 ];
 
-export const validationSchema2 = yup.object({
+export const validationSchema2 = ({ publicOnly }) => yup.object({
     name: yup.string().required('Pole wymagane'),
     phone_number: yup
         .string()
@@ -250,7 +249,7 @@ export const validationSchema2 = yup.object({
     description: yup.string().required('Pole wymagane'),
     origin: yup.string().required('Pole wymagane'),
     traveling_with_pets: yup.string().required('Pole wymagane'),
-    // contact_person: yup.string().required('Pole wymagane'),
+    contact_person: publicOnly ? yup.string().required('Pole wymagane') : null,
     languages: yup.string().required('Pole wymagane'),
     when: yup.date().required('Pole wymagane'),
 });

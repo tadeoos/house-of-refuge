@@ -5,6 +5,7 @@ import Header from '../components/Header.js';
 import BigButton from '../components/BigButton.js';
 import Form from '../components/Form.js';
 import Footer from '../components/Footer.js';
+import Privacy from '../components/Privacy.js';
 import { fields1, fields2, validationSchema1, validationSchema2 } from './formSchema';
 import {
   BrowserRouter,
@@ -40,7 +41,7 @@ const ButtonWrap = styled.div`
 
   > * {
       &:first-child {
-        margin-bottom: 40px;
+        margin-bottom: 30px;
 
         @media (max-width: 600px) {
           margin-bottom: 20px;
@@ -90,6 +91,7 @@ const App = ({ userData }) => {
             successInfo='Дякуємо за подання.'
             user={user}
           />} />
+          <Route path="/privacy" element={<Privacy />} />
         </Routes>
         <Footer className="Footer" />
       </StyledApp >

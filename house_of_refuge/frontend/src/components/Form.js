@@ -9,7 +9,7 @@ const StyledForm = styled.form`
   flex-direction: column;
   margin: auto;
   width: 100%;
-  max-width: 360px;
+  max-width: 400px;
   margin-top: 32px;
   margin-bottom: 32px;
 `;
@@ -22,7 +22,7 @@ const Label = styled.label`
 
 const Input = styled.input.attrs(({ type }) => ({
     as: type === 'textarea' ? type : 'input'
-  }))`
+}))`
   height: 44px; 
   padding: 0 8px;
   box-sizing: border-box;
@@ -89,7 +89,7 @@ const Form = ({ fields, validationSchema, url, successInfo, user }) => {
                 field.type === 'date' ? new Date().toISOString().split('T')[0] :
                     field.name === 'receiver' && user ? user.id :
                         '', acc), {}),
-        validationSchema,
+        validationSchema: validationSchema({ publicOnly: !user }),
         onSubmit: async (values) => {
             const { city, ...rest } = values;
             const cityZipCodeValues = {

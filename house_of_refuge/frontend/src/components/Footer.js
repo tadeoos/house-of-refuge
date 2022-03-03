@@ -1,17 +1,20 @@
 import styled from 'styled-components';
+import { Link } from "react-router-dom";
 
 const StyledFooter = styled.div`
-  color: #898F9C;
   font-size: 15px;
   height: 32px;
   display: flex;
-  height: 80px;
+  margin-top: 30px;
+  padding-bottom: 50px;
 
-  span {
-      margin: auto;
-      text-align: center;
+  > a {
+    color: #898F9C;
+    text-decoration: none;
+    display: flex;
+    margin: auto;
+    text-align: center;
   }
-
 
 `;
 
@@ -20,10 +23,10 @@ const Footer = ({ className }) => {
 
     return (
         <StyledFooter className={className}>
-            <span>
-                Polityka prywatności / політика конфіденційності
-            </span>
-        </StyledFooter>
+            <Link to="/privacy">
+                    Polityka prywatności / політика конфіденційності
+            </Link>
+        </StyledFooter >
     );
 };
 

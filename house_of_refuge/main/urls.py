@@ -7,6 +7,7 @@ urlpatterns = [
     path("", views.home, name="home"),
     path("form1", views.home, name="home"),
     path("form2", views.home, name="home"),
+    path("privacy", views.home, name="home"),
     path("zasoby", views.housing_list, name="zasoby"),
     path("api/update_status/<int:resource_id>", views.update_resource_status, name="status_update"),
     path("api/update_note/<int:resource_id>", views.update_resource_note, name="note_update"),
