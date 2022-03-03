@@ -98,11 +98,13 @@ const Form = ({ fields, validationSchema, url, successInfo, user, primaryText, s
 
     const formik = useFormik({
         initialValues: fields.reduce((acc, field) => (acc[field.name] =
-            field.type === 'checkbox' ? false :
-                field.type === 'select' ? field.options[0].value :
-                    field.type === 'date' ? new Date().toISOString().split('T')[0] :
-                        field.name === 'receiver' && user ? user.id :
-                            '', acc), {}),
+            // temporary fix
+            field.name === 'people_to_accommodate_raw' ? '_' :
+                field.type === 'checkbox' ? false :
+                    field.type === 'select' ? field.options[0].value :
+                        field.type === 'date' ? new Date().toISOString().split('T')[0] :
+                            field.name === 'receiver' && user ? user.id :
+                                '', acc), {}),
         validationSchema: validationSchema({ publicOnly: !user }),
         onSubmit: async (values) => {
             const { city, ...rest } = values;

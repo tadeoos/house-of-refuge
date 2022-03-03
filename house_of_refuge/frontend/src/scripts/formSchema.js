@@ -128,6 +128,11 @@ export const fields1 = [
         label: 'Dodatkowe uwagi',
         type: 'text'
     },
+    {
+        name: 'people_to_accommodate_raw',
+        type: 'hidden'
+    },
+
 ];
 
 export const validationSchema1 = () => yup.object({
@@ -158,7 +163,7 @@ export const validationSchema1 = () => yup.object({
         .string()
         .email('Niepoprawny adres email')
         .required('Pole wymagane'),
-    // extra: yup.string().required('Pole wymagane'),
+    extra: yup.string().required('Pole wymagane'),
 });
 
 
@@ -198,6 +203,11 @@ export const fields2 = [
     {
         name: 'traveling_with_pets',
         label: 'Czy podróżujesz ze zwierzętami',
+        type: 'text'
+    },
+    {
+        name: 'can_stay_with_pets',
+        label: 'Czy mozesz spac w miejscu ze zwierzetami? (np. alergie)',
         type: 'text'
     },
     {
@@ -273,6 +283,7 @@ export const validationSchema2 = ({ publicOnly }) => yup.object({
     description: yup.string().required('Pole wymagane'),
     origin: yup.string().required('Pole wymagane'),
     traveling_with_pets: yup.string().required('Pole wymagane'),
+    can_stay_with_pets: yup.string().required('Pole wymagane'),
     contact_person: publicOnly ? yup.string().required('Pole wymagane') : null,
     languages: yup.string().required('Pole wymagane'),
     when: yup.date().required('Pole wymagane'),
