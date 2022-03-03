@@ -138,7 +138,7 @@ class HousingRow(resources.ModelResource):
 @admin.register(HousingResource)
 class HousingResourceAdmin(ImportExportModelAdmin):
     resource_class = HousingRow
-    search_fields = ("about_info", "city_and_zip_code", "email", "details", "extra")
+    search_fields = ("name", "about_info", "city_and_zip_code", "email", "details", "extra")
     list_display = ("name", "email", "resource", "availability", "accommodation_length", "status")
     list_filter = ("status", "availability", "people_to_accommodate")
 
@@ -146,10 +146,10 @@ class HousingResourceAdmin(ImportExportModelAdmin):
 @admin.register(Submission)
 class SubmissionAdmin(ImportExportModelAdmin):
     # resource_class = HousingRow
-    search_fields = ("name", "languages", "receiver", "coordinator", "note")
+    search_fields = ("name", "languages", "receiver__name", "coordinator__name", "note")
     list_display = ("name", "people", "how_long", "source", "status", "receiver", "matcher", "coordinator")
     list_filter = ("status", "source")
-    list_editable = ("status", "source",)
+    list_editable = ("status", "source")
 
 
 @admin.register(Coordinator)

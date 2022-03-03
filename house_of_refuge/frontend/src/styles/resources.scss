@@ -154,3 +154,14 @@
   text-align: center;
   color: #34a853;
 }
+
+.dropped-row {
+  border: 4px cyan solid;
+  margin: 10px 0;
+  background-color: white;
+}
+
+.dropped-container {
+  position: sticky;
+  top: 40px;
+}

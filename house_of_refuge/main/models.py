@@ -61,9 +61,9 @@ class HousingResource(TimeStampedModel):
     people_to_accommodate = models.IntegerField(
         default=0
     )  # Ile osób jesteś w stanie wesprzeć tak, by miały godne warunki pobytu?
-    age = models.CharField(max_length=512)
-    languages = models.CharField(max_length=512)
-    when_to_call = models.CharField(max_length=1024)
+    age = models.CharField(max_length=512, default="", blank=True)
+    languages = models.CharField(max_length=512, default="", blank=True)
+    when_to_call = models.CharField(max_length=1024, default="", blank=True)
     living_with_pets = models.CharField(max_length=1024, null=True, blank=True)
     can_take_person_with_pets = models.CharField(max_length=512, null=True, blank=True)
 
@@ -81,10 +81,11 @@ class HousingResource(TimeStampedModel):
     email = models.EmailField(unique=False)
     extra = models.CharField(max_length=2048, null=True)
     status = models.CharField(choices=Status.choices, default=Status.NEW, max_length=32)
-    owner = models.ForeignKey(User, on_delete=models.SET_NULL, default=None, null=True)
+    owner = models.ForeignKey(User, on_delete=models.SET_NULL, default=None, null=True, blank=True)
     will_pick_up_now = models.BooleanField(default=False)
     note = models.TextField(max_length=2048, default="", blank=True)
     cherry = models.BooleanField(default=False)
+    is_dropped = models.BooleanField(default=False)
 
     objects = HousingResourceManager()
 
@@ -229,6 +230,14 @@ class Submission(TimeStampedModel):
         if self.when:
             return self.when > timezone.now().date()
         return False
+
+    def handle_gone(self):
+        self.status = SubStatus.CANCELLED
+        self.resource.is_dropped = True
+        self.resource.save()
+        self.resource = None
+        self.note += f" Dropped at {timezone.now()}"
+        self.save()
 
     def as_prop(self):
         return dict(

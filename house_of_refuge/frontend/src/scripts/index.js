@@ -566,8 +566,17 @@ function SubmissionRow({sub, activeHandler, user, isActive = false}) {
   </div>;
 }
 
+const DroppedHost = (resource) => {
+  return <div className={"dropped-row"}>
+    <p>Resource</p>
+    {/*<ResourceRow resource={resource} isExpanded={false} />*/}
+  </div>;
+};
+
+
 const SubmissionList = ({user, subs, btnHandler}) => {
   const [submissions, setSubmissions] = useState(subs);
+  const [droppedHosts, setDroppedHosts] = useState([]);
   const [visibleSubmissions, setVisibleSubmissions] = useState(submissions);
   const [sourceFilter, setSourceFilter] = useState([{label: "Teren", value: "terrain"}]);
   const [statusFilter, setStatusFilter] = useState([]);
@@ -577,7 +586,8 @@ const SubmissionList = ({user, subs, btnHandler}) => {
   const loadData = async () => {
     const response = await fetch(`/api/zgloszenia`);
     const result = await response.json();
-    setSubmissions(result.data);
+    setSubmissions(result.data.submissions);
+    setDroppedHosts(result.data.dropped);
   };
 
   useEffect(() => {
@@ -688,7 +698,7 @@ const SubmissionList = ({user, subs, btnHandler}) => {
         {/*  {SUB_COLUMNS.map(colName => <div className={"col-head col"}>{colName}</div>)}*/}
         {/*</div>*/}
 
-
+        {droppedHosts && <div className={"dropped-container"}>{droppedHosts.map(r => <DroppedHost resource={r} key={r.id}/>)}</div>}
         {visibleSubmissions.map(s => <SubmissionRow user={user} sub={s} key={s.id} activeHandler={btnHandler}/>)}
       </>
 

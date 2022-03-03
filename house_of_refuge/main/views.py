@@ -159,8 +159,12 @@ def update_sub(request, sub_id):
     data = json.loads(request.body)
     sub = Submission.objects.get(id=sub_id)
     for field, value in data['fields'].items():
-        setattr(sub, field, value)
-        sub.save()
+        if field == "status" and value == SubStatus.GONE:
+            # zniknął!
+            sub.handle_gone()
+        else:
+            setattr(sub, field, value)
+            sub.save()
     return JsonResponse({"data": sub.as_prop(), "message": "Updated"})
 
 
@@ -198,4 +202,5 @@ def get_submissions(request):
         s.as_prop()
         for s in Submission.objects.all()
     ]
-    return JsonResponse({"data": subs})
+    dropped = [hr.as_prop() for hr in  HousingResource.objects.filter(is_dropped=True)]
+    return JsonResponse({"data": dict(submissions=subs, dropped=dropped)})
