@@ -90,7 +90,6 @@ const Primary = styled.span`
 const Secondary = styled.div`
    font-size: 18px;
    text-align: center;
-   margin-bottom: 6px;
 `;
 
 
@@ -100,9 +99,10 @@ const Form = ({ fields, validationSchema, url, successInfo, user, primaryText, s
     const formik = useFormik({
         initialValues: fields.reduce((acc, field) => (acc[field.name] =
             field.type === 'checkbox' ? false :
-                field.type === 'date' ? new Date().toISOString().split('T')[0] :
-                    field.name === 'receiver' && user ? user.id :
-                        '', acc), {}),
+                field.type === 'select' ? field.options[0].value :
+                    field.type === 'date' ? new Date().toISOString().split('T')[0] :
+                        field.name === 'receiver' && user ? user.id :
+                            '', acc), {}),
         validationSchema: validationSchema({ publicOnly: !user }),
         onSubmit: async (values) => {
             const { city, ...rest } = values;
@@ -155,16 +155,27 @@ const Form = ({ fields, validationSchema, url, successInfo, user, primaryText, s
                                                 <span>{choice.label}</span>
                                             </Radiolabel>;
                                         })}
-                                    </> :
-                                    <Input
-                                        id={field.name}
-                                        name={field.name}
-                                        type={field.type}
-                                        onChange={formik.handleChange}
-                                        value={formik.values[field.name]}
-                                        min={field.type === 'number' ? 1 : null}
-                                        max={field.type === 'number' ? 100 : null}
-                                    />
+                                    </> : field.type === 'select' ?
+                                        <select
+                                            style={{ height: 44, cursor: 'pointer', paddingLeft: 6 }}
+                                            name={field.name}
+                                            value={field.value}
+                                            onChange={formik.handleChange}
+                                        >
+                                            {field.options.map(option => <option key={option.value} value={option.value}>
+                                                {option.label}
+                                            </option>)}
+                                        </select>
+                                        :
+                                        <Input
+                                            id={field.name}
+                                            name={field.name}
+                                            type={field.type}
+                                            onChange={formik.handleChange}
+                                            value={formik.values[field.name]}
+                                            min={field.type === 'number' ? 1 : null}
+                                            max={field.type === 'number' ? 100 : null}
+                                        />
                                 }
                                 {formik.errors[field.name] && formik.touched[field.name] ? (
                                     <Alert role="alert"> {formik.errors[field.name]} </Alert>

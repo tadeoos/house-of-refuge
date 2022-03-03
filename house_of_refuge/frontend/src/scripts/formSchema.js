@@ -234,6 +234,30 @@ export const fields2 = [
         name: 'receiver',
         type: 'hidden'
     },
+    {
+        loggedUser: true,
+        name: 'source',
+        label: 'Źródło',
+        type: 'select',
+        options: [
+            {
+                value: 'terrain',
+                label: 'Zachodni',
+            },
+            {
+                value: 'webform',
+                label: 'Strona',
+            },
+            {
+                value: 'mail',
+                label: 'Email',
+            },
+            {
+                value: 'other',
+                label: 'Inne',
+            },
+        ]
+    },
 
 
 ];
