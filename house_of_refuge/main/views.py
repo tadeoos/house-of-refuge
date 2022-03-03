@@ -44,14 +44,14 @@ def housing_list(request):
 
     people_helped = sum([
         sub.people_as_int
-        for sub in Submission.objects.todays().filter(status=SubStatus.SUCCESS)
+        for sub in Submission.objects.for_happy_message()
     ])
 
     return render(
         request, "main/housing_list.html", {"props": dict(
             initialResources=resources, subs=subs, userData=request.user.as_json(),
             coordinators=coords, helped=people_helped,
-        )}
+        ), "show_nav": False}
     )
 
 

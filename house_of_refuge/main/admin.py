@@ -8,7 +8,7 @@ from import_export.admin import ImportExportModelAdmin
 from import_export.fields import Field
 from import_export.widgets import DateTimeWidget, DateWidget, Widget
 
-from .models import HousingResource, HousingType, TransportRange, Submission, Coordinator
+from .models import HousingResource, HousingType, TransportRange, Submission, Coordinator, Status
 
 VALUE_MAP = {
     "Tak, na terenie Warszawy": TransportRange.WARSAW,
@@ -29,6 +29,31 @@ class ChoiceWidget(Widget):
 class PeopleWidget(Widget):
     def clean(self, value, row=None, *args, **kwargs):
         return max([int(i) for i in re.findall(r"\d+", value)] or [0])
+
+
+class StatusWidget(Widget):
+    def clean(self, value, row=None, *args, **kwargs):
+        if "zignoruj" in value.lower():
+            return Status.IGNORE
+        else:
+            return Status.NEW
+
+
+class CherryWidget(Widget):
+    def clean(self, value, row=None, *args, **kwargs):
+        if value.lower() in ["wiśnia", "wisnia"]:
+            return True
+        else:
+            return False
+
+
+class VerifiedWidget(Widget):
+    def clean(self, value, row=None, *args, **kwargs):
+
+        if value.lower() in ["wiśnia", "wisnia"] or "zweryfikow" in value.lower():
+            return True
+        else:
+            return False
 
 
 class ExtractZipCodeWidget(Widget):
@@ -117,6 +142,11 @@ class HousingRow(resources.ModelResource):
         column_name="Timestamp",
         widget=CustomDateTimeWidget(format="%m/%d/%Y %H:%M:%S"),
     )
+    verified = Field(attribute="verified", column_name="Osoba zweryfikowana/niezweryfikowana/nie brać", widget=VerifiedWidget())
+    status = Field(attribute="status", column_name="Osoba zweryfikowana/niezweryfikowana/nie brać",
+                     widget=StatusWidget())
+    cherry = Field(attribute="cherry", column_name="Osoba zweryfikowana/niezweryfikowana/nie brać",
+                     widget=CherryWidget())
 
     def skip_row(self, instance, original):
         if all([
@@ -140,7 +170,7 @@ class HousingResourceAdmin(ImportExportModelAdmin):
     resource_class = HousingRow
     search_fields = ("name", "about_info", "city_and_zip_code", "email", "details", "extra")
     list_display = ("name", "email", "resource", "availability", "accommodation_length", "status")
-    list_filter = ("status", "availability", "people_to_accommodate")
+    list_filter = ("status", "cherry", "verified")
 
 
 @admin.register(Submission)
