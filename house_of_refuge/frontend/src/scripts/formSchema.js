@@ -31,6 +31,10 @@ export const fields1 = [
             {
                 value: 'couch',
                 label: 'Kanapa',
+            },
+            {
+                value: 'mattress',
+                label: 'Materac',
             }
         ]
     },
@@ -128,10 +132,6 @@ export const fields1 = [
         label: 'Dodatkowe uwagi',
         type: 'text'
     },
-    {
-        name: 'people_to_accommodate_raw',
-        type: 'hidden'
-    },
 
 ];
 
@@ -223,13 +223,13 @@ export const fields2 = [
     },
     {
         name: 'when',
-        labe: 'when',
+        label: 'Od kiedy?',
         type: 'date'
     },
     {
         publicOnly: true,
         name: 'transport_needed',
-        label: 'Czy potrzebujesz transport?',
+        label: 'Potrzebuję transport',
         type: 'checkbox',
     },
     // below for logged in
