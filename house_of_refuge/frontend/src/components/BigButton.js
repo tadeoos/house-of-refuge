@@ -25,8 +25,11 @@ const Primary = styled.span`
 const Secondary = styled.div`
    font-size: 21px;
    text-align: center;
+   margin-top: -8px;
+   
    @media (max-width: 600px) {
-    font-size: 18px;
+    margin-top: -2px;
+    font-size: 16px;
    }
 `;
 

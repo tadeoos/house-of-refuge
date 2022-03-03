@@ -1,5 +1,5 @@
 import "../styles/resources.scss";
-import React, {useEffect, useMemo, useRef, useState} from 'react'; // eslint-disable-line
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react'; // eslint-disable-line
 import ReactDOM from 'react-dom';
 import {Button, Table, Modal} from "react-bootstrap";
 import {SortUp, SortDown, Filter, Search} from "react-bootstrap-icons";
@@ -9,6 +9,24 @@ import Select from "react-dropdown-select";
 import {getCookie} from "./utils";
 import {ToastContainer, toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+
+
+const updateResource = (resource, fields) => {
+  console.log('sub update: ', fields);
+  fetch(`/api/resource/update/${resource.id}`, {
+    method: 'POST', // *GET, POST, PUT, DELETE, etc.
+    headers: {
+      'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken')
+    }, body: JSON.stringify({fields: fields}) // body data type must match "Content-Type" header
+  }).then(response => response.json()).then(data => {
+    console.log('Response: ', data);
+    if (data.message) {
+      toast(`${data.message}`, {type: data.status});
+    }
+  }).catch((error) => {
+    console.error('Error:', error);
+  });
+};
 
 
 const MatchModal = ({showModal, handleClose, matchHandle}) => {
@@ -71,19 +89,32 @@ export const EditableField = ({value, classes = '', noEditClasses = '', onRename
 
 };
 
-const VISIBLE = ["name", "address", "people_to_accommodate", "availability", "accommodation_length",];
+const VISIBLE = ["name", "full_address", "people_to_accommodate", "accommodation_length", "resource"];
 
-const STATUS_OPTIONS = [{label: "Nowy", value: "new"}, {
-  label: "Wiśnia",
-  value: "verified"
-}, // {label: "W procesie", value: "processing"},
+const STATUS_OPTIONS = [{label: "Nowy", value: "new"},
   {label: "Zajęta", value: "taken"}, {label: "Zignoruj", value: "ignore"},];
 
 const STATUS_MAP = {
-  "new": "nowy", "verified": "wiśnia", 'processing': "w procesie", "taken": "Zajęta", "ignore": "Zignoruj",
+  "new": "nowy", 'processing': "w procesie", "taken": "Zajęta", "ignore": "Zignoruj",
 };
 
-const ResourceRow = ({resource, isExpanded, statusUpdateHandler, onMatch}) => {
+const RESOURCE_MAP = {
+  "home": "Dom",
+  "flat": "Mieszkanie",
+  "room": "Pokój",
+  "couch": "Kanapa",
+  "mattress": "Materac"
+};
+
+const getResourceDisplay = (r) => {
+  return RESOURCE_MAP[r] || r;
+};
+
+const getPickUpDisplay = (v) => {
+  return v ? "Przyjedzie" : "My musimy zawieźć";
+};
+
+const ResourceRow = ({resource, isExpanded, statusUpdateHandler, onMatch, compact = false}) => {
   const [expanded, setExpanded] = useState(isExpanded);
   const [showModal, setShowModal] = useState(false);
   useEffect(() => {
@@ -112,17 +143,29 @@ const ResourceRow = ({resource, isExpanded, statusUpdateHandler, onMatch}) => {
     });
   };
 
+  const handleDateChange = (e) => {
+    const newDate = e.target.value;
+    updateResource(resource, {"availability": newDate});
+  };
+
   return <div className={`resource-row`}>
-    <div className={`base-content row-${resource.status}`}>
-      {VISIBLE.map((a) => <div onClick={() => setExpanded(e => !e)} className={"col"}
-                               key={`${resource.id}-${a}`}>{resource[a]}</div>)}
-      <div className={`col`}>
-        <Select
-            values={STATUS_OPTIONS.filter((o) => o.value === resource.status)}
-            options={STATUS_OPTIONS}
-            onChange={updateStatus}
-        />
+    <div className={`base-content row-${resource.status} ${resource.cherry ? "row-verified" : ""}`}>
+      {VISIBLE.map(
+          (a) => <div onClick={() => setExpanded(e => !e)} className={"col"}
+                      key={`${resource.id}-${a}`}>{getResourceDisplay(resource[a])}</div>)}
+      <div className={"col"}>
+        {compact ? getPickUpDisplay(resource.will_pick_up_now) :
+            <input required type="date" min={new Date().toJSON().slice(0, 10)} value={resource.availability}
+                   onChange={handleDateChange}/>
+        }
       </div>
+      {/*<div className={`col`}>*/}
+      {/*  <Select*/}
+      {/*      values={STATUS_OPTIONS.filter((o) => o.value === resource.status)}*/}
+      {/*      options={STATUS_OPTIONS}*/}
+      {/*      onChange={updateStatus}*/}
+      {/*  />*/}
+      {/*</div>*/}
     </div>
     {expanded && <div className="row-expanded">
       <Table bordered style={{borderColor: 'black'}}>
@@ -159,8 +202,12 @@ const ResourceRow = ({resource, isExpanded, statusUpdateHandler, onMatch}) => {
         </tr>
         <tr>
           <th>Notatka</th>
-          <td><EditableField value={resource.note} onRename={updateNote}/></td>
-          <td colSpan="2"><Button onClick={() => setShowModal(true)}>ZGODZIŁ SIĘ PRZYJĄC</Button></td>
+          {compact ? <td>{resource.note}</td> :
+              <>
+                <td><EditableField value={resource.note} onRename={updateNote}/></td>
+                <td colSpan="2"><Button onClick={() => setShowModal(true)}>ZGODZIŁ SIĘ PRZYJĄC</Button></td>
+              </>
+          }
         </tr>
         </tbody>
       </Table>
@@ -195,7 +242,7 @@ const ColumnHeader = ({col, sortHandler, isSorting, sortDirection, filterData}) 
   </div>;
 };
 
-const ResourceList = ({initialResources, sub, subHandler}) => {
+const ResourceList = ({initialResources, sub, subHandler, user, clearActiveSub}) => {
   const [resources, setResources] = useState(initialResources);
   const [visibleResources, setVisibleResources] = useState(resources);
   const [onlyWarsaw, setOnlyWarsaw] = useState(false);
@@ -206,27 +253,18 @@ const ResourceList = ({initialResources, sub, subHandler}) => {
   const [sortBy, setSortBy] = useState("name");
   const [sortOrder, setSortOrder] = useState("asc");
   const [expandAll, setExpandAll] = useState(false);
+  const [dataSemaphore, setDataSemaphore] = useState(true);
   const [activeSub] = useState(sub);
 
   const [columnsData] = useState({
     name: {fieldName: 'name', display: "Imie", sort: "asc"},
     address: {fieldName: 'address', display: "Adres", sort: "asc"},
     people_to_accommodate: {fieldName: 'people_to_accommodate', display: "Ilu ludzi przyjmie?", sort: "asc"},
-    availability: {fieldName: 'availability', display: "Kiedy?", sort: "asc"},
     accommodation_length: {fieldName: 'accommodation_length', display: "Na jak długo?", sort: "asc"},
-    status: {fieldName: 'status', display: "Status", sort: "asc"},
+    resource: {fieldName: 'resource', display: "Zasób", sort: "asc"},
+    availability: {fieldName: 'availability', display: "Od kiedy?", sort: "asc"},
 
   });
-
-  const loadData = async () => {
-    const response = await fetch(`/api/zasoby`);
-    const result = await response.json();
-    if (isEqual(resources, result.data)) {
-      console.log("THEY ARE EQUALL");
-      return;
-    }
-    setResources(result.data);
-  };
 
   const updateStatus = (resource, value) => {
 
@@ -259,7 +297,7 @@ const ResourceList = ({initialResources, sub, subHandler}) => {
     }).then(response => response.json()).then(data => {
       console.log('Response: ', data);
       toast(`${data.message}`, {type: data.status});
-      subHandler(sub);
+      clearActiveSub();
     }).catch((error) => {
       toast(`${error}`, {type: "error"});
       console.error('Error:', error);
@@ -268,10 +306,20 @@ const ResourceList = ({initialResources, sub, subHandler}) => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      loadData();
+      setDataSemaphore((s) => !s);
     }, 1000);
     return () => clearInterval(interval);
   }, []);
+
+  useEffect(async () => {
+    const response = await fetch(`/api/zasoby`);
+    const result = await response.json();
+    if (isEqual(resources, result.data)) {
+      console.log("THEY ARE EQUALL");
+      return;
+    }
+    setResources(result.data);
+  }, [dataSemaphore]);
 
   const resourceAsString = (r) => {
     return Object.values(r).join(' ').toLowerCase();
@@ -291,8 +339,9 @@ const ResourceList = ({initialResources, sub, subHandler}) => {
   };
 
   useEffect(() => {
-    setVisibleResources(orderBy(resources.filter(r => onlyWarsaw ? isInWarsaw(r) : true).filter(r => onlyAvailable ? isAvailable(r) : true).filter(r => peopleFilter ? peopleFilter.includes(r.people_to_accommodate) : true).filter(r => statusFilter ? statusFilter.includes(r.status) : true).filter(r => searchQuery ? resourceAsString(r).search(searchQuery) > -1 : true), [sortBy], [sortOrder]));
+    setVisibleResources(orderBy(resources.filter(r => onlyWarsaw ? isInWarsaw(r) : true).filter(r => onlyAvailable ? isAvailable(r) : true).filter(r => peopleFilter ? peopleFilter.includes(r.people_to_accommodate) : true).filter(r => statusFilter ? statusFilter.includes(r.resource) : true).filter(r => searchQuery ? resourceAsString(r).search(searchQuery) > -1 : true), [sortBy], [sortOrder]));
   }, [onlyWarsaw, onlyAvailable, peopleFilter, statusFilter, searchQuery, resources]);
+
   useEffect(() => {
     setVisibleResources(vr => orderBy(vr, [sortBy], [sortOrder]));
   }, [sortBy, sortOrder]);
@@ -308,18 +357,18 @@ const ResourceList = ({initialResources, sub, subHandler}) => {
   const statusFilterData = useMemo(() => {
     return {
       handler: (values) => values.length ? setStatusFilter(values.map(v => v.value)) : setStatusFilter(null),
-      options: [...new Set(resources.map(r => r.status))].map(v => ({value: v, label: STATUS_MAP[v]}))
+      options: [...new Set(resources.map(r => r.resource))].map(v => ({value: v, label: RESOURCE_MAP[v]}))
     };
   }, [resources]);
 
   const filters = {
-    "people_to_accommodate": peopleFilterData, "status": statusFilterData,
+    "people_to_accommodate": peopleFilterData, "resource": statusFilterData,
   };
 
   return (<>
         <ToastContainer autoClose={2000}/>
         {activeSub && <div>
-          <SubmissionRow sub={activeSub} activeHandler={subHandler} isActive={true}/>
+          <SubmissionRow sub={activeSub} activeHandler={subHandler} user={user} isActive={true}/>
         </div>}
         <Table>
           <tbody>
@@ -354,7 +403,9 @@ const ResourceList = ({initialResources, sub, subHandler}) => {
 
         {/*<Button>Do odbioru dzisiaj</Button>*/}
         {/*<Button>Na terenie warszawy</Button>*/}
-        <div><p>{`${visibleResources.length} zasóbów`}</p></div>
+        <div>
+          <p>{`${visibleResources.length} zasóbów ${visibleResources.length > 150 ? "(pokazuje pierwsze 150 wyników)" : ""}`}</p>
+        </div>
         <div className={"column-headers mt-3"}>
           {Object.values(columnsData).map(colData => <
               ColumnHeader col={colData} key={colData.fieldName} sortHandler={handleSort}
@@ -362,8 +413,9 @@ const ResourceList = ({initialResources, sub, subHandler}) => {
                            filterData={filters[colData.fieldName]}
           />)}
         </div>
-        {visibleResources.map(r => <ResourceRow resource={r} isExpanded={expandAll} statusUpdateHandler={updateStatus}
-                                                key={r.id} onMatch={matchFound}/>)}
+        {visibleResources.slice(0, 150).map(r => <ResourceRow resource={r} isExpanded={expandAll}
+                                                              statusUpdateHandler={updateStatus}
+                                                              key={r.id} onMatch={matchFound}/>)}
       </>
 
   );
@@ -379,7 +431,8 @@ const SOURCE_OPTIONS = [{label: "Strona", value: "webform"}, {label: "Mail", val
 
 const SUB_STATE_OPTIONS = [
   {value: "new", label: "Świeżak"},
-  {value: "in_progress", label: "W działaniu"},
+  {value: "searching", label: "Szukamy"},
+  {value: "in_progress", label: "Host znaleziony"},
   {value: "gone", label: "Zniknęła"},
   {value: "success", label: "Sukces"},
   {value: "cancelled", label: "Nieaktualne"},
@@ -392,46 +445,60 @@ const getStatusDisplay = (status) => {
 
 const SUB_COLUMNS = ["status", "kto ogarnia w bazie", "zgłoszenie bezpośrednie czy przez kogoś (kontakt do łącznika)", "ile osób", "Imię i nazwisko", "Telefon bezpośredni do potrzebującego", "kto tam jest (jaki skład),czy mamy ogarniac dla nich transport", "kiedy w PL", "na jak długo", "dodatkowe informacje o potrzebujących", "osoba kontaktowa (nocleg)", "nr telefonu", "czy zapewnia transport (tak/nie)", "UWAGI",];
 
+
+const updateSub = (sub, fields) => {
+  console.log(`sub update: ${fields}`);
+  fetch(`/api/sub/update/${sub.id}`, {
+    method: 'POST', // *GET, POST, PUT, DELETE, etc.
+    headers: {
+      'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken')
+    }, body: JSON.stringify({fields: fields}) // body data type must match "Content-Type" header
+  }).then(response => response.json()).then(data => {
+    console.log('Response: ', data);
+    toast(`${data.message}`, {type: data.status});
+  }).catch((error) => {
+    console.error('Error:', error);
+  });
+};
+
+const updateSubStatus = (sub, value) => {
+  updateSub(sub, {"status": value});
+  console.log("sub status update");
+};
+
 function SubmissionRow({sub, activeHandler, user, isActive = false}) {
 
   const isOwner = user.id === sub.matcher?.id;
   const isCoordinator = user.id === sub.coordinator?.id;
+  const isGroupAdmin = user.coordinator;
 
   const btnHandler = () => {
-    if (isActive) {
-      activeHandler(null);
-    } else {
-      activeHandler(sub);
-    }
+    activeHandler(sub, isActive);
   };
 
   const getActionBtn = () => {
     if (sub.status === "in_progress") {
       if (sub.coordinator) {
-        return isCoordinator ? "status" : <Button disabled>{sub.coordinator.display}</Button>;
+        return isCoordinator ? "" : <Button disabled>{sub.coordinator.display}</Button>;
       } else {
         return <Button onClick={setCoordinator}>Przypisz do siebie</Button>;
       }
+    } else if (sub.status === "searching" && !isOwner) {
+      return "";
     } else if (sub.matcher && !isActive && !isOwner) {
       return <Button disabled>{sub.matcher.display}</Button>;
     } else {
-      return <Button onClick={btnHandler}>{isActive ? "Zwolnij" : "Szukaj"}</Button>;
+      return <Button onClick={btnHandler}>{isActive ? "Zwolnij" : "Szukaj Hosta"}</Button>;
     }
   };
 
   const updateStatus = (value) => {
-    console.log("sub status update");
-    fetch(`/api/sub/update/${sub.id}`, {
-      method: 'POST', // *GET, POST, PUT, DELETE, etc.
-      headers: {
-        'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken')
-      }, body: JSON.stringify({"status": value}) // body data type must match "Content-Type" header
-    }).then(response => response.json()).then(data => {
-      console.log('Response: ', data);
-      toast(`${data.message}`, {type: data.status});
-    }).catch((error) => {
-      console.error('Error:', error);
-    });
+    console.log("Updating value: ", value);
+    updateSubStatus(sub, value[0].value);
+  };
+
+  const freeUpMatcher = () => {
+    updateSub(sub, {"matcher": null, "status": "new"});
   };
 
   const setCoordinator = () => {
@@ -449,7 +516,8 @@ function SubmissionRow({sub, activeHandler, user, isActive = false}) {
     });
   };
 
-  return <div className={`submission-row sub-${sub.status.replace("_", "-")} ${sub.accomodation_in_the_future ? "sub-in-future" : ""}`}>
+  return <div
+      className={`submission-row sub-${sub.status.replace("_", "-")} ${sub.accomodation_in_the_future ? "sub-in-future" : ""}`}>
     <Table className="sub-table">
       <tbody>
       <tr>
@@ -459,8 +527,8 @@ function SubmissionRow({sub, activeHandler, user, isActive = false}) {
         <td>{sub.people}</td>
         <th>Jak dlugo?</th>
         <td>{sub.how_long}</td>
-        <th>Narodowość</th>
-        <td>{sub.origin}</td>
+        <th>Telefon</th>
+        <td>{sub.phone_number}</td>
       </tr>
       <tr>
         <th>Od Kiedy?</th>
@@ -469,19 +537,37 @@ function SubmissionRow({sub, activeHandler, user, isActive = false}) {
         <td>{sub.description}</td>
         <th>Języki</th>
         <td>{sub.languages}</td>
-        <th>Notka</th>
-        <td>{sub.note}</td>
+        <th>Narodowość</th>
+        <td>{sub.origin}</td>
       </tr>
+      <tr>
+        <th>Ma zwierzęta</th>
+        <td>{sub.traveling_with_pets}</td>
+        <th>Czy może spać ze zwierzętami?</th>
+        <td>{sub.can_stay_with_pets}</td>
+        <th>Potrzebuje transportu?</th>
+        <td>{sub.transport_needed ? "tak" : "nie"}</td>
+        <th>Notka</th>
+        <td><EditableField value={sub.note} onRename={(note) => updateSub(sub, {"note": note})}/></td>
+      </tr>
+      {sub.resource && <tr className="tr-host">
+        <th>HOST</th>
+        <td>{sub.resource.name}</td>
+        <td>{sub.resource.address}</td>
+        <td>{sub.resource.phone_number}</td>
+        <td>{getPickUpDisplay(sub.resource.will_pick_up_now)}</td>
+        <td colSpan={3}>{sub.resource.note}</td>
+      </tr>}
       <tr>
         <th>Osoba zgłaszająca:</th>
         <td>{sub.receiver?.display || sub.contact_person}</td>
-        <th>Host znaleziony przez:</th>
-        <td>{sub.matcher?.display}</td>
+        <th>Hosta {["searching", "new"].includes(sub.status) ? "szuka" : "znalazł"}:</th>
+        <td>{sub.matcher?.display || getActionBtn()}</td>
         <th>Łącznik:</th>
-        <td>{sub.coordinator?.display}</td>
-        <td colSpan={1}>
-          {getActionBtn()}
-        </td>
+        <td>{sub.coordinator?.display || (sub.matcher ? getActionBtn() : "")}</td>
+        <th>
+          status
+        </th>
         <td>
           {isCoordinator ? <Select
               values={SUB_STATE_OPTIONS.filter((o) => o.value === sub.status)}
@@ -491,31 +577,59 @@ function SubmissionRow({sub, activeHandler, user, isActive = false}) {
           }
         </td>
       </tr>
+      {
+          isGroupAdmin && <tr>
+            <th>Akcje koordynatora</th>
+            {sub.matcher && <td><Button onClick={freeUpMatcher}>Zwolnij hosta</Button></td>}
+            <td><Button>Zmień status</Button></td>
+          </tr>
+      }
       </tbody>
     </Table>
   </div>;
 }
 
+const DroppedHost = ({resource}) => {
+  return <div className={"dropped-row"}>
+    {/*<p>{resource.compact_display}</p>*/}
+    <ResourceRow resource={resource} compact={true}/>
+  </div>;
+};
+
+
 const SubmissionList = ({user, subs, btnHandler}) => {
   const [submissions, setSubmissions] = useState(subs);
+  const [droppedHosts, setDroppedHosts] = useState([]);
   const [visibleSubmissions, setVisibleSubmissions] = useState(submissions);
   const [sourceFilter, setSourceFilter] = useState([{label: "Teren", value: "terrain"}]);
   const [statusFilter, setStatusFilter] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [userOnly, setUserOnly] = useState(false);
+  const [dataSemaphore, setDataSemaphore] = useState(true);
 
-  const loadData = async () => {
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setDataSemaphore((s) => !s);
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(async () => {
     const response = await fetch(`/api/zgloszenia`);
     const result = await response.json();
-    setSubmissions(result.data);
-  };
+    console.log("got data", result.data);
+    if (isEqual(submissions, result.data.submissions)) {
+      console.log("Subs  ARE EQUALL");
+    } else {
+      setSubmissions(result.data.submissions);
+    }
+    if (isEqual(droppedHosts, result.data.dropped)) {
+      console.log("Drops  ARE EQUALL");
+    } else {
+      setDroppedHosts(result.data.dropped);
+    }
+  }, [dataSemaphore]);
 
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     loadData();
-  //   }, 1000);
-  //   return () => clearInterval(interval);
-  // }, []);
 
   const subBelongsToUser = (s) => {
     if (s.receiver?.id === user.id) {
@@ -543,6 +657,7 @@ const SubmissionList = ({user, subs, btnHandler}) => {
         )
     );
   }, [sourceFilter, statusFilter, submissions, searchQuery, userOnly]);
+
   // useEffect(() => {
   //   setVisibleResources(
   //       vr => orderBy(vr, [sortBy], [sortOrder])
@@ -617,7 +732,8 @@ const SubmissionList = ({user, subs, btnHandler}) => {
         {/*  {SUB_COLUMNS.map(colName => <div className={"col-head col"}>{colName}</div>)}*/}
         {/*</div>*/}
 
-
+        {droppedHosts && <div className={"dropped-container"}>{droppedHosts.map(r => <DroppedHost resource={r}
+                                                                                                  key={r.id}/>)}</div>}
         {visibleSubmissions.map(s => <SubmissionRow user={user} sub={s} key={s.id} activeHandler={btnHandler}/>)}
       </>
 
@@ -626,31 +742,69 @@ const SubmissionList = ({user, subs, btnHandler}) => {
 };
 
 
-const App = ({subs, initialResources, userData}) => {
+const CoordinaotrsHeader = ({coordinators, helped}) => {
+  console.log(coordinators);
+  return <>
+    <div className="coordinators">
+      <div>
+        <h5>Koordynaotrzy Zachodni</h5>
+        <ol>{(coordinators.station || []).map(c => <li key={c.user.id}>{c.user.display}</li>)}</ol>
+      </div>
+      <div>
+        <h5>Koordynaotrzy Zdalni</h5>
+        <ol>{(coordinators.remote || []).map(c => <li key={c.user.id}>{c.user.display}</li>)}</ol>
+      </div>
+    </div>
+    {helped &&
+        <div><h5 className="good-message">Pomogliśmy dziś {helped} osobom {"🙏".repeat(Math.floor(helped / 10))}</h5>
+        </div>}
+  </>;
+};
+
+
+const App = ({subs, initialResources, userData, coordinators, helped}) => {
   const [activeSub, setActiveSub] = useState(null);
 
-  const subIsTaken = (sub) => {
-    fetch(`api/set_matcher`, {
+  const clearActiveSub = () => setActiveSub(null);
+
+  const subIsTaken = (sub, isActive = false) => {
+    console.log("sub taken");
+    let fields;
+    if (isActive) {
+      // no match found... we're clearing the status
+      fields = {"status": "new", "matcher_id": null};
+    } else {
+      fields = {"status": "searching", "matcher_id": userData.id};
+    }
+
+    fetch(`/api/sub/update/${sub.id}`, {
       method: 'POST', // *GET, POST, PUT, DELETE, etc.
       headers: {
         'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken')
-      }, body: JSON.stringify({sub_id: sub.id, matcher: userData.id}) // body data type must match "Content-Type" header
+      }, body: JSON.stringify({"fields": fields})
     }).then(response => response.json()).then(data => {
       console.log('Response: ', data);
-      // toast(`${data.message}`, {type: data.status});
+      toast(`${data.message}`, {type: data.status});
+      if (!isActive) {
+        setActiveSub(data.data);
+      } else {
+        setActiveSub(null);
+      }
+
     }).catch((error) => {
       console.error('Error:', error);
     });
-    setActiveSub(sub);
   };
 
-  if (activeSub) {
-    return <>
-      <ResourceList initialResources={initialResources} sub={activeSub} subHandler={(sub) => setActiveSub(null)}/>
-    </>;
-  } else {
-    return <SubmissionList user={userData} subs={subs} btnHandler={subIsTaken}/>;
-  }
+
+  return <>
+    <CoordinaotrsHeader coordinators={coordinators} helped={helped}/>
+    {activeSub ? <ResourceList initialResources={initialResources}
+                               user={userData} sub={activeSub} subHandler={subIsTaken}
+                               clearActiveSub={clearActiveSub}
+    /> : <SubmissionList user={userData} subs={subs} btnHandler={subIsTaken}/>
+    }
+  </>;
 };
 
 ReactDOM.render(React.createElement(App, window.props),    // gets the props that are passed in the template

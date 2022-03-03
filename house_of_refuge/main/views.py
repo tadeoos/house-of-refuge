@@ -1,3 +1,5 @@
+from collections import defaultdict
+
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.http import JsonResponse
@@ -11,7 +13,7 @@ from rest_framework.response import Response
 
 from .forms import HousingResourceForm
 # Create your views here.
-from .models import HousingResource, Status, Submission, SubStatus
+from .models import HousingResource, Status, Submission, SubStatus, Coordinator
 from .serializers import SubmissionSerializer, HousingResourceSerializer
 
 
@@ -36,9 +38,19 @@ def housing_list(request):
         s.as_prop()
         for s in Submission.objects.all()
     ]
+    coords = defaultdict(list)
+    for c in Coordinator.objects.all():
+        coords[c.group].append(c.as_json())
+
+    people_helped = sum([
+        sub.people_as_int
+        for sub in Submission.objects.todays().filter(status=SubStatus.SUCCESS)
+    ])
+
     return render(
         request, "main/housing_list.html", {"props": dict(
-            initialResources=resources, subs=subs, userData=request.user.as_json()
+            initialResources=resources, subs=subs, userData=request.user.as_json(),
+            coordinators=coords, helped=people_helped,
         )}
     )
 
@@ -147,16 +159,30 @@ def update_sub(request, sub_id):
     data = json.loads(request.body)
     sub = Submission.objects.get(id=sub_id)
     for field, value in data['fields'].items():
-        setattr(sub, field, value)
-        sub.save()
+        if field == "status" and value == SubStatus.GONE:
+            # zniknął!
+            sub.handle_gone()
+        else:
+            setattr(sub, field, value)
+            sub.save()
     return JsonResponse({"data": sub.as_prop(), "message": "Updated"})
+
+
+@api_view(['POST'])
+def update_resource(request, resource_id):
+    resource = HousingResource.objects.get(id=resource_id)
+    serializer = HousingResourceSerializer(instance=resource, data=request.data['fields'], partial=True)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @require_http_methods(["POST"])
 def set_sub_matcher(request):
     data = json.loads(request.body)
     sub = Submission.objects.get(id=data['sub_id'])
-    sub.matcher = data["matcher"]
+    sub.matcher_id = data["matcher"]
     sub.save()
     return JsonResponse({"data": sub.as_prop()})
 
@@ -164,7 +190,7 @@ def set_sub_matcher(request):
 @require_http_methods(["POST"])
 def sub_is_processed(request, sub_id):
     sub = Submission.objects.get(id=sub_id)
-    sub.matcher = request.user
+    sub.matcher_id = request.user
     sub.save()
     return JsonResponse({"data": sub.as_prop()})
 
@@ -176,4 +202,5 @@ def get_submissions(request):
         s.as_prop()
         for s in Submission.objects.all()
     ]
-    return JsonResponse({"data": subs})
+    dropped = [hr.as_prop() for hr in  HousingResource.objects.filter(is_dropped=True)]
+    return JsonResponse({"data": dict(submissions=subs, dropped=dropped)})

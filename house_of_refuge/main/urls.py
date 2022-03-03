@@ -7,7 +7,8 @@ urlpatterns = [
     path("", views.home, name="home"),
     path("form1", views.home, name="home"),
     path("form2", views.home, name="home"),
-    path("zasoby", views.housing_list, name="zasoby"),
+    path("privacy", views.home, name="home"),
+    path("jazda", views.housing_list, name="zasoby"),
     path("api/update_status/<int:resource_id>", views.update_resource_status, name="status_update"),
     path("api/update_note/<int:resource_id>", views.update_resource_note, name="note_update"),
     path("api/zasoby", views.get_resources, name="zasoby_get"),
@@ -17,4 +18,5 @@ urlpatterns = [
     path("api/set_matcher", views.set_sub_matcher, name="set_matcher"),
     path("api/match_found", views.resource_match_found, name="match_found"),
     path("api/sub/update/<int:sub_id>", views.update_sub, name="sub_update"),
+    path("api/resource/update/<int:resource_id>", views.update_resource, name="resource_update"),
 ]

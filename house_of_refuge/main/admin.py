@@ -1,13 +1,14 @@
 import re
 
 from django.contrib import admin
+from django.contrib.admin import ModelAdmin
 from django.utils import timezone
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
 from import_export.fields import Field
 from import_export.widgets import DateTimeWidget, DateWidget, Widget
 
-from .models import HousingResource, HousingType, TransportRange, Submission
+from .models import HousingResource, HousingType, TransportRange, Submission, Coordinator
 
 VALUE_MAP = {
     "Tak, na terenie Warszawy": TransportRange.WARSAW,
@@ -137,7 +138,7 @@ class HousingRow(resources.ModelResource):
 @admin.register(HousingResource)
 class HousingResourceAdmin(ImportExportModelAdmin):
     resource_class = HousingRow
-    search_fields = ("about_info", "city_and_zip_code", "email", "details", "extra")
+    search_fields = ("name", "about_info", "city_and_zip_code", "email", "details", "extra")
     list_display = ("name", "email", "resource", "availability", "accommodation_length", "status")
     list_filter = ("status", "availability", "people_to_accommodate")
 
@@ -145,6 +146,14 @@ class HousingResourceAdmin(ImportExportModelAdmin):
 @admin.register(Submission)
 class SubmissionAdmin(ImportExportModelAdmin):
     # resource_class = HousingRow
-    search_fields = ("name", "source", "languages", "status", "receiver", "coordinator")
-    list_display = ("name", "people", "how_long", "status", "receiver", "coordinator")
+    search_fields = ("name", "languages", "receiver__name", "coordinator__name", "note", "contact_person")
+    list_display = ("name", "people", "how_long", "source", "status", "receiver", "matcher", "coordinator")
     list_filter = ("status", "source")
+    list_editable = ("status", "source")
+
+
+@admin.register(Coordinator)
+class CoordinatorAdmin(ModelAdmin):
+    # resource_class = HousingRow
+    list_display = ("pk", "user", "group",)
+    list_editable = ("user", "group",)

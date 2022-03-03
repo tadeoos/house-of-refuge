@@ -8,8 +8,9 @@ export const fields1 = [
     },
     {
         name: 'about_info',
-        label: 'Powiedz coś o sobie - ile masz lat? Z kim mieszkasz (jeśli przyjmujesz kogoś u siebie)?',
-        type: 'text'
+        label: 'Powiedz coś o sobie?',
+        subHeading: 'Ile masz lat? Z kim mieszkasz (jeśli przyjmujesz kogoś u siebie)?',
+        type: 'textarea'
     },
     {
         name: 'resource',
@@ -31,6 +32,10 @@ export const fields1 = [
             {
                 value: 'couch',
                 label: 'Kanapa',
+            },
+            {
+                value: 'mattress',
+                label: 'Materac',
             }
         ]
     },
@@ -67,6 +72,7 @@ export const fields1 = [
     {
         name: 'when_to_call',
         label: 'W jakich godzinach możemy do Ciebie dzwonić?',
+        subHeading: 'Sporo godzin przybywa po północy. Czy możemy do Ciebie zadzownic pózno w nocy?',
         type: 'text'
     },
     {
@@ -86,13 +92,15 @@ export const fields1 = [
     },
     {
         name: 'details',
-        label: 'Garść informacji o miejscu (obecność zwierząt, języki obce lokatorów i lokatorek, dostępna pościel i ręczniki, inne)',
+        label: 'Garść informacji o miejscu',
+        subHeading: 'Obecność zwierząt, języki obce lokatorów i lokatorek, dostępna pościel i ręczniki, inne',
         type: 'text'
     },
     {
         name: 'transport',
-        label: 'Czy jesteś w stanie przyjechać po osoby, którym udzielisz schronienia na dworzec/w podane miejsce pobytu?',
-        type: 'radio',
+        label: 'Czy jesteś w stanie przyjechać po osoby, którym udzielisz schronienia?',
+        subHeading: 'Np. na dworzec czy w podane miejsce pobytu'
+,         type: 'radio',
         choice: [
             {
                 value: 'warsaw',
@@ -128,9 +136,10 @@ export const fields1 = [
         label: 'Dodatkowe uwagi',
         type: 'text'
     },
+
 ];
 
-export const validationSchema1 = yup.object({
+export const validationSchema1 = () => yup.object({
     name: yup.string().required('Pole wymagane'),
     about_info: yup.string().required('Pole wymagane'),
     resource: yup.string().required('Pole wymagane'),
@@ -168,6 +177,7 @@ export const fields2 = [
     {
         name: 'name',
         label: 'Imię i nazwisko',
+        subHeading: '',
         type: 'text'
     },
     {
@@ -192,45 +202,83 @@ export const fields2 = [
     },
     {
         name: 'origin',
-        label: 'origin',
+        label: 'Narodowość',
         type: 'text'
     },
     {
         name: 'traveling_with_pets',
-        label: 'traveling_with_pets',
-        type: 'checkbox'
+        label: 'Czy podróżujesz ze zwierzętami',
+        type: 'text'
     },
     {
+        name: 'can_stay_with_pets',
+        label: 'Czy mozesz spac w miejscu ze zwierzetami?',
+        subHeading: 'Alergie itp.',
+        type: 'text'
+    },
+    {
+        publicOnly: true,
         name: 'contact_person',
-        label: 'contact_person',
+        label: 'Osoba do kontaktu',
         type: 'text'
     },
     {
         name: 'languages',
-        label: 'languages',
+        label: 'Języki jakie znasz',
         type: 'text'
     },
     {
         name: 'when',
-        labe: 'when',
+        label: 'Od kiedy?',
         type: 'date'
     },
     {
+        publicOnly: true,
         name: 'transport_needed',
-        label: 'transport_needed',
+        label: 'Potrzebuję transport',
         type: 'checkbox',
     },
     // below for logged in
     {
         loggedUser: true,
         name: 'note',
-        label: 'note',
+        label: 'Uwagi',
         type: 'text'
     },
+    {
+        loggedUser: true,
+        name: 'receiver',
+        type: 'hidden'
+    },
+    {
+        loggedUser: true,
+        name: 'source',
+        label: 'Źródło',
+        type: 'select',
+        options: [
+            {
+                value: 'terrain',
+                label: 'Zachodni',
+            },
+            {
+                value: 'webform',
+                label: 'Strona',
+            },
+            {
+                value: 'mail',
+                label: 'Email',
+            },
+            {
+                value: 'other',
+                label: 'Inne',
+            },
+        ]
+    },
+
 
 ];
 
-export const validationSchema2 = yup.object({
+export const validationSchema2 = ({ publicOnly }) => yup.object({
     name: yup.string().required('Pole wymagane'),
     phone_number: yup
         .string()
@@ -240,7 +288,9 @@ export const validationSchema2 = yup.object({
     how_long: yup.string().required('Pole wymagane'),
     description: yup.string().required('Pole wymagane'),
     origin: yup.string().required('Pole wymagane'),
-    contact_person: yup.string().required('Pole wymagane'),
+    traveling_with_pets: yup.string().required('Pole wymagane'),
+    can_stay_with_pets: yup.string().required('Pole wymagane'),
+    contact_person: publicOnly ? yup.string().required('Pole wymagane') : null,
     languages: yup.string().required('Pole wymagane'),
     when: yup.date().required('Pole wymagane'),
 });

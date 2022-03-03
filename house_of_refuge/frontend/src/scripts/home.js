@@ -5,6 +5,7 @@ import Header from '../components/Header.js';
 import BigButton from '../components/BigButton.js';
 import Form from '../components/Form.js';
 import Footer from '../components/Footer.js';
+import Privacy from '../components/Privacy.js';
 import { fields1, fields2, validationSchema1, validationSchema2 } from './formSchema';
 import {
   BrowserRouter,
@@ -40,10 +41,10 @@ const ButtonWrap = styled.div`
 
   > * {
       &:first-child {
-        margin-bottom: 20px;
+        margin-bottom: 30px;
 
         @media (max-width: 600px) {
-          margin-bottom: 10px;
+          margin-bottom: 20px;
         }
       }
   }
@@ -78,18 +79,23 @@ const App = ({ userData }) => {
             </Link>
           </ButtonWrap>} />
           <Route path="/form1" element={<Form
+            primaryText="Udostępniam nocleg"
+            secondaryText="Можу надати житло"
             fields={fields1}
             validationSchema={validationSchema1}
             url='/api/stworz_zasob'
             successInfo='Dziękujemy za zgłoszenie.'
           />} />
           <Route path="/form2" element={<Form
+            primaryText="Потребує житло"
+            secondaryText="Szukam noclegu"
             fields={fields2}
             validationSchema={validationSchema2}
             url='/api/zglos'
             successInfo='Дякуємо за подання.'
             user={user}
           />} />
+          <Route path="/privacy" element={<Privacy />} />
         </Routes>
         <Footer className="Footer" />
       </StyledApp >

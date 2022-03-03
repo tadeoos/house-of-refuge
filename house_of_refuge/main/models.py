@@ -1,3 +1,5 @@
+import re
+
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.db.models import Manager, Q
@@ -15,6 +17,7 @@ class HousingType(models.TextChoices):
     FLAT = "flat", _("Mieszkanie")
     ROOM = "room", _("Pokój")
     COUCH = "couch", _("Kanapa")
+    MATTRESS = "mattress", _("Materac")
 
 
 class TransportRange(models.TextChoices):
@@ -25,7 +28,7 @@ class TransportRange(models.TextChoices):
 
 class Status(models.TextChoices):
     NEW = "new", _("Świeżak")
-    VERIFIED = "verified", _("Wiśnia")
+    # VERIFIED = "verified", _("Wiśnia")
     # PROCESSING = "processing", _("W procesie")
     TAKEN = "taken", _("Zajęta")
     IGNORE = "ignore", _("Ignoruj")
@@ -35,7 +38,7 @@ class HousingResourceManager(Manager):
 
     def for_remote(self, user):
         return self.filter(
-            Q(status__in=[Status.NEW, Status.VERIFIED]) | Q(owner=user)
+            Q(status__in=[Status.NEW]) | Q(owner=user)
         )
 
 
@@ -53,14 +56,14 @@ class HousingResource(TimeStampedModel):
     resource = models.CharField(choices=HousingType.choices, max_length=1024)
     city_and_zip_code = models.CharField(max_length=512)
     zip_code = models.CharField(max_length=8)
-    address = models.CharField(max_length=128)  # ulica numer domu..
-    people_to_accommodate_raw = models.CharField(max_length=1024)
+    address = models.CharField(max_length=512)  # ulica numer domu..
+    people_to_accommodate_raw = models.CharField(max_length=1024, blank=True, default="")
     people_to_accommodate = models.IntegerField(
         default=0
     )  # Ile osób jesteś w stanie wesprzeć tak, by miały godne warunki pobytu?
-    age = models.CharField(max_length=512)
-    languages = models.CharField(max_length=512)
-    when_to_call = models.CharField(max_length=1024)
+    age = models.CharField(max_length=512, default="", blank=True)
+    languages = models.CharField(max_length=512, default="", blank=True)
+    when_to_call = models.CharField(max_length=1024, default="", blank=True)
     living_with_pets = models.CharField(max_length=1024, null=True, blank=True)
     can_take_person_with_pets = models.CharField(max_length=512, null=True, blank=True)
 
@@ -76,11 +79,13 @@ class HousingResource(TimeStampedModel):
     phone_number = models.CharField(max_length=128)
     backup_phone_number = models.CharField(max_length=128)
     email = models.EmailField(unique=False)
-    extra = models.CharField(max_length=2048, null=True)
+    extra = models.CharField(max_length=2048, null=True, default="", blank=True)
     status = models.CharField(choices=Status.choices, default=Status.NEW, max_length=32)
-    owner = models.ForeignKey(User, on_delete=models.SET_NULL, default=None, null=True)
+    owner = models.ForeignKey(User, on_delete=models.SET_NULL, default=None, null=True, blank=True)
     will_pick_up_now = models.BooleanField(default=False)
-    note = models.TextField(max_length=2048, default="")
+    note = models.TextField(max_length=2048, default="", blank=True)
+    cherry = models.BooleanField(default=False)
+    is_dropped = models.BooleanField(default=False)
 
     objects = HousingResourceManager()
 
@@ -94,6 +99,10 @@ class HousingResource(TimeStampedModel):
     @property
     def full_address(self):
         return f"{self.address} {self.city_and_zip_code}"
+
+    @property
+    def compact_display(self):
+        return f"{self.name} {self.get_resource_display()}, {self.full_address}\n{self.extra}"
 
     def sub_representation(self):
         return dict(
@@ -114,6 +123,7 @@ class HousingResource(TimeStampedModel):
             city_and_zip_code=self.city_and_zip_code,
             zip_code=self.zip_code,
             address=self.address,
+            full_address=self.full_address,
             people_to_accommodate=self.people_to_accommodate,
             costs=self.costs,
             availability=self.availability,
@@ -125,7 +135,9 @@ class HousingResource(TimeStampedModel):
             email=self.email,
             extra=self.extra,
             status=self.status,
+            cherry=self.cherry,
             note=self.note,
+            compact_display=self.compact_display,
             owner=self.owner.as_json() if self.owner else None,
         )
 
@@ -139,7 +151,8 @@ class SubSource(models.TextChoices):
 
 class SubStatus(models.TextChoices):
     NEW = "new", _("Świeżak")
-    IN_PROGRESS = "in_progress", _("W działaniu")
+    SEARCHING = "searching", _("Szukamy")
+    IN_PROGRESS = "in_progress", _("Host znaleziony")
     GONE = "gone", _("Zniknęła")
     SUCCESS = "success", _("Sukces")
     CANCELLED = "cancelled", _("Nieaktualne")
@@ -151,6 +164,14 @@ class SubmissionManager(Manager):
         return self.filter(
             Q(status__in=[Status.NEW])
         )
+
+    def todays(self):
+        now = timezone.now()
+        if now.hour > 9:
+            cut_off = now.replace(hour=9, minute=0, second=0)
+        else:
+            cut_off = now.replace(day=now.day-1, hour=9, minute=0, second=0)
+        return self.filter(created__gte=cut_off)
 
 
 class Submission(TimeStampedModel):
@@ -167,7 +188,7 @@ class Submission(TimeStampedModel):
     contact_person = models.CharField(max_length=1024, null=True, blank=True)
     languages = models.CharField(max_length=1024, null=True, blank=True)
     when = models.DateField(default=timezone.now, null=True, blank=True)
-    transport_needed = models.BooleanField(default=False)
+    transport_needed = models.BooleanField(default=True)
     # ponizej dla zalogowanych
     note = models.TextField(max_length=2048, null=True, blank=True)
     status = models.CharField(choices=SubStatus.choices, default=Status.NEW, max_length=32)
@@ -179,20 +200,50 @@ class Submission(TimeStampedModel):
     matcher = models.ForeignKey(User, on_delete=models.SET_NULL, default=None, blank=True, null=True,
                                 related_name="matched_subs")
     resource = models.ForeignKey(HousingResource, on_delete=models.SET_NULL, default=None, blank=True, null=True)
-    priority = models.IntegerField(default=0)
+    priority = models.IntegerField(default=1)
     source = models.CharField(choices=SubSource.choices, default=SubSource.WEBFORM, max_length=64)
 
+    # TODO: dorobić last status update?
+
     objects = SubmissionManager()
+
+    def __str__(self):
+        return f"{self.name} {self.people} na {self.how_long}"
 
     class Meta:
         verbose_name = "Zgłoszenie"
         verbose_name_plural = "Zgłoszenia"
+        ordering = ['-priority', 'created']
+
+    def save(self, *args, **kwargs):
+        if self.accomodation_in_the_future:
+            self.priority = -1
+        elif self.status == SubStatus.IN_PROGRESS:
+            self.priority = 2
+        elif self.status == SubStatus.GONE:
+            self.priority = 3
+        elif self.status == SubStatus.CANCELLED:
+            self.priority = -2
+        return super(Submission, self).save(*args, **kwargs)
+
+    @property
+    def people_as_int(self):
+        return max([int(i) for i in re.findall(r"\d+", self.people)] or [1])
 
     @property
     def accomodation_in_the_future(self):
         if self.when:
             return self.when > timezone.now().date()
         return False
+
+    def handle_gone(self):
+        self.status = SubStatus.CANCELLED
+        self.resource.is_dropped = True
+        self.resource.owner = None
+        self.resource.save()
+        self.resource = None
+        self.note += f' \nDropped at {timezone.now().strftime("%Y-%m-%d %H:%M:%S")}'
+        self.save()
 
     def as_prop(self):
         return dict(
@@ -219,3 +270,20 @@ class Submission(TimeStampedModel):
             can_stay_with_pets=self.can_stay_with_pets,
             resource=self.resource.sub_representation() if self.resource else None,
         )
+
+
+class Groups(models.TextChoices):
+    REMOTE = "remote", _("Zdalna")
+    STATION = "station", _("Dworzec")
+
+
+class Coordinator(TimeStampedModel):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    group = models.CharField(choices=Groups.choices, max_length=32)
+
+    class Meta:
+        verbose_name = "Koordynator"
+        verbose_name_plural = "Koordynatorzy"
+
+    def as_json(self):
+        return dict(user=self.user.as_json(), group=self.group)

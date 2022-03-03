@@ -76,7 +76,6 @@
 }
 
 .submission-row {
-  border: 2px solid lightslategray;
   border-radius: 10px;
   margin: 20px 2px;
   padding: 10px;
@@ -84,7 +83,7 @@
 
 .rename-input {
   &:hover {
-    background-color: #d6e9c6;
+    background-color: #d6e9c6 !important;
   }
 }
 
@@ -101,10 +100,69 @@
   background-color: #ea4335 !important;
 }
 
+.sub-searching {
+  background-color: yellow !important;
+}
+
+.sub-gone {
+  background-color: cyan !important;
+}
+
 .sub-table {
   background-color: white;
 }
 
 .sub-in-future {
   background-color: magenta;
+}
+
+.sub-new {
+  border: 2px solid lightslategray;
+}
+
+.sub-success {
+  background-color: green !important;
+}
+
+.tr-host {
+  td,
+  th {
+    border-color: black;
+    background-color: azure;
+  }
+}
+
+.table {
+  margin-bottom: 0;
+  border-radius: 8px;
+
+  tr:last-child {
+    td,
+    th {
+      border: 0;
+    }
+  }
+}
+
+.coordinators {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.good-message {
+  text-align: center;
+  color: #34a853;
+}
+
+.dropped-row {
+  border: 4px cyan solid;
+  margin: 10px 0;
+  background-color: white;
+}
+
+.dropped-container {
+  background-color: white;
+  position: sticky;
+  top: 40px;
 }
