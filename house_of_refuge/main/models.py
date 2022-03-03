@@ -214,7 +214,7 @@ class Submission(TimeStampedModel):
     priority = models.IntegerField(default=1)
     source = models.CharField(choices=SubSource.choices, default=SubSource.WEBFORM, max_length=64)
 
-    finished_at = models.DateTimeField(null=True)
+    finished_at = models.DateTimeField(null=True, blank=True)
 
     # TODO: dorobić last status update?
 

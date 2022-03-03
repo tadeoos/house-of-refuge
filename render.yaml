@@ -20,7 +20,7 @@ services:
     region: frankfurt
     branch: master
     buildCommand: "./build.sh"
-    startCommand: "gunicorn config.wsgi:application -t 360"
+    startCommand: "gunicorn config.wsgi:application"
     envVars:
       - key: DATABASE_URL
         fromDatabase:
