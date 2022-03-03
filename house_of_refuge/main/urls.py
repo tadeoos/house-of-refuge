@@ -5,8 +5,8 @@ import house_of_refuge.main.views as views
 app_name = "main"
 urlpatterns = [
     path("", views.home, name="home"),
-    path("form1", views.home, name="home"),
-    path("form2", views.home, name="home"),
+    path("share", views.home, name="home"),
+    path("find", views.home, name="home"),
     path("privacy/", views.home, name="home"),
     path("jazda/", views.housing_list, name="zasoby"),
     path("api/update_status/<int:resource_id>", views.update_resource_status, name="status_update"),
