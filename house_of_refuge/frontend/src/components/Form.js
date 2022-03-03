@@ -57,8 +57,8 @@ const Input = styled.input.attrs(({ type }) => ({
   min-height:  ${p => p.type === 'textarea' ? '70px' : 'initial'};
   max-height:  ${p => p.type === 'textarea' ? '140px' : 'initial'};
   padding-top:  ${p => p.type === 'textarea' ? '8px' : 'initial'};
-  -webkit-appearance: none;
-  -moz-appearance: none;
+   -webkit-appearance: ${p => p.type === 'checkbox' ? 'auto' : 'none'};
+  -moz-appearance:  ${p => p.type === 'checkbox' ? 'auto' : 'none'}; 
 `;
 
 
