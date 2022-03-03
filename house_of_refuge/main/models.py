@@ -229,6 +229,8 @@ class Submission(TimeStampedModel):
         ordering = ['-priority', 'created']
 
     def save(self, *args, **kwargs):
+        if self.source == SubSource.TERRAIN and not self.receiver:
+            self.source = SubSource.WEBFORM
         if self.accomodation_in_the_future:
             self.priority = -1
         elif self.status == SubStatus.IN_PROGRESS:

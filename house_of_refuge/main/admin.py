@@ -169,8 +169,9 @@ class HousingRow(resources.ModelResource):
 class HousingResourceAdmin(ImportExportModelAdmin):
     resource_class = HousingRow
     search_fields = ("name", "about_info", "city_and_zip_code", "email", "details", "extra")
-    list_display = ("name", "email", "resource", "availability", "accommodation_length", "status")
+    list_display = ("id", "name", "email", "resource", "status", "cherry", "verified")
     list_filter = ("status", "cherry", "verified")
+    list_editable = ("status", "cherry", "verified",)
 
 
 @admin.register(Submission)
