@@ -3,7 +3,6 @@ databases:
     databaseName: zasoby
     user: zasoby
     region: frankfurt
-    plan: free
 
 services:
   - type: pserv
@@ -20,7 +19,6 @@ services:
     env: python
     region: frankfurt
     branch: master
-    plan: starter
     buildCommand: "./build.sh"
     startCommand: "gunicorn config.wsgi:application"
     envVars:
