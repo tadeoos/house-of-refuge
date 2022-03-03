@@ -12,7 +12,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 
 const updateResource = (resource, fields) => {
-  console.log('sub update: ', fields);
+  console.log('resource update: ', fields);
   fetch(`/api/resource/update/${resource.id}`, {
     method: 'POST', // *GET, POST, PUT, DELETE, etc.
     headers: {
@@ -408,7 +408,7 @@ const SUB_STATE_OPTIONS = [
   {value: "new", label: "Świeżak"},
   {value: "searching", label: "Szukamy"},
   {value: "in_progress", label: "Host znaleziony"},
-  {value: "gone", label: "Zniknęła"},
+  // {value: "gone", label: "Zniknęła"},
   {value: "success", label: "Sukces"},
   {value: "cancelled", label: "Nieaktualne"},
 ];
@@ -422,7 +422,7 @@ const SUB_COLUMNS = ["status", "kto ogarnia w bazie", "zgłoszenie bezpośrednie
 
 
 const updateSub = (sub, fields) => {
-  console.log(`sub update: ${fields}`);
+  console.log('sub update:', fields);
   fetch(`/api/sub/update/${sub.id}`, {
     method: 'POST', // *GET, POST, PUT, DELETE, etc.
     headers: {
@@ -542,7 +542,7 @@ function SubmissionRow({sub, activeHandler, user, isActive = false}) {
       </tr>}
       <tr>
         <th>Osoba zgłaszająca:</th>
-        <td>{sub.receiver?.display || "ZGŁOSZENIE ZE STRONY"}</td>
+        <td>{sub.receiver?.display || `ZGŁOSZENIE ZE STRONY (${sub.contact_person})`}</td>
         <th>Hosta {["searching", "new"].includes(sub.status) ? "szuka" : "znalazł"}:</th>
         <td>{sub.matcher?.display || getActionBtn()}</td>
         <th>Łącznik:</th>
