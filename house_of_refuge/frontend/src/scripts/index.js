@@ -501,6 +501,11 @@ function SubmissionRow({sub, activeHandler, user, isActive = false}) {
     updateSub(sub, {"matcher": null, "status": "new"});
   };
 
+  const freeUpCoord = () => {
+    updateSub(sub, {"coordinator": null});
+  };
+
+
   const setCoordinator = () => {
     console.log("sub status update");
     fetch(`/api/sub/update/${sub.id}`, {
@@ -580,8 +585,13 @@ function SubmissionRow({sub, activeHandler, user, isActive = false}) {
       {
           isGroupAdmin && <tr>
             <th>Akcje koordynatora</th>
-            {sub.matcher && <td><Button onClick={freeUpMatcher}>Zwolnij hosta</Button></td>}
-            <td><Button>Zmień status</Button></td>
+            <td colSpan={6}>
+              <div className={"d-flex justify-content-evenly"}>
+                {sub.matcher && <td><Button variant={"warning"} onClick={freeUpMatcher}>Zwolnij zgłoszenie</Button></td>}
+                {sub.coordinator && <td><Button variant={"warning"} onClick={freeUpCoord}>Zwolnij łącznika</Button></td>}
+                <Button>Zmień status</Button>
+              </div>
+            </td>
           </tr>
       }
       </tbody>
