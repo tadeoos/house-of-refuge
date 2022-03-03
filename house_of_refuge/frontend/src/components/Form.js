@@ -80,7 +80,21 @@ const Success = styled.div`
   text-align: center;
 `;
 
-const Form = ({ fields, validationSchema, url, successInfo, user }) => {
+const Primary = styled.span`
+   font-size: 34px;
+   font-weight: 700;
+   margin-top: 80px;
+   text-align: center;
+`;
+
+const Secondary = styled.div`
+   font-size: 18px;
+   text-align: center;
+   margin-bottom: 6px;
+`;
+
+
+const Form = ({ fields, validationSchema, url, successInfo, user, primaryText, secondaryText }) => {
     const [success, setSuccess] = useState(false);
 
     const formik = useFormik({
@@ -118,46 +132,50 @@ const Form = ({ fields, validationSchema, url, successInfo, user }) => {
 
     return (
         success ? <Success> {successInfo} </Success> :
-            <StyledForm onSubmit={formik.handleSubmit} >
-                {fields
-                    .filter(field => user ? field : !field.loggedUser)
-                    .filter(field => !user ? field : !field.publicOnly)
-                    .map(field => {
-                        return <Field key={field.name} alert={formik.errors[field.name] && formik.touched[field.name]} >
-                            {field.type === 'hidden' ? null : <Label htmlFor={field.name}>{field.label}</Label>}
-                            {field.type === 'radio' ?
-                                <>
-                                    {field.choice.map(choice => {
-                                        return <Radiolabel key={choice.value} >
-                                            <Radio
-                                                type={field.type}
-                                                name={field.name}
-                                                value={choice.value}
-                                                onChange={formik.handleChange}
-                                            />
-                                            <span>{choice.label}</span>
-                                        </Radiolabel>;
-                                    })}
-                                </> :
-                                <Input
-                                    id={field.name}
-                                    name={field.name}
-                                    type={field.type}
-                                    onChange={formik.handleChange}
-                                    value={formik.values[field.name]}
-                                    min={field.type === 'number' ? 1 : null}
-                                    max={field.type === 'number' ? 100 : null}
-                                />
-                            }
-                            {formik.errors[field.name] && formik.touched[field.name] ? (
-                                <Alert role="alert"> {formik.errors[field.name]} </Alert>
-                            ) : null}
-                        </Field>;
-                    })}
+            <>
+                <Primary> {primaryText} </Primary>
+                <Secondary> {secondaryText} </Secondary>
+                <StyledForm onSubmit={formik.handleSubmit} >
+                    {fields
+                        .filter(field => user ? field : !field.loggedUser)
+                        .filter(field => !user ? field : !field.publicOnly)
+                        .map(field => {
+                            return <Field key={field.name} alert={formik.errors[field.name] && formik.touched[field.name]} >
+                                {field.type === 'hidden' ? null : <Label htmlFor={field.name}>{field.label}</Label>}
+                                {field.type === 'radio' ?
+                                    <>
+                                        {field.choice.map(choice => {
+                                            return <Radiolabel key={choice.value} >
+                                                <Radio
+                                                    type={field.type}
+                                                    name={field.name}
+                                                    value={choice.value}
+                                                    onChange={formik.handleChange}
+                                                />
+                                                <span>{choice.label}</span>
+                                            </Radiolabel>;
+                                        })}
+                                    </> :
+                                    <Input
+                                        id={field.name}
+                                        name={field.name}
+                                        type={field.type}
+                                        onChange={formik.handleChange}
+                                        value={formik.values[field.name]}
+                                        min={field.type === 'number' ? 1 : null}
+                                        max={field.type === 'number' ? 100 : null}
+                                    />
+                                }
+                                {formik.errors[field.name] && formik.touched[field.name] ? (
+                                    <Alert role="alert"> {formik.errors[field.name]} </Alert>
+                                ) : null}
+                            </Field>;
+                        })}
 
-                <Button type="submit">Wyślij</Button>
+                    <Button type="submit">Wyślij</Button>
 
-            </StyledForm>
+                </StyledForm>
+            </>
 
     );
 };

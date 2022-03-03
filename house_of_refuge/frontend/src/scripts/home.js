@@ -79,12 +79,16 @@ const App = ({ userData }) => {
             </Link>
           </ButtonWrap>} />
           <Route path="/form1" element={<Form
+            primaryText="Udostępniam nocleg"
+            secondaryText="Можу надати житло"
             fields={fields1}
             validationSchema={validationSchema1}
             url='/api/stworz_zasob'
             successInfo='Dziękujemy za zgłoszenie.'
           />} />
           <Route path="/form2" element={<Form
+            primaryText="Потребує житло"
+            secondaryText="Szukam noclegu"
             fields={fields2}
             validationSchema={validationSchema2}
             url='/api/zglos'
