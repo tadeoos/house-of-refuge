@@ -710,8 +710,9 @@ const CoordinaotrsHeader = ({coordinators, helped}) => {
         <ol>{(coordinators.remote || []).map(c => <li key={c.user.id}>{c.user.display}</li>)}</ol>
       </div>
     </div>
-    <div><h5 className="good-message">Pomogliśmy dziś już {helped} ludziom</h5>
-    </div>
+    {helped &&
+        <div><h5 className="good-message">Pomogliśmy dziś {helped} osobom {"🙏".repeat(Math.floor(helped / 10))}</h5>
+        </div>}
   </>;
 };
 
@@ -758,8 +759,6 @@ const App = ({subs, initialResources, userData, coordinators, helped}) => {
                                clearActiveSub={clearActiveSub}
     /> : <SubmissionList user={userData} subs={subs} btnHandler={subIsTaken}/>
     }
-    <CoordinaotrsHeader coordinators={coordinators} helped={helped}/>
-
   </>;
 };
 
