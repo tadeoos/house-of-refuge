@@ -46,7 +46,7 @@ export const fields1 = [
     },
     {
         name: 'zip_code',
-        label: 'Kod poczotwy',
+        label: 'Kod pocztowy',
         type: 'text'
     },
     {
@@ -193,7 +193,7 @@ export const fields2 = [
     },
     {
         name: 'how_long',
-        label: 'Jak dlugo',
+        label: 'Na jak długo?',
         type: 'text'
     },
     {
@@ -214,7 +214,7 @@ export const fields2 = [
     },
     {
         name: 'can_stay_with_pets',
-        label: 'Czy mozesz spac w miejscu ze zwierzetami?',
+        label: 'Czy możesz spać w miejscu ze zwierzętami?',
         subHeading: 'Np. alergie',
         type: 'text'
     },
