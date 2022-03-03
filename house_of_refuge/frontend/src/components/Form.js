@@ -8,7 +8,8 @@ const StyledForm = styled.form`
   display: flex;
   flex-direction: column;
   margin: auto;
-  max-width: 400px;
+  width: 100%;
+  max-width: 360px;
   margin-top: 32px;
   margin-bottom: 32px;
 `;
@@ -22,7 +23,7 @@ const Label = styled.label`
 const Input = styled.input.attrs(({ type }) => ({
     as: type === 'textarea' ? type : 'input'
   }))`
-  height: 40px; 
+  height: 44px; 
   padding: 0 8px;
   box-sizing: border-box;
   border-radius: 3px; 
@@ -86,7 +87,7 @@ const Form = ({ fields, validationSchema, url, successInfo, user }) => {
         initialValues: fields.reduce((acc, field) => (acc[field.name] =
             field.type === 'checkbox' ? false :
                 field.type === 'date' ? new Date().toISOString().split('T')[0] :
-                    field.name === 'receiver' ? user.id :
+                    field.name === 'receiver' && user ? user.id :
                         '', acc), {}),
         validationSchema,
         onSubmit: async (values) => {
