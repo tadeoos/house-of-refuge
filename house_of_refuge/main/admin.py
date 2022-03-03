@@ -146,7 +146,7 @@ class HousingResourceAdmin(ImportExportModelAdmin):
 @admin.register(Submission)
 class SubmissionAdmin(ImportExportModelAdmin):
     # resource_class = HousingRow
-    search_fields = ("name", "languages", "receiver__name", "coordinator__name", "note")
+    search_fields = ("name", "languages", "receiver__name", "coordinator__name", "note", "contact_person")
     list_display = ("name", "people", "how_long", "source", "status", "receiver", "matcher", "coordinator")
     list_filter = ("status", "source")
     list_editable = ("status", "source")
