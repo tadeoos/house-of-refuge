@@ -568,7 +568,7 @@ function SubmissionRow({sub, activeHandler, user, isActive = false}) {
       </tr>}
       <tr>
         <th>Osoba zgłaszająca:</th>
-        <td>{sub.receiver?.display || sub.contact_person}</td>
+        <td>{sub.receiver?.display || "ZGŁOSZENIE ZE STRONY"}</td>
         <th>Hosta {["searching", "new"].includes(sub.status) ? "szuka" : "znalazł"}:</th>
         <td>{sub.matcher?.display || getActionBtn()}</td>
         <th>Łącznik:</th>
