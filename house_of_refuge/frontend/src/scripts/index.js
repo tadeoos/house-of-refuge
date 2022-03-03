@@ -114,7 +114,7 @@ const getPickUpDisplay = (v) => {
   return v ? "Przyjedzie" : "My musimy zawieźć";
 };
 
-const ResourceRow = ({resource, isExpanded, statusUpdateHandler, onMatch, compact = false}) => {
+const ResourceRow = ({resource, isExpanded, onMatch, compact = false}) => {
   const [expanded, setExpanded] = useState(isExpanded);
   const [showModal, setShowModal] = useState(false);
   useEffect(() => {
@@ -122,11 +122,6 @@ const ResourceRow = ({resource, isExpanded, statusUpdateHandler, onMatch, compac
       setExpanded(isExpanded);
     };
   }, [isExpanded]);
-
-  const updateStatus = (value) => {
-    console.log("Status dropdown updated: ", value);
-    statusUpdateHandler(resource, value);
-  };
 
   const updateNote = (value) => {
 
@@ -269,28 +264,6 @@ const ResourceList = ({initialResources, sub, subHandler, user, clearActiveSub})
 
   });
 
-  const updateStatus = (resource, value) => {
-
-    const newStatus = value[0];
-
-    if (newStatus.value === resource.status) {
-      console.log("Status hasn't changed!");
-      return;
-    }
-
-    fetch(`/api/update_status/${resource.id}`, {
-      method: 'POST', // *GET, POST, PUT, DELETE, etc.
-      headers: {
-        'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken')
-      }, body: JSON.stringify(newStatus) // body data type must match "Content-Type" header
-    }).then(response => response.json()).then(data => {
-      console.log('Response: ', data);
-      // toast(`${data.message}`, {type: data.status});
-    }).catch((error) => {
-      console.error('Error:', error);
-    });
-  };
-
   const matchFound = (resource, transport) => {
     fetch(`/api/match_found`, {
       method: 'POST', // *GET, POST, PUT, DELETE, etc.
@@ -310,7 +283,7 @@ const ResourceList = ({initialResources, sub, subHandler, user, clearActiveSub})
   useEffect(() => {
     const interval = setInterval(() => {
       setDataSemaphore((s) => !s);
-    }, getRandomInt(1200, 4000));
+    }, getRandomInt(5000, 1000));
     return () => clearInterval(interval);
   }, []);
 
@@ -417,7 +390,6 @@ const ResourceList = ({initialResources, sub, subHandler, user, clearActiveSub})
           />)}
         </div>
         {visibleResources.slice(0, 150).map(r => <ResourceRow resource={r} isExpanded={expandAll}
-                                                              statusUpdateHandler={updateStatus}
                                                               key={r.id} onMatch={matchFound}/>)}
       </>
 
@@ -476,6 +448,7 @@ function SubmissionRow({sub, activeHandler, user, isActive = false}) {
   const isGroupAdmin = user.coordinator;
 
   const btnHandler = () => {
+    console.log("btn handler clicked");
     activeHandler(sub, isActive);
   };
 
@@ -497,7 +470,11 @@ function SubmissionRow({sub, activeHandler, user, isActive = false}) {
 
   const updateStatus = (value) => {
     console.log("Updating value: ", value);
-    updateSubStatus(sub, value[0].value);
+    if (value !== sub.status) {
+      updateSubStatus(sub, value[0].value);
+    } else {
+      console.log("would update but we're smart now");
+    }
   };
 
   const freeUpMatcher = () => {
@@ -628,7 +605,7 @@ const SubmissionList = ({user, subs, btnHandler, sourceFilter,
   useEffect(() => {
     const interval = setInterval(() => {
       setDataSemaphore((s) => !s);
-    }, getRandomInt(1200, 4000));
+    }, getRandomInt(2500, 8000));
     return () => clearInterval(interval);
   }, []);
 
@@ -637,12 +614,10 @@ const SubmissionList = ({user, subs, btnHandler, sourceFilter,
     const result = await response.json();
     console.log("got data", result.data);
     if (isEqual(submissions, result.data.submissions)) {
-      console.log("Subs  ARE EQUALL");
     } else {
       setSubmissions(result.data.submissions);
     }
     if (isEqual(droppedHosts, result.data.dropped)) {
-      console.log("Drops  ARE EQUALL");
     } else {
       setDroppedHosts(result.data.dropped);
     }
