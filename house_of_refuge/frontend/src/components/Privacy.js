@@ -5,6 +5,7 @@ const StyledPrivacy = styled.div`
   font-size: 15px;
   max-width: 650px;
   margin: auto;
+  margin-top: 42px;
 
   h3 {
       margin-bottom: 36px;
@@ -23,7 +24,7 @@ const Privacy = ({ className }) => {
     return (
         <StyledPrivacy className={className}>
             <h3>
-                Polityka prywatności / політика конфіденційності
+                Polityka prywatności / Політика конфіденційності
             </h3>
             <span>
                 <p>
