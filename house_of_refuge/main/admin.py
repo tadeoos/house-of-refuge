@@ -50,7 +50,7 @@ class CherryWidget(Widget):
 class VerifiedWidget(Widget):
     def clean(self, value, row=None, *args, **kwargs):
 
-        if value.lower() in ["wiśnia", "wisnia"] or "zweryfikow" in value.lower():
+        if value.lower() in ["wiśnia", "wisnia"] or "zwer" in value.lower():
             return True
         else:
             return False
