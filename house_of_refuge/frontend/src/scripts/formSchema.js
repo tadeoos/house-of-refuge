@@ -72,8 +72,8 @@ export const fields1 = [
     {
         name: 'when_to_call',
         label: 'W jakich godzinach możemy do Ciebie dzwonić?',
-        subHeading: 'Sporo godzin przybywa po północy. Czy możemy do Ciebie zadzownic pózno w nocy?',
-        type: 'text'
+        subHeading: 'Sporo ludzi przybywa po północy. Czy możemy do Ciebie zadzownic pózno w nocy? (Wybierz 0—24 jeżeli możemy dzwonić cały czas)',
+        type: 'custom_int_range'
     },
     {
         name: 'costs',
@@ -99,8 +99,8 @@ export const fields1 = [
     {
         name: 'transport',
         label: 'Czy jesteś w stanie przyjechać po osoby, którym udzielisz schronienia?',
-        subHeading: 'Np. na dworzec czy w podane miejsce pobytu'
-,         type: 'radio',
+        subHeading: 'Np. na dworzec czy w podane miejsce pobytu',
+        type: 'radio',
         choice: [
             {
                 value: 'warsaw',
@@ -167,7 +167,7 @@ export const validationSchema1 = () => yup.object({
         .string()
         .email('Niepoprawny adres email')
         .required('Pole wymagane'),
-    extra: yup.string().required('Pole wymagane'),
+    // extra: yup.string().required('Pole wymagane'),
 });
 
 
