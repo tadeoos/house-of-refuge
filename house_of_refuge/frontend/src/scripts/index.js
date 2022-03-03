@@ -436,10 +436,6 @@ const updateSub = (sub, fields) => {
   });
 };
 
-const updateSubStatus = (sub, value) => {
-  updateSub(sub, {"status": value});
-  console.log("sub status update");
-};
 
 function SubmissionRow({sub, activeHandler, user, isActive = false}) {
 
@@ -469,11 +465,12 @@ function SubmissionRow({sub, activeHandler, user, isActive = false}) {
   };
 
   const updateStatus = (value) => {
-    console.log("Updating value: ", value);
-    if (value !== sub.status) {
-      updateSubStatus(sub, value[0].value);
+    console.log("Updating sub value: ", value);
+    const newStatus = value[0].value;
+    if (newStatus !== sub.status) {
+      updateSub(sub, {"status": value});
     } else {
-      console.log("would update but we're smart now");
+      console.log("would update but we're smart now..");
     }
   };
 
