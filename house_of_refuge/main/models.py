@@ -85,6 +85,7 @@ class HousingResource(TimeStampedModel):
     will_pick_up_now = models.BooleanField(default=False)
     note = models.TextField(max_length=2048, default="", blank=True)
     cherry = models.BooleanField(default=False)
+    verified = models.BooleanField(default=False)
     is_dropped = models.BooleanField(default=False)
 
     objects = HousingResourceManager()
@@ -136,6 +137,7 @@ class HousingResource(TimeStampedModel):
             extra=self.extra,
             status=self.status,
             cherry=self.cherry,
+            verified=self.verified,
             note=self.note,
             compact_display=self.compact_display,
             owner=self.owner.as_json() if self.owner else None,
@@ -173,6 +175,14 @@ class SubmissionManager(Manager):
             cut_off = now.replace(day=now.day-1, hour=9, minute=0, second=0)
         return self.filter(created__gte=cut_off)
 
+    def for_happy_message(self):
+        now = timezone.now()
+        if now.hour > 9:
+            cut_off = now.replace(hour=9, minute=0, second=0)
+        else:
+            cut_off = now.replace(day=now.day - 1, hour=9, minute=0, second=0)
+        return self.filter(finished_at__gte=cut_off, status=SubStatus.SUCCESS)
+
 
 class Submission(TimeStampedModel):
     name = models.CharField(max_length=512, null=False, verbose_name="Imię i nazwisko")
@@ -203,6 +213,8 @@ class Submission(TimeStampedModel):
     priority = models.IntegerField(default=1)
     source = models.CharField(choices=SubSource.choices, default=SubSource.WEBFORM, max_length=64)
 
+    finished_at = models.DateTimeField(null=True)
+
     # TODO: dorobić last status update?
 
     objects = SubmissionManager()
@@ -223,7 +235,11 @@ class Submission(TimeStampedModel):
         elif self.status == SubStatus.GONE:
             self.priority = 3
         elif self.status == SubStatus.CANCELLED:
-            self.priority = -2
+            self.priority = -3
+        elif self.status == SubStatus.CANCELLED:
+            self.priority = -4
+        if self.status == SubStatus.SUCCESS and not self.finished_at:
+            self.finished_at = timezone.now()
         return super(Submission, self).save(*args, **kwargs)
 
     @property

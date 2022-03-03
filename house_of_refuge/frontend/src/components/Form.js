@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useFormik } from 'formik';
 import axios from 'axios';
@@ -12,6 +12,7 @@ const StyledForm = styled.form`
   max-width: 400px;
   margin-top: 32px;
   margin-bottom: 32px;
+  padding: 6px;
 `;
 
 const Label = styled.label`
@@ -22,16 +23,23 @@ const Label = styled.label`
   margin-left: ${p => p.type === 'checkbox' ? '20px' : 'initial'};
   position: ${p => p.type === 'checkbox' ? 'absolute' : 'initial'};
   cursor: ${p => p.type === 'checkbox' ? 'pointer' : 'initial'};
-
 `;
-
 
 const SubHeading = styled.span`
   text-align: left;
   font-size: 13.5px;
   line-height: 19px;
-  opacity: 0.55;
+  opacity: 0.6;
   margin-top: 2px;
+`;
+
+const CustomIntRange = styled.span`
+  justify-content: space-between;
+  display: flex;
+   
+   > input {
+       width: calc(50% - 8px);
+   }
 `;
 
 
@@ -49,6 +57,8 @@ const Input = styled.input.attrs(({ type }) => ({
   min-height:  ${p => p.type === 'textarea' ? '70px' : 'initial'};
   max-height:  ${p => p.type === 'textarea' ? '140px' : 'initial'};
   padding-top:  ${p => p.type === 'textarea' ? '8px' : 'initial'};
+  -webkit-appearance: none;
+  -moz-appearance: none;
 `;
 
 
@@ -88,7 +98,7 @@ const Field = styled.div`
   flex-direction: column;
   
   * {
-  color:  ${p => p.alert ? '#d93025' : 'initial'};
+  color:  ${p => p.alert ? '#d93025' : 'inherit'};
   }
 `;
 
@@ -103,11 +113,19 @@ const Primary = styled.span`
    font-weight: 700;
    margin-top: 80px;
    text-align: center;
+
+   @media (max-width: 600px) {
+      font-size: 24px;
+   }
 `;
 
 const Secondary = styled.div`
    font-size: 18px;
    text-align: center;
+
+   @media (max-width: 600px) {
+    font-size: 16px;
+   }
 `;
 
 
@@ -122,6 +140,11 @@ const UserInfo = styled.div`
 
 const Form = ({ fields, validationSchema, url, successInfo, user, primaryText, secondaryText }) => {
     const [success, setSuccess] = useState(false);
+    const [whenToCall, setWhenToCall] = useState('9—22');
+
+    useEffect(() => {
+        formik.setFieldValue('when_to_call', whenToCall);
+    }, [whenToCall]);
 
     const formik = useFormik({
         initialValues: fields.reduce((acc, field) => (acc[field.name] =
@@ -199,16 +222,36 @@ const Form = ({ fields, validationSchema, url, successInfo, user, primaryText, s
                                                 {option.label}
                                             </option>)}
                                         </select>
-                                        :
-                                        <Input
-                                            id={field.name}
-                                            name={field.name}
-                                            type={field.type}
-                                            onChange={formik.handleChange}
-                                            value={formik.values[field.name]}
-                                            min={field.type === 'number' ? 1 : null}
-                                            max={field.type === 'number' ? 100 : null}
-                                        />
+                                        : field.type === 'custom_int_range' && field.name === 'when_to_call' ?
+                                            <CustomIntRange>
+                                                <Input
+                                                    id={field.name}
+                                                    name={field.name}
+                                                    type='number'
+                                                    onChange={(e) => setWhenToCall(e.currentTarget.value + '—' + whenToCall.split('—')[1])}
+                                                    value={whenToCall.split('—')[0]}
+                                                    min={0}
+                                                    max={24}
+                                                />
+                                                <Input
+                                                    id={field.name}
+                                                    name={field.name}
+                                                    type='number'
+                                                    onChange={(e) => setWhenToCall(whenToCall.split('—')[0] + '—' + e.currentTarget.value)}
+                                                    value={whenToCall.split('—')[1]}
+                                                    min={0}
+                                                    max={24}
+                                                />
+                                            </CustomIntRange>
+                                            : <Input
+                                                id={field.name}
+                                                name={field.name}
+                                                type={field.type}
+                                                onChange={formik.handleChange}
+                                                value={formik.values[field.name]}
+                                                min={field.type === 'number' ? 1 : null}
+                                                max={field.type === 'number' ? 100 : null}
+                                            />
                                 }
                                 {field.type === 'checkbox' ? <Label type='checkbox' htmlFor={field.name}>{field.label}</Label> : null}
                                 {formik.errors[field.name] && formik.touched[field.name] ? (

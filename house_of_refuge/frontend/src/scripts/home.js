@@ -23,6 +23,7 @@ const StyledApp = styled.div`
   justify-content: space-between;
   height: 100%;
   font-family: 'Roboto', sans-serif;
+  color: #212121;
 
   .Footer {
     justify-content: flex-end;
@@ -34,7 +35,7 @@ const ButtonWrap = styled.div`
   flex-direction: column;
 
   > a {
-    color: initial;
+    color: inherit;
     text-decoration: none;
     display: flex;
   }

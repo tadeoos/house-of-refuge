@@ -24,7 +24,7 @@ const Footer = ({ className }) => {
     return (
         <StyledFooter className={className}>
             <Link to="/privacy">
-                    Polityka prywatności / політика конфіденційності
+                    Polityka prywatności / Політика конфіденційності
             </Link>
         </StyledFooter >
     );

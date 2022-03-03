@@ -149,7 +149,10 @@ const ResourceRow = ({resource, isExpanded, statusUpdateHandler, onMatch, compac
   };
 
   return <div className={`resource-row`}>
-    <div className={`base-content row-${resource.status} ${resource.cherry ? "row-verified" : ""}`}>
+    <div className={`base-content row-${resource.status}
+      ${resource.verified ? "row-verified" : ""} ${resource.cherry ? "row-cherry" : ""}
+      ${resource.is_dropped ? "row-dropped" : ""}
+      `}>
       {VISIBLE.map(
           (a) => <div onClick={() => setExpanded(e => !e)} className={"col"}
                       key={`${resource.id}-${a}`}>{getResourceDisplay(resource[a])}</div>)}
@@ -501,6 +504,11 @@ function SubmissionRow({sub, activeHandler, user, isActive = false}) {
     updateSub(sub, {"matcher": null, "status": "new"});
   };
 
+  const freeUpCoord = () => {
+    updateSub(sub, {"coordinator": null});
+  };
+
+
   const setCoordinator = () => {
     console.log("sub status update");
     fetch(`/api/sub/update/${sub.id}`, {
@@ -569,7 +577,7 @@ function SubmissionRow({sub, activeHandler, user, isActive = false}) {
           status
         </th>
         <td>
-          {isCoordinator ? <Select
+          {isCoordinator || isGroupAdmin ? <Select
               values={SUB_STATE_OPTIONS.filter((o) => o.value === sub.status)}
               options={SUB_STATE_OPTIONS}
               onChange={updateStatus}
@@ -578,10 +586,14 @@ function SubmissionRow({sub, activeHandler, user, isActive = false}) {
         </td>
       </tr>
       {
-          isGroupAdmin && <tr>
+          isGroupAdmin && !isActive && <tr>
             <th>Akcje koordynatora</th>
-            {sub.matcher && <td><Button onClick={freeUpMatcher}>Zwolnij hosta</Button></td>}
-            <td><Button>Zmień status</Button></td>
+            <td colSpan={6}>
+              <div className={"d-flex justify-content-evenly"}>
+                {sub.matcher && <td><Button variant={"warning"} onClick={freeUpMatcher}>Zwolnij zgłoszenie</Button></td>}
+                {sub.coordinator && <td><Button variant={"warning"} onClick={freeUpCoord}>Zwolnij łącznika</Button></td>}
+              </div>
+            </td>
           </tr>
       }
       </tbody>
@@ -743,7 +755,6 @@ const SubmissionList = ({user, subs, btnHandler}) => {
 
 
 const CoordinaotrsHeader = ({coordinators, helped}) => {
-  console.log(coordinators);
   return <>
     <div className="coordinators">
       <div>
@@ -755,9 +766,9 @@ const CoordinaotrsHeader = ({coordinators, helped}) => {
         <ol>{(coordinators.remote || []).map(c => <li key={c.user.id}>{c.user.display}</li>)}</ol>
       </div>
     </div>
-    {helped &&
+    {helped ?
         <div><h5 className="good-message">Pomogliśmy dziś {helped} osobom {"🙏".repeat(Math.floor(helped / 10))}</h5>
-        </div>}
+        </div> : <></>}
   </>;
 };
 

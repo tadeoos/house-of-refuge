@@ -72,8 +72,8 @@ export const fields1 = [
     {
         name: 'when_to_call',
         label: 'W jakich godzinach możemy do Ciebie dzwonić?',
-        subHeading: 'Sporo godzin przybywa po północy. Czy możemy do Ciebie zadzownic pózno w nocy?',
-        type: 'text'
+        subHeading: 'Sporo ludzi przybywa po północy. Czy możemy do Ciebie zadzownic pózno w nocy? (Wybierz 0—24 jeżeli możemy dzwonić cały czas)',
+        type: 'custom_int_range'
     },
     {
         name: 'costs',
@@ -88,7 +88,7 @@ export const fields1 = [
     {
         name: 'accommodation_length',
         label: 'Na jak długo udostępniasz nocleg?',
-        type: 'text'
+        type: 'number'
     },
     {
         name: 'details',
@@ -99,8 +99,8 @@ export const fields1 = [
     {
         name: 'transport',
         label: 'Czy jesteś w stanie przyjechać po osoby, którym udzielisz schronienia?',
-        subHeading: 'Np. na dworzec czy w podane miejsce pobytu'
-,         type: 'radio',
+        subHeading: 'Np. na dworzec czy w podane miejsce pobytu',
+        type: 'radio',
         choice: [
             {
                 value: 'warsaw',
@@ -123,7 +123,8 @@ export const fields1 = [
     },
     {
         name: 'backup_phone_number',
-        label: 'Awaryjny numer telefonu (dodatkowa osoba kontaktowa)',
+        label: 'Awaryjny numer telefonu',
+        subHeading: 'Dodatkowa osoba kontaktowa',
         type: 'text'
     },
     {
@@ -152,7 +153,7 @@ export const validationSchema1 = () => yup.object({
     when_to_call: yup.string().required('Pole wymagane'),
     costs: yup.string().required('Pole wymagane'),
     availability: yup.date().required('Pole wymagane'),
-    accommodation_length: yup.string().required('Pole wymagane'),
+    accommodation_length: yup.number().required('Pole wymagane'),
     details: yup.string().required('Pole wymagane'),
     transport: yup.string().required('Pole wymagane'),
     phone_number: yup
@@ -167,7 +168,7 @@ export const validationSchema1 = () => yup.object({
         .string()
         .email('Niepoprawny adres email')
         .required('Pole wymagane'),
-    extra: yup.string().required('Pole wymagane'),
+    // extra: yup.string().required('Pole wymagane'),
 });
 
 
@@ -198,6 +199,7 @@ export const fields2 = [
     {
         name: 'description',
         label: 'Opisz grupę, podaj wiek wszystkich osób',
+        subHeading: 'Relacje ich łączące (np. rodzina, przyjaciele)',
         type: 'text'
     },
     {
@@ -213,7 +215,7 @@ export const fields2 = [
     {
         name: 'can_stay_with_pets',
         label: 'Czy mozesz spac w miejscu ze zwierzetami?',
-        subHeading: 'Alergie itp.',
+        subHeading: 'Np. alergie',
         type: 'text'
     },
     {
