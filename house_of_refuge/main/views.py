@@ -84,6 +84,7 @@ def resource_match_found(request):
     resource = HousingResource.objects.select_for_update().get(id=resource_id)
     resource.owner = request.user
     resource.will_pick_up_now = data["transport"]
+    resource.is_dropped = False
     resource.save()
     sub = Submission.objects.get(id=sub_id)
     if sub.resource is not None and sub.resource == resource:
