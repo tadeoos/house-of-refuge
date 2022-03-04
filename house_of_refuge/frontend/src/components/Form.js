@@ -120,24 +120,26 @@ const Primary = styled.span`
 const Secondary = styled.div`
    font-size: 18px;
    text-align: center;
-
+   
    @media (max-width: 600px) {
-    font-size: 16px;
-   }
+       font-size: 16px;
+    }
 `;
 
-
-const UserInfo = styled.div`
+const Info = styled.div`
    font-size: 14px;
-   position: fixed;
-   bottom: 8px;
-   left: 12px;
-   color: #898F9C;
+   text-align: center;
+   color: #fff;
+   width: auto;
+   background-color: #212121;
+   margin: auto;
+   padding: 0 6px;
+   margin-top: ${p => p.marginTop + 'px'};
 `;
-
 
 const Form = ({ fields, validationSchema, url, successInfo, user, primaryText, secondaryText }) => {
     const [success, setSuccess] = useState(false);
+    const [error, setError] = useState(false);
     const [whenToCall, setWhenToCall] = useState('9—22');
 
     useEffect(() => {
@@ -147,6 +149,10 @@ const Form = ({ fields, validationSchema, url, successInfo, user, primaryText, s
     useEffect(() => {
         !user && formik.setFieldValue('source', 'webform');
     }, []);
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [error]);
 
     const formik = useFormik({
         initialValues: fields.reduce((acc, field) => (acc[field.name] =
@@ -172,11 +178,15 @@ const Form = ({ fields, validationSchema, url, successInfo, user, primaryText, s
                 },
             })
                 .catch(error => {
-                    // error && setError(true)
+                    error && setError(true);
                 })
-                .then(response => {
-                    if (response) {
-                        setSuccess(true);
+                .then(res => {
+                    if (res) {
+                        if (res.statusText === 'Created') {
+                            setSuccess(true);
+                        } else {
+                            setError(true);
+                        }
                     }
                 });
         }
@@ -187,7 +197,8 @@ const Form = ({ fields, validationSchema, url, successInfo, user, primaryText, s
             <>
                 <Primary> {primaryText} </Primary>
                 <Secondary> {secondaryText} </Secondary>
-                {user && <UserInfo> logged: {user.name} </UserInfo>}
+                {user && <Info marginTop={48} > Zalogowany: {user.name} </Info>}
+                {error && <Info marginTop={3} > Błąd serwera. Spróbuj jeszcze raz. </Info>}
 
                 <StyledForm onSubmit={formik.handleSubmit} >
                     {fields
