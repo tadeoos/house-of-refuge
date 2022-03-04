@@ -97,7 +97,6 @@ def resource_match_found(request):
             "message": f"This submission already have a diiferent resource",
             "object": sub.as_prop(),
         }, status=400)
-    assert sub.matcher == request.user
     sub.resource = resource
     sub.status = SubStatus.IN_PROGRESS
     sub.save()
