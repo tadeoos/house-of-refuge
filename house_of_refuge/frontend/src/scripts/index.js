@@ -635,7 +635,7 @@ const SubmissionList = ({user, subs, btnHandler, sourceFilter,
   useEffect(() => {
     const interval = setInterval(() => {
       setDataSemaphore((s) => !s);
-    }, getRandomInt(1000, 2000));
+    }, getRandomInt(1000, 1300));
     return () => clearInterval(interval);
   }, []);
 
@@ -798,7 +798,7 @@ const CoordinaotrsHeader = ({coordinators, helped}) => {
 
 
 const App = ({subs, initialResources, userData, coordinators, helped}) => {
-  const [activeSub, setActiveSub] = useState(subs[0]);
+  const [activeSub, setActiveSub] = useState(null);
   const [sourceFilter, setSourceFilter] = useState([{label: "Teren", value: "terrain"}]);
   const [statusFilter, setStatusFilter] = useState([]);
   const [droppedFilter, setDroppedFilter] = useState(true);
