@@ -15,7 +15,7 @@ services:
       mountPath: /var/lib/redis
       sizeGB: 1 # optional
   - type: web
-    name: zasoby-web
+    name: zasoby
     env: python
     region: frankfurt
     branch: master
