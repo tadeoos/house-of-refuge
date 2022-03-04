@@ -36,7 +36,7 @@ const SubHeading = styled.span`
 const CustomIntRange = styled.span`
   justify-content: space-between;
   display: flex;
-   
+
    > input {
        width: calc(50% - 8px);
    }
@@ -52,7 +52,7 @@ const Input = styled.input.attrs(({ type }) => ({
   cursor: ${p => p.type === 'checkbox' ? 'pointer' : 'initial'};
   padding: 0 8px;
   box-sizing: border-box;
-  border-radius: 3px; 
+  border-radius: 3px;
   border: 1px solid #898F9C;
   min-height: ${p => p.type === 'textarea' ? '70px' : 'initial'};
   max-height: ${p => p.type === 'textarea' ? '140px' : 'initial'};
@@ -73,7 +73,7 @@ const Radio = styled.input`
 `;
 
 const Button = styled.button`
-  margin-top: 36px; 
+  margin-top: 36px;
   padding: 0;
   cursor: pointer;
   width: 100%;
@@ -94,7 +94,7 @@ const Alert = styled.div`
 const Field = styled.div`
   display: flex;
   flex-direction: column;
-  
+
   * {
   color:  ${p => p.alert ? '#d93025' : 'inherit'};
   }
@@ -120,7 +120,7 @@ const Primary = styled.span`
 const Secondary = styled.div`
    font-size: 18px;
    text-align: center;
-   
+
    @media (max-width: 600px) {
        font-size: 16px;
     }
@@ -179,6 +179,7 @@ const Form = ({ fields, validationSchema, url, successInfo, user, primaryText, s
             })
                 .catch(error => {
                     error && setError(true);
+                    console.log("error: ", error);
                 })
                 .then(res => {
                     if (res) {

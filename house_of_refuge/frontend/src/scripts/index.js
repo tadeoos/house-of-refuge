@@ -625,7 +625,7 @@ const SubmissionList = ({user, subs, btnHandler, sourceFilter,
   const [visibleSubmissions, setVisibleSubmissions] = useState(submissions);
   const [searchQuery, setSearchQuery] = useState("");
   const [userOnly, setUserOnly] = useState(false);
-  const [todayFilter, setTodayFilter] = useState(false);
+  const [todayFilter, setTodayFilter] = useState(true);
   const [dataSemaphore, setDataSemaphore] = useState(true);
   const [latestChange, setLatestChange] = useState(0);
 
