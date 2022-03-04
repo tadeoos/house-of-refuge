@@ -144,6 +144,10 @@ const Form = ({ fields, validationSchema, url, successInfo, user, primaryText, s
         formik.setFieldValue('when_to_call', whenToCall);
     }, [whenToCall]);
 
+    useEffect(() => {
+        !user && formik.setFieldValue('source', 'webform');
+    }, []);
+
     const formik = useFormik({
         initialValues: fields.reduce((acc, field) => (acc[field.name] =
             field.type === 'checkbox' ? false :
