@@ -251,7 +251,10 @@ const Form = ({ fields, validationSchema, url, successInfo, user, primaryText, s
                                                 max={field.type === 'number' ? 100 : null}
                                             />
                                 }
-                                {field.type === 'checkbox' ? <Label type='checkbox' htmlFor={field.name}>{field.label}</Label> : null}
+                                {field.type === 'checkbox' ? <>
+                                    <Label type='checkbox' htmlFor={field.name}>{field.label}</Label>
+                                    {field.subHeading && <SubHeading> {field.subHeading}</SubHeading>}
+                                </> : null}
                                 {formik.errors[field.name] && formik.touched[field.name] ? (
                                     <Alert role="alert"> {formik.errors[field.name]} </Alert>
                                 ) : null}
