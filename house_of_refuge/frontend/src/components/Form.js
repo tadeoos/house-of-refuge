@@ -183,13 +183,12 @@ const Form = ({ fields, validationSchema, url, successInfo, user, primaryText, s
                 })
                 .then(res => {
                     if (res) {
-                        setSuccess(true);
                         console.log("RESPONSE:", res);
-                        // if (res.statusText === 'Created') {
-                        //     setSuccess(true);
-                        // } else {
-                        //     setError(true);
-                        // }
+                        if (res.status === 201) {
+                            setSuccess(true);
+                        } else {
+                            setError(true);
+                        }
                     }
                 });
         }
