@@ -1,12 +1,12 @@
 databases:
-  - name: zasoby
+  - name: zasoby-db
     databaseName: zasoby
     user: zasoby
     region: frankfurt
 
 services:
   - type: pserv
-    name: zasoby
+    name: zasoby-redis
     env: docker
     repo: https://github.com/render-examples/redis.git # optional
     region: frankfurt
@@ -15,7 +15,7 @@ services:
       mountPath: /var/lib/redis
       sizeGB: 1 # optional
   - type: web
-    name: zasoby
+    name: zasoby-web
     env: python
     region: frankfurt
     branch: master
@@ -30,7 +30,7 @@ services:
     envVars:
       - key: DATABASE_URL
         fromDatabase:
-          name: zasoby
+          name: zasoby-db
           property: connectionString
       - key: DJANGO_SECRET_KEY
         generateValue: true
@@ -42,6 +42,6 @@ services:
         value: "config.settings.production"
       - key: REDIS_URL
         fromService:
-          name: zasoby
+          name: zasoby-redis
           type: pserv
           property: hostport

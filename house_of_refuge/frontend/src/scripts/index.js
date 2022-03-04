@@ -224,6 +224,7 @@ const ResourceRow = ({resource, isExpanded, onMatch, compact = false}) => {
   </div>;
 };
 
+const SHOW_NUMBER = 250;
 
 const ColumnHeader = ({col, sortHandler, isSorting, sortDirection, filterData}) => {
   const iconClass = isSorting ? "sort-active" : "sort-muted";
@@ -388,7 +389,7 @@ const ResourceList = ({initialResources, sub, subHandler, user, clearActiveSub})
         {/*<Button>Do odbioru dzisiaj</Button>*/}
         {/*<Button>Na terenie warszawy</Button>*/}
         <div>
-          <p>{`${visibleResources.length} zasóbów ${visibleResources.length > 150 ? "(pokazuje pierwsze 150 wyników)" : ""}`}</p>
+          <p>{`${visibleResources.length} zasóbów ${visibleResources.length > SHOW_NUMBER ? `(pokazuje pierwsze ${SHOW_NUMBER} wyników)` : ""}`}</p>
         </div>
         <div className={"column-headers mt-3"}>
           <div className={"col dol-head r-id-col"}>ID</div>
@@ -398,7 +399,7 @@ const ResourceList = ({initialResources, sub, subHandler, user, clearActiveSub})
                            filterData={filters[colData.fieldName]}
           />)}
         </div>
-        {visibleResources.slice(0, 150).map(r => <ResourceRow resource={r} isExpanded={expandAll}
+        {visibleResources.slice(0, SHOW_NUMBER).map(r => <ResourceRow resource={r} isExpanded={expandAll}
                                                               key={r.id} onMatch={matchFound}/>)}
       </>
 
