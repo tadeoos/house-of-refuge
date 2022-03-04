@@ -602,7 +602,7 @@ const SubmissionList = ({user, subs, btnHandler, sourceFilter,
   useEffect(() => {
     const interval = setInterval(() => {
       setDataSemaphore((s) => !s);
-    }, getRandomInt(1000, 1300));
+    }, getRandomInt(2500, 4000));
     return () => clearInterval(interval);
   }, []);
 
