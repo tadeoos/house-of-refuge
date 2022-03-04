@@ -177,74 +177,84 @@ export const validationSchema1 = () => yup.object({
 export const fields2 = [
     {
         name: 'name',
-        label: 'Imię i nazwisko',
-        subHeading: '',
+        label: 'Ім’я та прізвище',
+        subHeading: 'Imię i nazwisko',
         type: 'text'
     },
     {
         name: 'phone_number',
-        label: 'Twój numer telefonu',
+        label: 'Ваш номер телефону',
+        subHeading: 'Twój numer telefonu',
         type: 'text'
     },
     {
         name: 'people',
-        label: 'Liczba osób',
+        label: 'Кількість людей',
+        subHeading: 'Liczba osób',
         type: 'number'
     },
     {
         name: 'how_long',
-        label: 'Na jak długo?',
+        label: 'На який час необхідне житло?',
+        subHeading: 'Na jak długo?',
         type: 'text'
     },
     {
         name: 'description',
-        label: 'Opisz grupę, podaj wiek wszystkich osób',
-        subHeading: 'Relacje ich łączące (np. rodzina, przyjaciele)',
+        label: 'Опишіть групу, вкажіть вік всіх прибулих і відносини між ними (наприклад: сім’я, друзі, одногрупники)',
+        subHeading: 'Opisz grupę, podaj wiek wszystkich osób, relacje ich łączące (np. rodzina, przyjaciele)',
         type: 'text'
     },
     {
         name: 'origin',
-        label: 'Narodowość',
+        label: 'Національність ',
+        subHeading: 'Narodowość',
         type: 'text'
     },
     {
         name: 'traveling_with_pets',
-        label: 'Czy podróżujesz ze zwierzętami',
+        label: 'Ви приїхали з домашніми тваринами?',
+        subHeading: 'Czy podróżujesz ze zwierzętami',
         type: 'text'
     },
     {
         name: 'can_stay_with_pets',
-        label: 'Czy możesz spać w miejscu ze zwierzętami?',
-        subHeading: 'Np. alergie',
+        label: 'Можете Ви спати в домі де є домашні тварини? (вкажіть алергії)',
+        subHeading: 'Czy możesz spać w miejscu ze zwierzętami? (np. alergie)',
         type: 'text'
     },
     {
         publicOnly: true,
         name: 'contact_person',
-        label: 'Osoba do kontaktu',
+        label: 'Контактна особа',
+        subHeading: 'Osoba do kontaktu',
         type: 'text'
     },
     {
         name: 'languages',
-        label: 'Języki jakie znasz',
+        label: 'Мови, якими Ви володієте ',
+        subHeading: 'Języki jakie znasz',
         type: 'text'
     },
     {
         name: 'when',
-        label: 'Od kiedy?',
+        label: 'З якого дня Вам необхідне житло?',
+        subHeading: 'Od kiedy dnia potrzebujesz mieszkanie?',
         type: 'date'
     },
     {
         publicOnly: true,
         name: 'transport_needed',
-        label: 'Potrzebuję transport',
+        label: 'Мені потрібен транспорт',
+        subHeading: 'Potrzebuję transport',
         type: 'checkbox',
     },
     // below for logged in
     {
         loggedUser: true,
         name: 'note',
-        label: 'Uwagi',
+        label: 'Додаткові уваги',
+        subHeading: 'Uwagi',
         type: 'text'
     },
     {
@@ -255,7 +265,8 @@ export const fields2 = [
     {
         loggedUser: true,
         name: 'source',
-        label: 'Źródło',
+        label: 'Джерело',
+        subHeading: 'Źródło',
         type: 'select',
         options: [
             {

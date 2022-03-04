@@ -97,6 +97,9 @@ class HousingResource(TimeStampedModel):
     class Meta:
         verbose_name = "Zasób"
         verbose_name_plural = "Zasoby"
+        indexes = [
+            models.Index(fields=['modified']),
+        ]
 
     @property
     def full_address(self):
@@ -227,6 +230,9 @@ class Submission(TimeStampedModel):
         verbose_name = "Zgłoszenie"
         verbose_name_plural = "Zgłoszenia"
         ordering = ['-priority', 'created']
+        indexes = [
+            models.Index(fields=['modified']),
+        ]
 
     def save(self, *args, **kwargs):
         if self.accomodation_in_the_future:

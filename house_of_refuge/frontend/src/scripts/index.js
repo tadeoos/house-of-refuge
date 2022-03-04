@@ -421,7 +421,7 @@ const getStatusDisplay = (status) => {
 const SUB_COLUMNS = ["status", "kto ogarnia w bazie", "zgłoszenie bezpośrednie czy przez kogoś (kontakt do łącznika)", "ile osób", "Imię i nazwisko", "Telefon bezpośredni do potrzebującego", "kto tam jest (jaki skład),czy mamy ogarniac dla nich transport", "kiedy w PL", "na jak długo", "dodatkowe informacje o potrzebujących", "osoba kontaktowa (nocleg)", "nr telefonu", "czy zapewnia transport (tak/nie)", "UWAGI",];
 
 
-const updateSub = (sub, fields) => {
+const updateSub = (sub, fields, onCorrect = null) => {
   console.log('sub update:', fields);
   fetch(`/api/sub/update/${sub.id}`, {
     method: 'POST', // *GET, POST, PUT, DELETE, etc.
@@ -430,6 +430,12 @@ const updateSub = (sub, fields) => {
     }, body: JSON.stringify({fields: fields}) // body data type must match "Content-Type" header
   }).then(response => response.json()).then(data => {
     console.log('Response: ', data);
+    if (data.status === "success") {
+      if (onCorrect) {
+        console.log("doing on correct");
+        onCorrect();
+      }
+    }
     // toast(`${data.message}`, {type: data.status});
   }).catch((error) => {
     console.error('Error:', error);
@@ -442,6 +448,8 @@ function SubmissionRow({sub, activeHandler, user, isActive = false}) {
   const isOwner = user.id === sub.matcher?.id;
   const isCoordinator = user.id === sub.coordinator?.id;
   const isGroupAdmin = user.coordinator;
+  const [status, setStatus] = useState(sub.status);
+  const [note, setNote] = useState(sub.note);
 
   const btnHandler = () => {
     console.log("btn handler clicked");
@@ -468,18 +476,18 @@ function SubmissionRow({sub, activeHandler, user, isActive = false}) {
     console.log("Updating sub value: ", value);
     const newStatus = value[0].value;
     if (newStatus !== sub.status) {
-      updateSub(sub, {"status": newStatus});
+      updateSub(sub, {"status": newStatus}, () => setStatus(newStatus));
     } else {
       console.log("would update but we're smart now..");
     }
   };
 
   const freeUpMatcher = () => {
-    updateSub(sub, {"matcher": null, "status": "new"});
+    updateSub(sub, {"matcher": null, "status": "new"}, () => setStatus("new"));
   };
 
   const freeUpCoord = () => {
-    updateSub(sub, {"coordinator": null});
+    updateSub(sub, {"coordinator": null}, ()=>null);
   };
 
 
@@ -530,7 +538,7 @@ function SubmissionRow({sub, activeHandler, user, isActive = false}) {
         <th>Potrzebuje transportu?</th>
         <td>{sub.transport_needed ? "tak" : "nie"}</td>
         <th>Notka</th>
-        <td><EditableField value={sub.note} onRename={(note) => updateSub(sub, {"note": note})}/></td>
+        <td><EditableField value={note} onRename={(note) => updateSub(sub, {"note": note}, () => setNote(note))}/></td>
       </tr>
       {sub.resource && <tr className="tr-host">
         <th>HOST</th>
@@ -552,10 +560,10 @@ function SubmissionRow({sub, activeHandler, user, isActive = false}) {
         </th>
         <td>
           {isCoordinator || isGroupAdmin ? <Select
-              values={SUB_STATE_OPTIONS.filter((o) => o.value === sub.status)}
+              values={SUB_STATE_OPTIONS.filter((o) => o.value === status)}
               options={SUB_STATE_OPTIONS}
               onChange={updateStatus}
-          /> : getStatusDisplay(sub.status)
+          /> : getStatusDisplay(status)
           }
         </td>
       </tr>
@@ -564,8 +572,8 @@ function SubmissionRow({sub, activeHandler, user, isActive = false}) {
             <th>Akcje koordynatora</th>
             <td colSpan={6}>
               <div className={"d-flex justify-content-evenly"}>
-                {sub.matcher && <td><Button variant={"warning"} onClick={freeUpMatcher}>Zwolnij zgłoszenie</Button></td>}
-                {sub.coordinator && <td><Button variant={"warning"} onClick={freeUpCoord}>Zwolnij łącznika</Button></td>}
+                {sub.matcher && <Button variant={"warning"} onClick={freeUpMatcher}>Zwolnij zgłoszenie</Button>}
+                {sub.coordinator && <Button variant={"warning"} onClick={freeUpCoord}>Zwolnij łącznika</Button>}
               </div>
             </td>
           </tr>
@@ -589,6 +597,13 @@ function getRandomInt(min, max) {
 }
 
 
+const getLatestSubId = async () => {
+  const response = await fetch(`/api/latest/subs/`);
+  const result = await response.json();
+  return result.id;
+};
+
+
 const SubmissionList = ({user, subs, btnHandler, sourceFilter,
                           setStatusFilter, setSourceFilter, statusFilter, droppedFilter, setDropped
 }) => {
@@ -598,6 +613,7 @@ const SubmissionList = ({user, subs, btnHandler, sourceFilter,
   const [searchQuery, setSearchQuery] = useState("");
   const [userOnly, setUserOnly] = useState(false);
   const [dataSemaphore, setDataSemaphore] = useState(true);
+  const [latestChange, setLatestChange] = useState(0);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -607,18 +623,20 @@ const SubmissionList = ({user, subs, btnHandler, sourceFilter,
   }, []);
 
   useEffect(async () => {
+    const latest = await getLatestSubId();
+    if (latest > latestChange) {
+      setLatestChange(latest);
+    }
+  }, [dataSemaphore]);
+
+  useEffect(async () => {
     const response = await fetch(`/api/zgloszenia`);
     const result = await response.json();
     console.log("got data", result.data);
-    if (isEqual(submissions, result.data.submissions)) {
-    } else {
-      setSubmissions(result.data.submissions);
-    }
-    if (isEqual(droppedHosts, result.data.dropped)) {
-    } else {
-      setDroppedHosts(result.data.dropped);
-    }
-  }, [dataSemaphore]);
+    setSubmissions(result.data.submissions);
+    // do latest for dropped
+    setDroppedHosts(result.data.dropped);
+  }, [latestChange]);
 
 
   const subBelongsToUser = (s) => {
