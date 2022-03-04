@@ -164,6 +164,15 @@ class SubStatus(models.TextChoices):
     CANCELLED = "cancelled", _("Nieaktualne")
 
 
+def get_our_today_cutoff():
+    now = timezone.now()
+    if now.hour > 9:
+        cut_off = now.date()
+    else:
+        cut_off = (now - datetime.timedelta(days=1)).date()
+    return cut_off
+
+
 class SubmissionManager(Manager):
 
     def for_remote(self):
@@ -172,12 +181,7 @@ class SubmissionManager(Manager):
         )
 
     def todays(self):
-        now = timezone.now()
-        if now.hour > 9:
-            cut_off = now.date()
-        else:
-            cut_off = (now - datetime.timedelta(days=1)).date()
-        return self.filter(when__lte=cut_off)
+        return self.filter(when__lte=get_our_today_cutoff())
 
     def for_happy_message(self):
         now = timezone.now()
@@ -257,7 +261,7 @@ class Submission(TimeStampedModel):
     def accomodation_in_the_future(self):
         if self.when:
             when = self.when.date() if isinstance(self.when, datetime.datetime) else self.when
-            return when > timezone.now().date()
+            return when > get_our_today_cutoff()
         return False
 
     def handle_gone(self):
