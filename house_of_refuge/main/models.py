@@ -256,10 +256,11 @@ class Submission(TimeStampedModel):
 
     def handle_gone(self):
         self.status = SubStatus.CANCELLED
-        self.resource.is_dropped = True
-        self.resource.owner = None
-        self.resource.save()
-        self.resource = None
+        if self.resource:
+            self.resource.is_dropped = True
+            self.resource.owner = None
+            self.resource.save()
+            self.resource = None
         self.note += f' \nDropped at {timezone.now().strftime("%Y-%m-%d %H:%M:%S")}'
         self.save()
 
