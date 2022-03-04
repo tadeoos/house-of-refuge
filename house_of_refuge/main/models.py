@@ -270,7 +270,7 @@ class Submission(TimeStampedModel):
         self.status = SubStatus.CANCELLED
         if self.resource:
             self.resource.is_dropped = True
-            self.resource.note += f"\nHosta znalazł: {self.resource.owner}"
+            self.resource.note += f"\nHosta znaleziony przez: {self.resource.owner}"
             self.resource.owner = None
             self.resource.save()
             self.resource = None

@@ -142,9 +142,12 @@ def update_resource_note(request, resource_id, **kwargs):
 def create_submission(request):
     # TODO: add some validation
     serializer = SubmissionSerializer(data=request.data)
+    print(f"Got sub data: {request.data}")
     if serializer.is_valid():
         serializer.save()
+        print(f"Seralizer saved")
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+    print(f"Seralizer BAD")
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -152,9 +155,12 @@ def create_submission(request):
 def create_resource(request):
     # TODO: add some validation
     serializer = HousingResourceSerializer(data=request.data)
+    print(f"Got resource data: {request.data}")
     if serializer.is_valid():
         serializer.save()
+        print(f"Seralizer saved")
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+    print(f"Seralizer BAD")
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 

@@ -351,9 +351,9 @@ const ResourceList = ({initialResources, sub, subHandler, user, clearActiveSub})
 
   return (<>
         <ToastContainer autoClose={2000}/>
-        {activeSub && <div>
+        {activeSub &&
           <SubmissionRow sub={activeSub} activeHandler={subHandler} user={user} isActive={true}/>
-        </div>}
+        }
         <Table>
           <tbody>
           <tr>
@@ -517,7 +517,8 @@ function SubmissionRow({sub, activeHandler, user, isActive = false}) {
   };
 
   return <div
-      className={`submission-row sub-${sub.status.replace("_", "-")} ${sub.accomodation_in_the_future ? "sub-in-future" : ""}`}>
+      className={`submission-row sub-${sub.status.replace("_", "-")}
+       ${sub.accomodation_in_the_future ? "sub-in-future" : ""} ${isActive ? "sub-active" : ""}`}>
     <p className='sub-id'>ID ZGŁOSZENIA: {sub.id}</p>
     <Table className="sub-table">
       <tbody>
