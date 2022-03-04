@@ -93,7 +93,7 @@ class HousingResource(TimeStampedModel):
     objects = HousingResourceManager()
 
     def __str__(self):
-        return f"{self.name} {self.phone_number} {self.full_address} {self.pk}"
+        return f"{self.id} {self.name} {self.phone_number} {self.full_address} {self.pk}"
 
     class Meta:
         verbose_name = "Zasób"
@@ -233,7 +233,7 @@ class Submission(TimeStampedModel):
     objects = SubmissionManager()
 
     def __str__(self):
-        return f"{self.name} {self.people} na {self.how_long}"
+        return f"{self.id} {self.name} {self.people} na {self.how_long}"
 
     class Meta:
         verbose_name = "Zgłoszenie"
@@ -324,3 +324,14 @@ class Coordinator(TimeStampedModel):
 
     def as_json(self):
         return dict(user=self.user.as_json(), group=self.group)
+
+
+class ObjectChange(TimeStampedModel):
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    submission = models.ForeignKey(Submission, on_delete=models.SET_NULL, null=True)
+    host = models.ForeignKey(HousingResource, on_delete=models.SET_NULL, null=True)
+    change = models.CharField(max_length=2048)
+
+    class Meta:
+        verbose_name = "Zmiana Rekordu"
+        verbose_name_plural = "Zmiany Rekordów"

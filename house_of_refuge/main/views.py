@@ -14,7 +14,7 @@ from rest_framework.response import Response
 
 from .forms import HousingResourceForm
 # Create your views here.
-from .models import HousingResource, Status, Submission, SubStatus, Coordinator
+from .models import HousingResource, Status, Submission, SubStatus, Coordinator, ObjectChange
 from .serializers import SubmissionSerializer, HousingResourceSerializer
 
 
@@ -101,6 +101,12 @@ def resource_match_found(request):
     sub.resource = resource
     sub.status = SubStatus.IN_PROGRESS
     sub.save()
+
+    ObjectChange.objects.create(
+        user=request.user, submission=sub, host=resource,
+        change="matched host with submission"
+    )
+
     return JsonResponse({
         "status": "success",
         "message": "Poszło!",
@@ -117,6 +123,10 @@ def update_resource_status(request, resource_id, **kwargs):
     new_status = data['value']
     resource.status = new_status
     resource.save()
+    ObjectChange.objects.create(
+        user=request.user, host=resource,
+        change=f"status update: {data}"
+    )
     return JsonResponse({
         "status": "success",
         "message": "Updated!",
@@ -130,6 +140,10 @@ def update_resource_note(request, resource_id, **kwargs):
     data = json.loads(request.body)
     resource = HousingResource.objects.select_for_update().get(id=resource_id)
     resource.note = data['note']
+    ObjectChange.objects.create(
+        user=request.user, host=resource,
+        change=f"note update: {data}"
+    )
     resource.save()
     return JsonResponse({
         "status": "success",
@@ -175,6 +189,10 @@ def update_sub(request, sub_id):
         else:
             setattr(sub, field, value)
             sub.save()
+    ObjectChange.objects.create(
+        user=request.user, submission=sub,
+        change=f"update: {data}"
+    )
     return JsonResponse({"data": sub.as_prop(), "message": "Updated", "status": "success",})
 
 
@@ -184,6 +202,10 @@ def update_resource(request, resource_id):
     serializer = HousingResourceSerializer(instance=resource, data=request.data['fields'], partial=True)
     if serializer.is_valid():
         serializer.save()
+        ObjectChange.objects.create(
+            user=request.user, host=resource,
+            change=f"update: {request.data['fields']}"
+        )
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -193,6 +215,10 @@ def set_sub_matcher(request):
     data = json.loads(request.body)
     sub = Submission.objects.get(id=data['sub_id'])
     sub.matcher_id = data["matcher"]
+    ObjectChange.objects.create(
+        user=request.user, submission=sub,
+        change="set as matcher"
+    )
     sub.save()
     return JsonResponse({"data": sub.as_prop()})
 
