@@ -167,7 +167,7 @@ def update_sub(request, sub_id):
         else:
             setattr(sub, field, value)
             sub.save()
-    return JsonResponse({"data": sub.as_prop(), "message": "Updated"})
+    return JsonResponse({"data": sub.as_prop(), "message": "Updated", "status": "success",})
 
 
 @api_view(['POST'])
@@ -195,6 +195,18 @@ def sub_is_processed(request, sub_id):
     sub.matcher_id = request.user
     sub.save()
     return JsonResponse({"data": sub.as_prop()})
+
+
+@require_http_methods(["GET"])
+@login_required
+def latest_submission(request):
+    return JsonResponse({"id": int(Submission.objects.all().latest("modified").modified.timestamp() * 1000)})
+
+
+@require_http_methods(["GET"])
+@login_required
+def latest_resource(request):
+    return JsonResponse({"id": int(HousingResource.objects.all().latest("modified").modified.timestamp() * 1000)})
 
 
 @require_http_methods(["GET"])
