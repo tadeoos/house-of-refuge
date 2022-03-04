@@ -274,7 +274,7 @@ class Submission(TimeStampedModel):
     def as_prop(self):
         return dict(
             id=self.id,
-            created=self.created.strftime("%-d %B o %H:%M:%S"),
+            created=self.created.strftime("%-d %B %H:%M:%S"),
             name=self.name,
             phone_number=self.phone_number,
             people=self.people,
