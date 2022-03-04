@@ -468,7 +468,7 @@ function SubmissionRow({sub, activeHandler, user, isActive = false}) {
     console.log("Updating sub value: ", value);
     const newStatus = value[0].value;
     if (newStatus !== sub.status) {
-      updateSub(sub, {"status": value});
+      updateSub(sub, {"status": newStatus});
     } else {
       console.log("would update but we're smart now..");
     }

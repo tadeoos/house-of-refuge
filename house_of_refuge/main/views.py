@@ -3,6 +3,7 @@ from collections import defaultdict
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.http import JsonResponse, HttpResponse
+from django.utils import timezone
 from django.views.decorators.http import require_http_methods
 from django.shortcuts import render
 import json
@@ -201,7 +202,7 @@ def sub_is_processed(request, sub_id):
 def get_submissions(request):
     subs = [
         s.as_prop()
-        for s in Submission.objects.all()
+        for s in Submission.objects.filter(when__lte=timezone.now().date())
     ]
     dropped = [hr.as_prop() for hr in HousingResource.objects.filter(is_dropped=True)]
     return JsonResponse({"data": dict(submissions=subs, dropped=dropped)})
