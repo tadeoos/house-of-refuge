@@ -153,11 +153,6 @@ const ResourceRow = ({resource, isExpanded, onMatch, compact = false}) => {
     });
   };
 
-  const handleDateChange = (e) => {
-    const newDate = e.target.value;
-    updateResource(resource, {"availability": newDate});
-  };
-
   return <div className={`resource-row`}>
     <div className={`base-content row-${resource.status}
       ${resource.verified ? "row-verified" : ""} ${resource.cherry ? "row-cherry" : ""}
@@ -296,7 +291,7 @@ const ResourceList = ({initialResources, sub, subHandler, user, clearActiveSub})
   useEffect(() => {
     const interval = setInterval(() => {
       setDataSemaphore((s) => !s);
-    }, getRandomInt(5000, 1000));
+    }, getRandomInt(2000, 4000));
     return () => clearInterval(interval);
   }, []);
 
