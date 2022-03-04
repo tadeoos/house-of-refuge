@@ -166,9 +166,12 @@ class SubStatus(models.TextChoices):
     CANCELLED = "cancelled", _("Nieaktualne")
 
 
+END_OF_DAY = 7
+
+
 def get_our_today_cutoff(date=None):
     now = date or timezone.now()
-    if now.hour > 9:
+    if now.hour > END_OF_DAY:
         cut_off = now.date()
     else:
         cut_off = (now - datetime.timedelta(days=1)).date()
@@ -187,10 +190,10 @@ class SubmissionManager(Manager):
 
     def for_happy_message(self):
         now = timezone.now()
-        if now.hour > 9:
-            cut_off = now.replace(hour=9, minute=0, second=0)
+        if now.hour > END_OF_DAY:
+            cut_off = now.replace(hour=END_OF_DAY, minute=0, second=0)
         else:
-            cut_off = now.replace(day=now.day - 1, hour=9, minute=0, second=0)
+            cut_off = now.replace(day=now.day - 1, hour=END_OF_DAY, minute=0, second=0)
         return self.filter(finished_at__gte=cut_off, status=SubStatus.SUCCESS)
 
 
@@ -280,7 +283,7 @@ class Submission(TimeStampedModel):
     def as_prop(self):
         return dict(
             id=self.id,
-            created=self.created.strftime("%-d %B %H:%M:%S"),
+            created=self.created.astimezone(timezone.get_default_timezone()).strftime("%-d %B %H:%M:%S"),
             name=self.name,
             phone_number=self.phone_number,
             people=self.people,
