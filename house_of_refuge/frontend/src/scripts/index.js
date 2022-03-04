@@ -408,7 +408,7 @@ const SUB_STATE_OPTIONS = [
   {value: "new", label: "Świeżak"},
   {value: "searching", label: "Szukamy"},
   {value: "in_progress", label: "Host znaleziony"},
-  // {value: "gone", label: "Zniknęła"},
+  {value: "gone", label: "Zniknęła"},
   {value: "success", label: "Sukces"},
   {value: "cancelled", label: "Nieaktualne"},
 ];
