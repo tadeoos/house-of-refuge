@@ -224,7 +224,7 @@ const ResourceRow = ({resource, isExpanded, onMatch, compact = false}) => {
   </div>;
 };
 
-const SHOW_NUMBER = 250;
+const SHOW_NUMBER = 400;
 
 const ColumnHeader = ({col, sortHandler, isSorting, sortDirection, filterData}) => {
   const iconClass = isSorting ? "sort-active" : "sort-muted";
@@ -478,6 +478,8 @@ function SubmissionRow({sub, activeHandler, user, isActive = false}) {
       return "";
     } else if (sub.matcher && !isActive && !isOwner) {
       return <Button size={"sm"} disabled>{sub.matcher.display}</Button>;
+    } else if (sub.status === "cancelled") {
+      return "NIEKATUALNE";
     } else {
       return <Button size={"sm"} onClick={btnHandler}>{isActive ? "Zwolnij" : "Szukaj Hosta"}</Button>;
     }
