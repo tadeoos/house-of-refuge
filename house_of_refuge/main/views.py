@@ -61,7 +61,7 @@ def home(request):
     user = None
     if not request.user.is_anonymous:
         user = request.user
-        user = dict(id=user.id, name=user.username)
+        user = dict(id=user.id, name=str(user))
     return render(request, "main/home.html", {"props": dict(userData=user)})
 
 
@@ -79,7 +79,7 @@ def get_resources(request):
 @login_required
 def resource_match_found(request):
     data = json.loads(request.body)
-    print(f"Data: {data}")
+    print(f"Host znaleziony: {data}")
     resource_id = data["resource"]
     sub_id = data["sub"]
     resource = HousingResource.objects.select_for_update().get(id=resource_id)
@@ -214,7 +214,7 @@ def latest_resource(request):
 def get_submissions(request):
     subs = [
         s.as_prop()
-        for s in Submission.objects.filter(when__lte=timezone.now().date())
+        for s in Submission.objects.todays()
     ]
     dropped = [hr.as_prop() for hr in HousingResource.objects.filter(is_dropped=True)]
     return JsonResponse({"data": dict(submissions=subs, dropped=dropped)})

@@ -18,10 +18,15 @@
 .resource-row {
   display: flex;
   flex-direction: column;
+  font-size: 12px;
 
   .base-content {
     cursor: pointer;
     display: flex;
+  }
+
+  .row-expanded {
+    margin-bottom: 10px;
   }
 
   /* border: 1px solid black;
@@ -46,6 +51,8 @@
   width: 250px;
   border: 1px solid black;
   border-bottom: 0;
+  font-size: 12px;
+  text-align: center;
 }
 
 .search-input {
@@ -84,9 +91,11 @@
 }
 
 .submission-row {
+  border: 1px black solid;
   border-radius: 10px;
   margin: 20px 2px;
-  padding: 10px;
+
+  /* padding: 10px; */
 }
 
 .rename-input {
@@ -116,10 +125,6 @@
   background-color: cyan !important;
 }
 
-.sub-table {
-  background-color: white;
-}
-
 .sub-in-future {
   background-color: magenta;
 }
@@ -143,6 +148,16 @@
 .table {
   margin-bottom: 0;
   border-radius: 8px;
+
+  td,
+  th {
+    padding: 1px;
+  }
+}
+
+.sub-table {
+  background-color: white;
+  font-size: 12px;
 
   tr:last-child {
     td,
@@ -173,4 +188,12 @@
   background-color: white;
   position: sticky;
   top: 40px;
+  max-height: 50vh;
+  overflow: scroll;
+}
+
+.sub-id {
+  margin: 0 auto;
+  text-align: center;
+  font-weight: bolder;
 }

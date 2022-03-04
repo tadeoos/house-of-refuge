@@ -174,10 +174,10 @@ class SubmissionManager(Manager):
     def todays(self):
         now = timezone.now()
         if now.hour > 9:
-            cut_off = now.replace(hour=9, minute=0, second=0)
+            cut_off = now.date()
         else:
-            cut_off = now.replace(day=now.day-1, hour=9, minute=0, second=0)
-        return self.filter(created__gte=cut_off)
+            cut_off = (now - datetime.timedelta(days=1)).date()
+        return self.filter(when__lte=cut_off)
 
     def for_happy_message(self):
         now = timezone.now()
@@ -264,6 +264,7 @@ class Submission(TimeStampedModel):
         self.status = SubStatus.CANCELLED
         if self.resource:
             self.resource.is_dropped = True
+            self.resource.note += f"\nHosta znalazł: {self.resource.owner}"
             self.resource.owner = None
             self.resource.save()
             self.resource = None
@@ -273,6 +274,7 @@ class Submission(TimeStampedModel):
     def as_prop(self):
         return dict(
             id=self.id,
+            created=self.created.strftime("%-d %B o %H:%M:%S"),
             name=self.name,
             phone_number=self.phone_number,
             people=self.people,

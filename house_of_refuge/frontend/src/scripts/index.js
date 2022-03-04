@@ -203,7 +203,7 @@ const ResourceRow = ({resource, isExpanded, onMatch, compact = false}) => {
           {compact ? <td>{resource.note}</td> :
               <>
                 <td><EditableField value={resource.note} onRename={updateNote}/></td>
-                <td colSpan="2"><Button onClick={() => setShowModal(true)}>ZGODZIŁ SIĘ PRZYJĄC</Button></td>
+                <td colSpan="2"><Button size={"sm"} onClick={() => setShowModal(true)}>ZGODZIŁ SIĘ PRZYJĄC</Button></td>
               </>
           }
         </tr>
@@ -439,6 +439,7 @@ const updateSub = (sub, fields, onCorrect = null) => {
     // toast(`${data.message}`, {type: data.status});
   }).catch((error) => {
     console.error('Error:', error);
+    toast(`THERE WAS AN ERROR:\n${error}`, {type: "error", autoClose: 3000});
   });
 };
 
@@ -459,16 +460,16 @@ function SubmissionRow({sub, activeHandler, user, isActive = false}) {
   const getActionBtn = () => {
     if (sub.status === "in_progress") {
       if (sub.coordinator) {
-        return isCoordinator ? "" : <Button disabled>{sub.coordinator.display}</Button>;
+        return isCoordinator ? "" : <Button size={"sm"} disabled>{sub.coordinator.display}</Button>;
       } else {
-        return <Button onClick={setCoordinator}>Przypisz do siebie</Button>;
+        return <Button size={"sm"} onClick={setCoordinator}>Przypisz do siebie</Button>;
       }
     } else if (sub.status === "searching" && !isOwner) {
       return "";
     } else if (sub.matcher && !isActive && !isOwner) {
-      return <Button disabled>{sub.matcher.display}</Button>;
+      return <Button size={"sm"} disabled>{sub.matcher.display}</Button>;
     } else {
-      return <Button onClick={btnHandler}>{isActive ? "Zwolnij" : "Szukaj Hosta"}</Button>;
+      return <Button size={"sm"} onClick={btnHandler}>{isActive ? "Zwolnij" : "Szukaj Hosta"}</Button>;
     }
   };
 
@@ -508,6 +509,7 @@ function SubmissionRow({sub, activeHandler, user, isActive = false}) {
 
   return <div
       className={`submission-row sub-${sub.status.replace("_", "-")} ${sub.accomodation_in_the_future ? "sub-in-future" : ""}`}>
+    <p className='sub-id'>ID ZGŁOSZENIA: {sub.id}</p>
     <Table className="sub-table">
       <tbody>
       <tr>
@@ -550,7 +552,7 @@ function SubmissionRow({sub, activeHandler, user, isActive = false}) {
       </tr>}
       <tr>
         <th>Osoba zgłaszająca:</th>
-        <td>{sub.receiver?.display || `ZGŁOSZENIE ZE STRONY (${sub.contact_person})`}</td>
+        <td>{sub.receiver?.display || sub.contact_person}</td>
         <th>Hosta {["searching", "new"].includes(sub.status) ? "szuka" : "znalazł"}:</th>
         <td>{sub.matcher?.display || getActionBtn()}</td>
         <th>Łącznik:</th>
@@ -572,14 +574,15 @@ function SubmissionRow({sub, activeHandler, user, isActive = false}) {
             <th>Akcje koordynatora</th>
             <td colSpan={6}>
               <div className={"d-flex justify-content-evenly"}>
-                {sub.matcher && <Button variant={"warning"} onClick={freeUpMatcher}>Zwolnij zgłoszenie</Button>}
-                {sub.coordinator && <Button variant={"warning"} onClick={freeUpCoord}>Zwolnij łącznika</Button>}
+                {sub.matcher && <Button variant={"warning"}  size={"sm"} onClick={freeUpMatcher}>Zwolnij zgłoszenie</Button>}
+                {sub.coordinator && <Button variant={"warning"} size={"sm"} onClick={freeUpCoord}>Zwolnij łącznika</Button>}
               </div>
             </td>
           </tr>
       }
       </tbody>
     </Table>
+    <p className='sub-id'>Przyjęte: {sub.created}</p>
   </div>;
 }
 
