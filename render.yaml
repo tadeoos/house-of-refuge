@@ -23,8 +23,8 @@ services:
     startCommand: "gunicorn config.wsgi:application"
     healthCheckPath: /healthz
     scaling:
-      minInstances: 2
-      maxInstances: 6
+      minInstances: 1
+      maxInstances: 8
       targetMemoryPercent: 60 # optional if targetCPUPercent is set (valid: 1-90)
       targetCPUPercent: 60 # optional if targetMemory is set (valid: 1-90)
     envVars:
