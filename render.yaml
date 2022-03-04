@@ -20,7 +20,7 @@ services:
     region: frankfurt
     branch: master
     buildCommand: "./build.sh"
-    startCommand: "gunicorn --worker-class=gevent --worker-connections=1000 config.wsgi:application"
+    startCommand: "gunicorn config.wsgi:application"
     healthCheckPath: /healthz
     scaling:
       minInstances: 2
