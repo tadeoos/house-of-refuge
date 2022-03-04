@@ -258,7 +258,12 @@ const Form = ({ fields, validationSchema, url, successInfo, user, primaryText, s
                             </Field>;
                         })}
 
-                    <Button type="submit">Wyślij</Button>
+                    <Button
+                        type="submit"
+                        disabled={formik.isSubmitting}
+                    >
+                        Wyślij
+                    </Button>
 
                 </StyledForm>
             </>
