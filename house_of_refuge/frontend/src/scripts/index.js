@@ -617,13 +617,15 @@ const getLatestSubId = async () => {
 
 
 const SubmissionList = ({user, subs, btnHandler, sourceFilter,
-                          setStatusFilter, setSourceFilter, statusFilter, droppedFilter, setDropped
+                          setStatusFilter, setSourceFilter, statusFilter, droppedFilter, setDropped,
+
 }) => {
   const [submissions, setSubmissions] = useState(subs);
   const [droppedHosts, setDroppedHosts] = useState([]);
   const [visibleSubmissions, setVisibleSubmissions] = useState(submissions);
   const [searchQuery, setSearchQuery] = useState("");
   const [userOnly, setUserOnly] = useState(false);
+  const [todayFilter, setTodayFilter] = useState(false);
   const [dataSemaphore, setDataSemaphore] = useState(true);
   const [latestChange, setLatestChange] = useState(0);
 
@@ -673,10 +675,12 @@ const SubmissionList = ({user, subs, btnHandler, sourceFilter,
         ).filter(
             s => userOnly ? subBelongsToUser(s) : true
         ).filter(
+            s => todayFilter ? s.is_today : true
+        ).filter(
             s => searchQuery ? Object.values(s).join(' ').toLowerCase().search(searchQuery) > -1 : true
         )
     );
-  }, [sourceFilter, statusFilter, submissions, searchQuery, userOnly]);
+  }, [sourceFilter, todayFilter, statusFilter, submissions, searchQuery, userOnly]);
 
   // useEffect(() => {
   //   setVisibleResources(
@@ -739,6 +743,15 @@ const SubmissionList = ({user, subs, btnHandler, sourceFilter,
                   checked={droppedFilter}
                   onChange={(checked) => {
                     setDropped(checked);
+                  }}
+              /></td>
+            <td>Przyjęte dzisiaj</td>
+            <td>
+              <BootstrapSwitchButton
+                  size={"sm"}
+                  checked={todayFilter}
+                  onChange={(checked) => {
+                    setTodayFilter(checked);
                   }}
               /></td>
             <td>Tylko moje</td>

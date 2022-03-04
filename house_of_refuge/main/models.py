@@ -166,8 +166,8 @@ class SubStatus(models.TextChoices):
     CANCELLED = "cancelled", _("Nieaktualne")
 
 
-def get_our_today_cutoff():
-    now = timezone.now()
+def get_our_today_cutoff(date=None):
+    now = date or timezone.now()
     if now.hour > 9:
         cut_off = now.date()
     else:
@@ -299,6 +299,7 @@ class Submission(TimeStampedModel):
             accomodation_in_the_future=self.accomodation_in_the_future,
             status=self.status,
             origin=self.origin,
+            is_today=get_our_today_cutoff(self.created) >= get_our_today_cutoff(),
             traveling_with_pets=self.traveling_with_pets,
             can_stay_with_pets=self.can_stay_with_pets,
             resource=self.resource.sub_representation() if self.resource else None,
