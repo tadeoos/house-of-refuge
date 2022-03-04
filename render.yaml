@@ -37,7 +37,7 @@ services:
       - key: DJANGO_ADMIN_URL
         value: "kijow/"
       - key: WEB_CONCURRENCY
-        value: 4
+        value: 8
       - key: DJANGO_SETTINGS_MODULE
         value: "config.settings.production"
       - key: REDIS_URL
