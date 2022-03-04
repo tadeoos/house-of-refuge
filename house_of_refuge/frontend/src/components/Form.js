@@ -201,7 +201,7 @@ const Form = ({ fields, validationSchema, url, successInfo, user, primaryText, s
                 <Primary> {primaryText} </Primary>
                 <Secondary> {secondaryText} </Secondary>
                 {user && <Info marginTop={48} > Zalogowany: {user.name} </Info>}
-                {error && <Info marginTop={3} > Błąd serwera. Spróbuj jeszcze raz. </Info>}
+                {/*{error && <Info marginTop={3} > Błąd serwera. Spróbuj jeszcze raz. </Info>}*/}
 
                 <StyledForm onSubmit={formik.handleSubmit} >
                     {fields
