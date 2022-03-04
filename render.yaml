@@ -20,7 +20,7 @@ services:
     region: frankfurt
     branch: master
     buildCommand: "./build.sh"
-    startCommand: "gunicorn config.wsgi:application"
+    startCommand: "gunicorn --worker-class=gevent --worker-connections=1000 config.wsgi:application"
     healthCheckPath: /healthz
     scaling:
       minInstances: 2
@@ -37,7 +37,7 @@ services:
       - key: DJANGO_ADMIN_URL
         value: "kijow/"
       - key: WEB_CONCURRENCY
-        value: 8
+        value: 5
       - key: DJANGO_SETTINGS_MODULE
         value: "config.settings.production"
       - key: REDIS_URL
