@@ -178,12 +178,13 @@ const Form = ({ fields, validationSchema, url, successInfo, user, primaryText, s
                 },
             })
                 .catch(error => {
+                    console.log("TADEK ERROR: ", error);
                     error && setError(true);
-                    console.log("error: ", error);
                 })
                 .then(res => {
+                    console.log("TADEK RESPONSE:", res);
                     if (res) {
-                        console.log("RESPONSE:", res);
+                        setSuccess(true);
                         if (res.status === 201) {
                             setSuccess(true);
                         } else {
