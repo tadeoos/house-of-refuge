@@ -168,7 +168,7 @@ class HousingRow(resources.ModelResource):
 @admin.register(HousingResource)
 class HousingResourceAdmin(ImportExportModelAdmin):
     resource_class = HousingRow
-    search_fields = ("pk", "name", "about_info", "city_and_zip_code", "email", "details", "extra")
+    search_fields = ("pk", "name", "about_info", "city_and_zip_code", "email", "details", "extra", "address", "owner__name")
     list_display = ("id", "name", "email", "resource", "status", "cherry", "verified")
     list_filter = ("status", "cherry", "verified")
     list_editable = ("status", "cherry", "verified",)

@@ -132,6 +132,9 @@ const getPickUpDisplay = (v) => {
 const ResourceRow = ({resource, isExpanded, onMatch, compact = false}) => {
   const [expanded, setExpanded] = useState(isExpanded);
   const [showModal, setShowModal] = useState(false);
+  const [availableFrom, setAvailableFrom] = useState(resource.availability);
+  const [status, setStatus] = useState(resource.status);
+
   useEffect(() => {
     return () => {
       setExpanded(isExpanded);
@@ -153,6 +156,12 @@ const ResourceRow = ({resource, isExpanded, onMatch, compact = false}) => {
     });
   };
 
+  const handleDateChange = (e) => {
+    const newDate = e.target.value;
+    updateResource(resource, {"availability": newDate});
+    setAvailableFrom(newDate);
+  };
+
   return <div className={`resource-row`}>
     <div className={`base-content row-${resource.status}
       ${resource.verified ? "row-verified" : ""} ${resource.cherry ? "row-cherry" : ""}
@@ -160,18 +169,25 @@ const ResourceRow = ({resource, isExpanded, onMatch, compact = false}) => {
       `}>
       <div className={"col r-id-col"}>{resource.id}</div>
       {VISIBLE.map(
-          (a) => <div onClick={() => setExpanded(e => !e)} className={"col"}
+          (a) => <div onClick={() => setExpanded(e => !e)}
+                      className={`col ${shortCols.includes(a) ? "col-short": ""}`}
                       key={`${resource.id}-${a}`}>{getResourceDisplay(resource[a])}</div>)}
       <div className={"col"}>
-        {compact ? getPickUpDisplay(resource.will_pick_up_now) : resource.is_prio ? "GOTOWY": ""}
+        {compact ? getPickUpDisplay(resource.will_pick_up_now) :
+            <input required type="date" min={new Date().toJSON().slice(0, 10)} value={availableFrom}
+                   onChange={handleDateChange}/>}
       </div>
-      {/*<div className={`col`}>*/}
-      {/*  <Select*/}
-      {/*      values={STATUS_OPTIONS.filter((o) => o.value === resource.status)}*/}
-      {/*      options={STATUS_OPTIONS}*/}
-      {/*      onChange={updateStatus}*/}
-      {/*  />*/}
-      {/*</div>*/}
+      <div className={`col`}>
+        <Select
+            values={STATUS_OPTIONS.filter((o) => o.value === status)}
+            options={STATUS_OPTIONS}
+            onChange={(values) => {
+              const status = values[0].value;
+              setStatus(status);
+              updateResource(resource, {"status": status});
+            }}
+        />
+      </div>
     </div>
     {expanded && <div className="row-expanded">
       <Table bordered style={{borderColor: 'black'}}>
@@ -225,12 +241,13 @@ const ResourceRow = ({resource, isExpanded, onMatch, compact = false}) => {
 };
 
 const SHOW_NUMBER = 400;
+const shortCols = ["people_to_accommodate"];
 
 const ColumnHeader = ({col, sortHandler, isSorting, sortDirection, filterData}) => {
   const iconClass = isSorting ? "sort-active" : "sort-muted";
   const [showFilter, setShowFilter] = useState(false);
 
-  return <div className={"col-head col"}>
+  return <div className={`col-head col ${shortCols.includes(col.fieldName) ? "col-short" : ""}`}>
     <div className={'top'}>
       {col.display} {sortDirection === "asc" ?
         <SortUp className={iconClass} onClick={() => sortHandler(col.fieldName)}/> : <SortDown
@@ -266,11 +283,11 @@ const ResourceList = ({initialResources, sub, subHandler, user, clearActiveSub})
   const [columnsData] = useState({
     name: {fieldName: 'name', display: "Imie", sort: "asc"},
     address: {fieldName: 'address', display: "Adres", sort: "asc"},
-    people_to_accommodate: {fieldName: 'people_to_accommodate', display: "Ilu ludzi przyjmie?", sort: "asc"},
+    people_to_accommodate: {fieldName: 'people_to_accommodate', display: "Ilu ludzi?", sort: "asc"},
     accommodation_length: {fieldName: 'accommodation_length', display: "Na jak długo?", sort: "asc"},
     resource: {fieldName: 'resource', display: "Zasób", sort: "asc"},
-    is_prio: {fieldName: 'is_prio', display: "Gotowy?", sort: "asc"},
-
+    availability: {fieldName: 'availability', display: "Od kiedy?", sort: "asc"},
+    status: {fieldName: 'status', display: "Status", sort: "asc"},
   });
 
   const matchFound = (resource, payload) => {

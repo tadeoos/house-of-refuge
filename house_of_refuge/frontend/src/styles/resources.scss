@@ -203,6 +203,10 @@
   overflow: scroll;
 }
 
+.col-short {
+  max-width: 100px;
+}
+
 .sub-active {
   position: sticky;
   top: 40px;
