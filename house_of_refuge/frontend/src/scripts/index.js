@@ -29,22 +29,37 @@ const updateResource = (resource, fields) => {
 };
 
 
-const MatchModal = ({showModal, handleClose, matchHandle}) => {
+const MatchModal = ({showModal, handleClose, matchHandle, resource}) => {
+
+  const [dateSet, setDateSet] = useState(null);
+
 
   const match = (transport) => {
-    matchHandle(transport);
+    const payload = {transport: transport, newDate: dateSet};
+    matchHandle(resource, payload);
     handleClose();
+  };
+
+  const handleDateChange = (e) => {
+    const newDate = e.target.value;
+    setDateSet(newDate);
+    // updateResource(resource, {"availability": newDate});
   };
 
   return (
       <Modal show={showModal} onHide={handleClose} className="" dialogClassName="">
-        <Modal.Body>
-          <h3>Jaki transport?</h3>
+        <Modal.Body className={"text-center"}>
+          <h5>Od Kiedy host będzie znów dostępny?</h5>
+          <div style={{margin: "30px"}}>
+            <input required type="date" min={new Date().toJSON().slice(0, 10)} value={dateSet}
+                   onChange={handleDateChange}/>
+          </div>
+          <h5>Co z transportem?</h5>
           <div className="transport-btns">
-            <Button variant="info" onClick={() => match(true)}>
+            <Button variant="info" disabled={!dateSet} onClick={() => match(true)}>
               Host przyjedzie na dworzec
             </Button>
-            <Button variant="warning" onClick={() => match(false)}>
+            <Button variant="warning" disabled={!dateSet} onClick={() => match(false)}>
               My musimy ogarnąć
             </Button>
           </div>
@@ -148,14 +163,12 @@ const ResourceRow = ({resource, isExpanded, onMatch, compact = false}) => {
       ${resource.verified ? "row-verified" : ""} ${resource.cherry ? "row-cherry" : ""}
       ${resource.is_dropped ? "row-dropped" : ""}
       `}>
+      <div className={"col r-id-col"}>{resource.id}</div>
       {VISIBLE.map(
           (a) => <div onClick={() => setExpanded(e => !e)} className={"col"}
                       key={`${resource.id}-${a}`}>{getResourceDisplay(resource[a])}</div>)}
       <div className={"col"}>
-        {compact ? getPickUpDisplay(resource.will_pick_up_now) :
-            <input required type="date" min={new Date().toJSON().slice(0, 10)} value={resource.availability}
-                   onChange={handleDateChange}/>
-        }
+        {compact ? getPickUpDisplay(resource.will_pick_up_now) : resource.is_prio ? "GOTOWY": ""}
       </div>
       {/*<div className={`col`}>*/}
       {/*  <Select*/}
@@ -211,8 +224,8 @@ const ResourceRow = ({resource, isExpanded, onMatch, compact = false}) => {
       </Table>
 
     </div>}
-    <MatchModal showModal={showModal} handleClose={() => setShowModal(false)}
-                matchHandle={(transport) => onMatch(resource, transport)}/>
+    <MatchModal showModal={showModal} handleClose={() => setShowModal(false)} resource={resource}
+                matchHandle={onMatch}/>
   </div>;
 };
 
@@ -248,8 +261,8 @@ const ResourceList = ({initialResources, sub, subHandler, user, clearActiveSub})
   const [peopleFilter, setPeopleFilter] = useState(null);
   const [statusFilter, setStatusFilter] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
-  const [sortBy, setSortBy] = useState("name");
-  const [sortOrder, setSortOrder] = useState("asc");
+  const [sortBy, setSortBy] = useState("is_prio");
+  const [sortOrder, setSortOrder] = useState("desc");
   const [expandAll, setExpandAll] = useState(false);
   const [dataSemaphore, setDataSemaphore] = useState(true);
   const [activeSub] = useState(sub);
@@ -260,16 +273,16 @@ const ResourceList = ({initialResources, sub, subHandler, user, clearActiveSub})
     people_to_accommodate: {fieldName: 'people_to_accommodate', display: "Ilu ludzi przyjmie?", sort: "asc"},
     accommodation_length: {fieldName: 'accommodation_length', display: "Na jak długo?", sort: "asc"},
     resource: {fieldName: 'resource', display: "Zasób", sort: "asc"},
-    availability: {fieldName: 'availability', display: "Od kiedy?", sort: "asc"},
+    is_prio: {fieldName: 'is_prio', display: "Gotowy?", sort: "asc"},
 
   });
 
-  const matchFound = (resource, transport) => {
+  const matchFound = (resource, payload) => {
     fetch(`/api/match_found`, {
       method: 'POST', // *GET, POST, PUT, DELETE, etc.
       headers: {
         'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken')
-      }, body: JSON.stringify({resource: resource.id, sub: sub.id, transport: transport}) // body data type must match "Content-Type" header
+      }, body: JSON.stringify({resource: resource.id, sub: sub.id, ...payload}) // body data type must match "Content-Type" header
     }).then(response => response.json()).then(data => {
       console.log('Response: ', data);
       toast(`${data.message}`, {type: data.status});
@@ -383,6 +396,7 @@ const ResourceList = ({initialResources, sub, subHandler, user, clearActiveSub})
           <p>{`${visibleResources.length} zasóbów ${visibleResources.length > 150 ? "(pokazuje pierwsze 150 wyników)" : ""}`}</p>
         </div>
         <div className={"column-headers mt-3"}>
+          <div className={"col dol-head r-id-col"}>ID</div>
           {Object.values(columnsData).map(colData => <
               ColumnHeader col={colData} key={colData.fieldName} sortHandler={handleSort}
                            sortDirection={sortOrder} isSorting={sortBy === colData.fieldName}
@@ -784,7 +798,7 @@ const CoordinaotrsHeader = ({coordinators, helped}) => {
 
 
 const App = ({subs, initialResources, userData, coordinators, helped}) => {
-  const [activeSub, setActiveSub] = useState(null);
+  const [activeSub, setActiveSub] = useState(subs[0]);
   const [sourceFilter, setSourceFilter] = useState([{label: "Teren", value: "terrain"}]);
   const [statusFilter, setStatusFilter] = useState([]);
   const [droppedFilter, setDroppedFilter] = useState(true);

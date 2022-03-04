@@ -88,6 +88,7 @@ class HousingResource(TimeStampedModel):
     cherry = models.BooleanField(default=False)
     verified = models.BooleanField(default=False)
     is_dropped = models.BooleanField(default=False)
+    is_ready = models.BooleanField(default=False)
 
     objects = HousingResourceManager()
 
@@ -143,6 +144,7 @@ class HousingResource(TimeStampedModel):
             cherry=self.cherry,
             verified=self.verified,
             note=self.note,
+            is_prio=self.is_dropped or self.is_ready,
             compact_display=self.compact_display,
             owner=self.owner.as_json() if self.owner else None,
         )
