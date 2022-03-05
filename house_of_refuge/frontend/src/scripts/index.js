@@ -178,6 +178,7 @@ const ResourceRow = ({resource, isExpanded, onMatch, compact = false}) => {
                    onChange={handleDateChange}/>}
       </div>
       <div className={`col`}>
+        {compact ? resource.note :
         <Select
             values={STATUS_OPTIONS.filter((o) => o.value === status)}
             options={STATUS_OPTIONS}
@@ -186,7 +187,7 @@ const ResourceRow = ({resource, isExpanded, onMatch, compact = false}) => {
               setStatus(status);
               updateResource(resource, {"status": status});
             }}
-        />
+        />}
       </div>
     </div>
     {expanded && <div className="row-expanded">
@@ -195,32 +196,34 @@ const ResourceRow = ({resource, isExpanded, onMatch, compact = false}) => {
         <tr>
           <th>Coś o sobie</th>
           <td>{resource.about_info}</td>
-          <th>Zasób</th>
-          <td>{resource.resource}</td>
-        </tr>
-        <tr>
-          <th>Miasto i kod</th>
-          <td>{resource.city_and_zip_code}</td>
-          <th>Koszty</th>
-          <td>{resource.costs}</td>
+          <th>Języki</th>
+          <td>{resource.languages}</td>
+          <th>Kiedy można dzwonić?</th>
+          <td>{resource.when_to_call}</td>
         </tr>
         <tr>
           <th>Info o miejscu</th>
           <td>{resource.details}</td>
+          <th>Czy są w domu zwierzęta?</th>
+          <td>{resource.living_with_pets}</td>
+          <th>Czy przyjmie zwierzęta?</th>
+          <td>{resource.can_take_person_with_pets}</td>
+        </tr>
+        <tr>
+          <th>Dodatkowe uwagi</th>
+          <td>{resource.extra}</td>
           <th>Transport</th>
           <td>{resource.transport}</td>
+          <th>Koszty</th>
+          <td>{resource.costs}</td>
         </tr>
         <tr>
           <th>Telefon</th>
           <td>{resource.phone_number}</td>
           <th>Telefon awaryjny</th>
           <td>{resource.backup_phone_number}</td>
-        </tr>
-        <tr>
           <th>Email</th>
           <td>{resource.email}</td>
-          <th>Dodatkowe uwagi</th>
-          <td>{resource.extra}</td>
         </tr>
         <tr>
           <th>Notatka</th>
