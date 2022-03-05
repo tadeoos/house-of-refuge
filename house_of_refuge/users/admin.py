@@ -30,5 +30,6 @@ class UserAdmin(auth_admin.UserAdmin):
         ),
         (_("Important dates"), {"fields": ("last_login", "date_joined")}),
     )
-    list_display = ["username", "name", "is_superuser"]
+    list_display = ["username", "name", "is_superuser", "is_active"]
+    list_editable = ["is_active"]
     search_fields = ["name"]

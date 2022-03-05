@@ -24,8 +24,10 @@ if RENDER_EXTERNAL_HOSTNAME:
 # ------------------------------------------------------------------------------
 DATABASES["default"] = env.db("DATABASE_URL")  # noqa F405
 DATABASES["default"]["ENGINE"] = "django_db_geventpool.backends.postgresql_psycopg2"
+if "OPTIONS" not in DATABASES["default"]:
+    DATABASES["default"]["OPTIONS"] = {}
 DATABASES["default"]["OPTIONS"]["MAX_CONNS"] = 15
-DATABASES["default"]["OPTIONS"]["REUSE_CONNS"] = 14
+DATABASES["default"]["OPTIONS"]["REUSE_CONNS"] = 12
 DATABASES["default"]["ATOMIC_REQUESTS"] = False  # noqa F405
 DATABASES["default"]["CONN_MAX_AGE"] = env.int("CONN_MAX_AGE", default=0)  # noqa F405
 
