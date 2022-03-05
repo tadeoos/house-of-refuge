@@ -468,12 +468,12 @@ const updateSub = (sub, fields, onCorrect = null) => {
 };
 
 
-function SubmissionRow({sub, activeHandler, user, isActive = false}) {
+function SubmissionRow({sub, activeHandler, user, isGroupCoordinator, isActive = false}) {
 
 
+  const isGroupAdmin = isGroupCoordinator;
   const isOwner = user.id === sub.matcher?.id;
   const isCoordinator = user.id === sub.coordinator?.id;
-  const isGroupAdmin = user.coordinator;
   const [status, setStatus] = useState(sub.status);
   const [note, setNote] = useState(sub.note);
   const [localSub, setLocalSub] = useState(sub);
@@ -658,7 +658,7 @@ const SubmissionList = ({
                           statusFilter,
                           droppedFilter,
                           setDropped,
-
+                          isCoordinator
                         }) => {
   const [submissions, setSubmissions] = useState(subs);
   const [droppedHosts, setDroppedHosts] = useState([]);
@@ -810,6 +810,7 @@ const SubmissionList = ({
             <div className={"dropped-container"}>{droppedHosts.map(r => <DroppedHost resource={r}
                                                                                      key={r.id}/>)}</div>}
         {isLoading ? <LoadingSpinner/> : visibleSubmissions.map(s => <SubmissionRow user={user} sub={s} key={s.id}
+                                                                                    isGroupCoordinator={isCoordinator}
                                                                                     activeHandler={btnHandler}/>)}
       </>
 
@@ -842,6 +843,9 @@ const App = ({subs, initialResources, userData, coordinators, helped}) => {
   const [sourceFilter, setSourceFilter] = useState([{label: "Teren", value: "terrain"}]);
   const [statusFilter, setStatusFilter] = useState([]);
   const [droppedFilter, setDroppedFilter] = useState(true);
+  const coordIds = Object.values(coordinators).map(g => g.map(c => c.user.id)).flat();
+  const isCoordinator = coordIds.includes(userData.id);
+  console.log("IsCoordinator: ", isCoordinator, coordIds, userData);
 
   const clearActiveSub = () => setActiveSub(null);
 
@@ -883,6 +887,7 @@ const App = ({subs, initialResources, userData, coordinators, helped}) => {
     /> : <SubmissionList user={userData} subs={subs} btnHandler={subIsTaken}
                          sourceFilter={sourceFilter} setSourceFilter={(v) => setSourceFilter(v)}
                          statusFilter={statusFilter}
+                         isCoordinator={isCoordinator}
                          setStatusFilter={(v) => setStatusFilter(v)}
                          droppedFilter={droppedFilter} setDropped={(v) => setDroppedFilter(v)}
     />}
