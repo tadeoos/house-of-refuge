@@ -473,11 +473,13 @@ const updateSub = (sub, fields, onCorrect = null) => {
 
 function SubmissionRow({sub, activeHandler, user, isActive = false}) {
 
+
   const isOwner = user.id === sub.matcher?.id;
   const isCoordinator = user.id === sub.coordinator?.id;
   const isGroupAdmin = user.coordinator;
   const [status, setStatus] = useState(sub.status);
   const [note, setNote] = useState(sub.note);
+  const [localSub, setLocalSub] = useState(sub);
 
   const btnHandler = () => {
     console.log("btn handler clicked");
@@ -485,17 +487,17 @@ function SubmissionRow({sub, activeHandler, user, isActive = false}) {
   };
 
   const getActionBtn = () => {
-    if (sub.status === "in_progress") {
-      if (sub.coordinator) {
-        return isCoordinator ? "" : <Button size={"sm"} disabled>{sub.coordinator.display}</Button>;
+    if (localSub.status === "in_progress") {
+      if (localSub.coordinator) {
+        return isCoordinator ? "" : <Button size={"sm"} disabled>{localSub.coordinator.display}</Button>;
       } else {
         return <Button size={"sm"} onClick={setCoordinator}>Przypisz do siebie</Button>;
       }
-    } else if (sub.status === "searching" && !isOwner) {
+    } else if (localSub.status === "searching" && !isOwner) {
       return "";
-    } else if (sub.matcher && !isActive && !isOwner) {
-      return <Button size={"sm"} disabled>{sub.matcher.display}</Button>;
-    } else if (sub.status === "cancelled") {
+    } else if (localSub.matcher && !isActive && !isOwner) {
+      return <Button size={"sm"} disabled>{localSub.matcher.display}</Button>;
+    } else if (localSub.status === "cancelled") {
       return "NIEKATUALNE";
     } else {
       return <Button size={"sm"} onClick={btnHandler}>{isActive ? "Zwolnij" : "Szukaj Hosta"}</Button>;
@@ -505,8 +507,9 @@ function SubmissionRow({sub, activeHandler, user, isActive = false}) {
   const updateStatus = (value) => {
     console.log("Updating sub value: ", value);
     const newStatus = value[0].value;
-    if (newStatus !== sub.status) {
-      updateSub(sub, {"status": newStatus}, () => setStatus(newStatus));
+    if (newStatus !== localSub.status) {
+      updateSub(localSub, {"status": newStatus}, () => setStatus(newStatus));
+      setLocalSub((s) => ({...s, status: newStatus}));
     } else {
       console.log("would update but we're smart now..");
     }
@@ -514,16 +517,18 @@ function SubmissionRow({sub, activeHandler, user, isActive = false}) {
 
   const freeUpMatcher = () => {
     updateSub(sub, {"matcher": null, "status": "new"}, () => setStatus("new"));
+    setLocalSub((s) => ({...s, matcher: null}));
   };
 
   const freeUpCoord = () => {
     updateSub(sub, {"coordinator": null}, ()=>null);
+    setLocalSub((s) => ({...s, coordinator: null}));
   };
 
 
   const setCoordinator = () => {
     console.log("sub status update");
-    fetch(`/api/sub/update/${sub.id}`, {
+    fetch(`/api/sub/update/${localSub.id}`, {
       method: 'POST', // *GET, POST, PUT, DELETE, etc.
       headers: {
         'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken')
@@ -531,62 +536,63 @@ function SubmissionRow({sub, activeHandler, user, isActive = false}) {
     }).then(response => response.json()).then(data => {
       console.log('Response: ', data);
       // toast(`${data.message}`, {type: data.status});
+      setLocalSub(s => ({...s, coordinator: user}));
     }).catch((error) => {
       console.error('Error:', error);
     });
   };
 
   return <div
-      className={`submission-row sub-${sub.status.replace("_", "-")}
-       ${sub.accomodation_in_the_future ? "sub-in-future" : ""} ${isActive ? "sub-active" : ""}`}>
-    <p className='sub-id'>ID ZGŁOSZENIA: {sub.id}</p>
+      className={`submission-row sub-${localSub.status.replace("_", "-")}
+       ${localSub.accomodation_in_the_future ? "sub-in-future" : ""} ${isActive ? "sub-active" : ""}`}>
+    <p className='sub-id'>ID ZGŁOSZENIA: {localSub.id}</p>
     <Table className="sub-table">
       <tbody>
       <tr>
         <th>Imie</th>
-        <td>{sub.name}</td>
+        <td>{localSub.name}</td>
         <th>Ile Osób?</th>
-        <td>{sub.people}</td>
+        <td>{localSub.people}</td>
         <th>Jak dlugo?</th>
-        <td>{sub.how_long}</td>
+        <td>{localSub.how_long}</td>
         <th>Telefon</th>
-        <td>{sub.phone_number}</td>
+        <td>{localSub.phone_number}</td>
       </tr>
       <tr>
         <th>Od Kiedy?</th>
-        <td>{sub.when}</td>
+        <td>{localSub.when}</td>
         <th>Opis:</th>
-        <td>{sub.description}</td>
+        <td>{localSub.description}</td>
         <th>Języki</th>
-        <td>{sub.languages}</td>
+        <td>{localSub.languages}</td>
         <th>Narodowość</th>
-        <td>{sub.origin}</td>
+        <td>{localSub.origin}</td>
       </tr>
       <tr>
         <th>Ma zwierzęta</th>
-        <td>{sub.traveling_with_pets}</td>
+        <td>{localSub.traveling_with_pets}</td>
         <th>Czy może spać ze zwierzętami?</th>
-        <td>{sub.can_stay_with_pets}</td>
+        <td>{localSub.can_stay_with_pets}</td>
         <th>Potrzebuje transportu?</th>
-        <td>{sub.transport_needed ? "tak" : "nie"}</td>
+        <td>{localSub.transport_needed ? "tak" : "nie"}</td>
         <th>Notka</th>
-        <td><EditableField value={note} onRename={(note) => updateSub(sub, {"note": note}, () => setNote(note))}/></td>
+        <td><EditableField value={note} onRename={(note) => updateSub(localSub, {"note": note}, () => setNote(note))}/></td>
       </tr>
-      {sub.resource && <tr className="tr-host">
+      {localSub.resource && <tr className="tr-host">
         <th>HOST</th>
-        <td>{sub.resource.name}</td>
-        <td>{sub.resource.address}</td>
-        <td>{sub.resource.phone_number}</td>
-        <td>{getPickUpDisplay(sub.resource.will_pick_up_now)}</td>
-        <td colSpan={3}>{sub.resource.note}</td>
+        <td>{localSub.resource.name}</td>
+        <td>{localSub.resource.address}</td>
+        <td>{localSub.resource.phone_number}</td>
+        <td>{getPickUpDisplay(localSub.resource.will_pick_up_now)}</td>
+        <td colSpan={3}>{localSub.resource.note}</td>
       </tr>}
       <tr>
         <th>Osoba zgłaszająca:</th>
-        <td>{sub.receiver?.display || sub.contact_person}</td>
-        <th>Hosta {["searching", "new"].includes(sub.status) ? "szuka" : "znalazł"}:</th>
-        <td>{sub.matcher?.display || getActionBtn()}</td>
+        <td>{localSub.receiver?.display || localSub.contact_person}</td>
+        <th>Hosta {["searching", "new"].includes(localSub.status) ? "szuka" : "znalazł"}:</th>
+        <td>{localSub.matcher?.display || getActionBtn()}</td>
         <th>Łącznik:</th>
-        <td>{sub.coordinator?.display || (sub.matcher ? getActionBtn() : "")}</td>
+        <td>{localSub.coordinator?.display || (localSub.matcher ? getActionBtn() : "")}</td>
         <th>
           status
         </th>
@@ -604,15 +610,15 @@ function SubmissionRow({sub, activeHandler, user, isActive = false}) {
             <th>Akcje koordynatora</th>
             <td colSpan={6}>
               <div className={"d-flex justify-content-evenly"}>
-                {sub.matcher && <Button variant={"warning"}  size={"sm"} onClick={freeUpMatcher}>Zwolnij zgłoszenie</Button>}
-                {sub.coordinator && <Button variant={"warning"} size={"sm"} onClick={freeUpCoord}>Zwolnij łącznika</Button>}
+                {localSub.matcher && <Button variant={"warning"}  size={"sm"} onClick={freeUpMatcher}>Zwolnij zgłoszenie</Button>}
+                {localSub.coordinator && <Button variant={"warning"} size={"sm"} onClick={freeUpCoord}>Zwolnij łącznika</Button>}
               </div>
             </td>
           </tr>
       }
       </tbody>
     </Table>
-    <p className='sub-id'>Przyjęte: {sub.created}</p>
+    <p className='sub-id'>Przyjęte: {localSub.created}</p>
   </div>;
 }
 
