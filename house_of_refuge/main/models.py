@@ -218,7 +218,7 @@ class Submission(TimeStampedModel):
     when = models.DateField(default=timezone.now, null=True, blank=True, help_text="Od kiedy potrzebuje")
     transport_needed = models.BooleanField(default=True)
     # ponizej dla zalogowanych
-    note = models.TextField(max_length=2048, null=True, blank=True)
+    note = models.CharField(max_length=2048, null=True, blank=True)
     status = models.CharField(choices=SubStatus.choices, default=Status.NEW, max_length=32)
     person_in_charge_old = models.CharField(max_length=512, default="", blank=True)
     receiver = models.ForeignKey(User, on_delete=models.SET_NULL, default=None, blank=True, null=True,

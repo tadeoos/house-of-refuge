@@ -204,10 +204,12 @@ class HousingResourceAdmin(ImportExportModelAdmin):
 @admin.register(Submission)
 class SubmissionAdmin(ImportExportModelAdmin):
     # resource_class = HousingRow
-    search_fields = ("id", "name", "languages", "receiver__name", "coordinator__name", "note", "contact_person", "matcher__name")
-    list_display = ("id", "name", "people", "how_long", "source", "status", "receiver", "matcher", "coordinator")
+    search_fields = ("id", "name", "languages", "phone_number","receiver__name", "coordinator__name", "note", "contact_person", "matcher__name")
+    list_display = ("id", "name", "people","how_long",
+                    "contact_person", "description",
+                    "note", "source", "status",)
     list_filter = ("status", "source", "should_be_deleted")
-    list_editable = ("status", "source")
+    list_editable = ("status", "source", "note")
     autocomplete_fields = ['resource', 'matcher', 'coordinator', 'receiver']
     inlines = [ChangeInline]
     ordering = ["-pk"]
