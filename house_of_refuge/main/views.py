@@ -262,7 +262,7 @@ def latest_resource(request):
 def get_submissions(request):
     subs = [
         s.as_prop()
-        for s in Submission.objects.select_related().all()
+        for s in Submission.objects.select_related("matcher", "receiver", "coordinator", "resource").all()
     ]
     dropped = [hr.as_prop() for hr in HousingResource.objects.filter(is_dropped=True)]
     return JsonResponse({"data": dict(submissions=subs, dropped=dropped)})
