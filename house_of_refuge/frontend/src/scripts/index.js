@@ -46,31 +46,29 @@ const MatchModal = ({showModal, handleClose, matchHandle, resource}) => {
     // updateResource(resource, {"availability": newDate});
   };
 
-  return (
-      <Modal show={showModal} onHide={handleClose} className="" dialogClassName="">
-        <Modal.Body className={"text-center"}>
-          <h5>Od Kiedy host będzie znów dostępny?</h5>
-          <div style={{margin: "30px"}}>
-            <input required type="date" min={new Date().toJSON().slice(0, 10)} value={dateSet}
-                   onChange={handleDateChange}/>
-          </div>
-          <h5>Co z transportem?</h5>
-          <div className="transport-btns">
-            <Button variant="info" disabled={!dateSet} onClick={() => match(true)}>
-              Host przyjedzie na dworzec
-            </Button>
-            <Button variant="warning" disabled={!dateSet} onClick={() => match(false)}>
-              My musimy ogarnąć
-            </Button>
-          </div>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Cancel
-          </Button>
-        </Modal.Footer>
-      </Modal>
-  );
+  return (<Modal show={showModal} onHide={handleClose} className="" dialogClassName="">
+    <Modal.Body className={"text-center"}>
+      <h5>Od Kiedy host będzie znów dostępny?</h5>
+      <div style={{margin: "30px"}}>
+        <input required type="date" min={new Date().toJSON().slice(0, 10)} value={dateSet}
+               onChange={handleDateChange}/>
+      </div>
+      <h5>Co z transportem?</h5>
+      <div className="transport-btns">
+        <Button variant="info" disabled={!dateSet} onClick={() => match(true)}>
+          Host przyjedzie na dworzec
+        </Button>
+        <Button variant="warning" disabled={!dateSet} onClick={() => match(false)}>
+          My musimy ogarnąć
+        </Button>
+      </div>
+    </Modal.Body>
+    <Modal.Footer>
+      <Button variant="secondary" onClick={handleClose}>
+        Cancel
+      </Button>
+    </Modal.Footer>
+  </Modal>);
 };
 
 export const EditableField = ({value, classes = '', noEditClasses = '', onRename}) => {
@@ -106,19 +104,17 @@ export const EditableField = ({value, classes = '', noEditClasses = '', onRename
 
 const VISIBLE = ["name", "full_address", "people_to_accommodate", "accommodation_length", "resource"];
 
-const STATUS_OPTIONS = [{label: "Nowy", value: "new"},
-  {label: "Zajęta", value: "taken"}, {label: "Zignoruj", value: "ignore"},];
+const STATUS_OPTIONS = [{label: "Nowy", value: "new"}, {label: "Zajęta", value: "taken"}, {
+  label: "Zignoruj",
+  value: "ignore"
+},];
 
 const STATUS_MAP = {
   "new": "nowy", 'processing': "w procesie", "taken": "Zajęta", "ignore": "Zignoruj",
 };
 
 const RESOURCE_MAP = {
-  "home": "Dom",
-  "flat": "Mieszkanie",
-  "room": "Pokój",
-  "couch": "Kanapa",
-  "mattress": "Materac"
+  "home": "Dom", "flat": "Mieszkanie", "room": "Pokój", "couch": "Kanapa", "mattress": "Materac"
 };
 
 const getResourceDisplay = (r) => {
@@ -168,18 +164,16 @@ const ResourceRow = ({resource, isExpanded, onMatch, compact = false}) => {
       ${resource.is_dropped ? "row-dropped" : ""}
       `}>
       <div className={"col r-id-col"}>{resource.id}</div>
-      {VISIBLE.map(
-          (a) => <div onClick={() => setExpanded(e => !e)}
-                      className={`col ${shortCols.includes(a) ? "col-short": ""}`}
-                      key={`${resource.id}-${a}`}>{getResourceDisplay(resource[a])}</div>)}
+      {VISIBLE.map((a) => <div onClick={() => setExpanded(e => !e)}
+                               className={`col ${shortCols.includes(a) ? "col-short" : ""}`}
+                               key={`${resource.id}-${a}`}>{getResourceDisplay(resource[a])}</div>)}
       <div className={"col"}>
         {compact ? getPickUpDisplay(resource.will_pick_up_now) :
             <input required type="date" min={new Date().toJSON().slice(0, 10)} value={availableFrom}
                    onChange={handleDateChange}/>}
       </div>
       <div className={`col`}>
-        {compact ? resource.note :
-        <Select
+        {compact ? resource.note : <Select
             values={STATUS_OPTIONS.filter((o) => o.value === status)}
             options={STATUS_OPTIONS}
             onChange={(values) => {
@@ -227,12 +221,10 @@ const ResourceRow = ({resource, isExpanded, onMatch, compact = false}) => {
         </tr>
         <tr>
           <th>Notatka</th>
-          {compact ? <td>{resource.note}</td> :
-              <>
-                <td><EditableField value={resource.note} onRename={updateNote}/></td>
-                <td colSpan="2"><Button size={"sm"} onClick={() => setShowModal(true)}>ZGODZIŁ SIĘ PRZYJĄC</Button></td>
-              </>
-          }
+          {compact ? <td>{resource.note}</td> : <>
+            <td><EditableField value={resource.note} onRename={updateNote}/></td>
+            <td colSpan="2"><Button size={"sm"} onClick={() => setShowModal(true)}>ZGODZIŁ SIĘ PRZYJĄC</Button></td>
+          </>}
         </tr>
         </tbody>
       </Table>
@@ -282,6 +274,7 @@ const ResourceList = ({initialResources, sub, subHandler, user, clearActiveSub})
   const [expandAll, setExpandAll] = useState(false);
   const [dataSemaphore, setDataSemaphore] = useState(true);
   const [activeSub] = useState(sub);
+  const [isLoading, setIsLoading] = useState(true);
 
   const [columnsData] = useState({
     name: {fieldName: 'name', display: "Imie", sort: "asc"},
@@ -324,6 +317,7 @@ const ResourceList = ({initialResources, sub, subHandler, user, clearActiveSub})
       return;
     }
     setResources(result.data);
+    setIsLoading(false);
   }, [dataSemaphore]);
 
   const resourceAsString = (r) => {
@@ -372,9 +366,7 @@ const ResourceList = ({initialResources, sub, subHandler, user, clearActiveSub})
 
   return (<>
         <ToastContainer autoClose={2000}/>
-        {activeSub &&
-          <SubmissionRow sub={activeSub} activeHandler={subHandler} user={user} isActive={true}/>
-        }
+        {activeSub && <SubmissionRow sub={activeSub} activeHandler={subHandler} user={user} isActive={true}/>}
         <Table>
           <tbody>
           <tr>
@@ -419,8 +411,10 @@ const ResourceList = ({initialResources, sub, subHandler, user, clearActiveSub})
                            filterData={filters[colData.fieldName]}
           />)}
         </div>
-        {visibleResources.slice(0, SHOW_NUMBER).map(r => <ResourceRow resource={r} isExpanded={expandAll}
-                                                              key={r.id} onMatch={matchFound}/>)}
+        {isLoading ? <LoadingSpinner/> : visibleResources.slice(0, SHOW_NUMBER).map(r => <ResourceRow resource={r}
+                                                                                                      isExpanded={expandAll}
+                                                                                                      key={r.id}
+                                                                                                      onMatch={matchFound}/>)}
       </>
 
   );
@@ -429,19 +423,17 @@ const ResourceList = ({initialResources, sub, subHandler, user, clearActiveSub})
 
 
 const SOURCE_OPTIONS = [{label: "Strona", value: "webform"}, {label: "Mail", value: "mail"}, {
-  label: "Teren",
-  value: "terrain"
+  label: "Teren", value: "terrain"
 }, {label: "Inne", value: "other"},];
 
 
-const SUB_STATE_OPTIONS = [
-  {value: "new", label: "Świeżak"},
-  {value: "searching", label: "Szukamy"},
-  {value: "in_progress", label: "Host znaleziony"},
-  {value: "gone", label: "Zniknęła"},
-  {value: "success", label: "Sukces"},
-  {value: "cancelled", label: "Nieaktualne"},
-];
+const SUB_STATE_OPTIONS = [{value: "new", label: "Świeżak"}, {
+  value: "searching",
+  label: "Szukamy"
+}, {value: "in_progress", label: "Host znaleziony"}, {value: "gone", label: "Zniknęła"}, {
+  value: "success",
+  label: "Sukces"
+}, {value: "cancelled", label: "Nieaktualne"},];
 
 const getStatusDisplay = (status) => {
   const option = SUB_STATE_OPTIONS.filter(o => o.value === status)[0];
@@ -524,7 +516,7 @@ function SubmissionRow({sub, activeHandler, user, isActive = false}) {
   };
 
   const freeUpCoord = () => {
-    updateSub(sub, {"coordinator": null}, ()=>null);
+    updateSub(sub, {"coordinator": null}, () => null);
     setLocalSub((s) => ({...s, coordinator: null}));
   };
 
@@ -548,7 +540,7 @@ function SubmissionRow({sub, activeHandler, user, isActive = false}) {
   return <div
       className={`submission-row sub-${localSub.status.replace("_", "-")}
        ${localSub.accomodation_in_the_future ? "sub-in-future" : ""} ${isActive ? "sub-active" : ""}`}>
-    <p className='sub-id'>ID ZGŁOSZENIA: {localSub.id}</p>
+    <p className="sub-id">ID ZGŁOSZENIA: {localSub.id}</p>
     <Table className="sub-table">
       <tbody>
       <tr>
@@ -579,7 +571,8 @@ function SubmissionRow({sub, activeHandler, user, isActive = false}) {
         <th>Potrzebuje transportu?</th>
         <td>{localSub.transport_needed ? "tak" : "nie"}</td>
         <th>Notka</th>
-        <td><EditableField value={note} onRename={(note) => updateSub(localSub, {"note": note}, () => setNote(note))}/></td>
+        <td><EditableField value={note} onRename={(note) => updateSub(localSub, {"note": note}, () => setNote(note))}/>
+        </td>
       </tr>
       {localSub.resource && <tr className="tr-host">
         <th>HOST</th>
@@ -604,24 +597,23 @@ function SubmissionRow({sub, activeHandler, user, isActive = false}) {
               values={SUB_STATE_OPTIONS.filter((o) => o.value === status)}
               options={SUB_STATE_OPTIONS}
               onChange={updateStatus}
-          /> : getStatusDisplay(status)
-          }
+          /> : getStatusDisplay(status)}
         </td>
       </tr>
-      {
-          isGroupAdmin && !isActive && <tr>
-            <th>Akcje koordynatora</th>
-            <td colSpan={6}>
-              <div className={"d-flex justify-content-evenly"}>
-                {localSub.matcher && <Button variant={"warning"}  size={"sm"} onClick={freeUpMatcher}>Zwolnij zgłoszenie</Button>}
-                {localSub.coordinator && <Button variant={"warning"} size={"sm"} onClick={freeUpCoord}>Zwolnij łącznika</Button>}
-              </div>
-            </td>
-          </tr>
-      }
+      {isGroupAdmin && !isActive && <tr>
+        <th>Akcje koordynatora</th>
+        <td colSpan={6}>
+          <div className={"d-flex justify-content-evenly"}>
+            {localSub.matcher &&
+                <Button variant={"warning"} size={"sm"} onClick={freeUpMatcher}>Zwolnij zgłoszenie</Button>}
+            {localSub.coordinator &&
+                <Button variant={"warning"} size={"sm"} onClick={freeUpCoord}>Zwolnij łącznika</Button>}
+          </div>
+        </td>
+      </tr>}
       </tbody>
     </Table>
-    <p className='sub-id'>Przyjęte: {localSub.created}</p>
+    <p className="sub-id">Przyjęte: {localSub.created}</p>
   </div>;
 }
 
@@ -646,10 +638,26 @@ const getLatestSubId = async () => {
 };
 
 
-const SubmissionList = ({user, subs, btnHandler, sourceFilter,
-                          setStatusFilter, setSourceFilter, statusFilter, droppedFilter, setDropped,
+function LoadingSpinner() {
+  return <div style={{margin: "0 auto", width: "fit-content"}}>
+    <div className="spinner-border text-center mt-5" role="status">
+      <span className="visually-hidden">Loading...</span>
+    </div>
+  </div>;
+}
 
-}) => {
+const SubmissionList = ({
+                          user,
+                          subs,
+                          btnHandler,
+                          sourceFilter,
+                          setStatusFilter,
+                          setSourceFilter,
+                          statusFilter,
+                          droppedFilter,
+                          setDropped,
+
+                        }) => {
   const [submissions, setSubmissions] = useState(subs);
   const [droppedHosts, setDroppedHosts] = useState([]);
   const [visibleSubmissions, setVisibleSubmissions] = useState(submissions);
@@ -658,6 +666,7 @@ const SubmissionList = ({user, subs, btnHandler, sourceFilter,
   const [todayFilter, setTodayFilter] = useState(true);
   const [dataSemaphore, setDataSemaphore] = useState(true);
   const [latestChange, setLatestChange] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -680,6 +689,7 @@ const SubmissionList = ({user, subs, btnHandler, sourceFilter,
     setSubmissions(result.data.submissions);
     // do latest for dropped
     setDroppedHosts(result.data.dropped);
+    setIsLoading(false);
   }, [latestChange]);
 
 
@@ -697,19 +707,7 @@ const SubmissionList = ({user, subs, btnHandler, sourceFilter,
   };
 
   useEffect(() => {
-    setVisibleSubmissions(
-        submissions.filter(
-            s => sourceFilter.length ? sourceFilter.map(o => o.value).includes(s.source) : true
-        ).filter(
-            s => statusFilter.length ? statusFilter.map(o => o.value).includes(s.status) : true
-        ).filter(
-            s => userOnly ? subBelongsToUser(s) : true
-        ).filter(
-            s => todayFilter ? s.is_today : true
-        ).filter(
-            s => searchQuery ? Object.values(s).join(' ').toLowerCase().search(searchQuery) > -1 : true
-        )
-    );
+    setVisibleSubmissions(submissions.filter(s => sourceFilter.length ? sourceFilter.map(o => o.value).includes(s.source) : true).filter(s => statusFilter.length ? statusFilter.map(o => o.value).includes(s.status) : true).filter(s => userOnly ? subBelongsToUser(s) : true).filter(s => todayFilter ? s.is_today : true).filter(s => searchQuery ? Object.values(s).join(' ').toLowerCase().search(searchQuery) > -1 : true));
   }, [sourceFilter, todayFilter, statusFilter, submissions, searchQuery, userOnly]);
 
   // useEffect(() => {
@@ -806,9 +804,11 @@ const SubmissionList = ({user, subs, btnHandler, sourceFilter,
         {/*  {SUB_COLUMNS.map(colName => <div className={"col-head col"}>{colName}</div>)}*/}
         {/*</div>*/}
 
-        {droppedFilter && droppedHosts && <div className={"dropped-container"}>{droppedHosts.map(r => <DroppedHost resource={r}
-                                                                                                  key={r.id}/>)}</div>}
-        {visibleSubmissions.map(s => <SubmissionRow user={user} sub={s} key={s.id} activeHandler={btnHandler}/>)}
+        {droppedFilter && droppedHosts &&
+            <div className={"dropped-container"}>{droppedHosts.map(r => <DroppedHost resource={r}
+                                                                                     key={r.id}/>)}</div>}
+        {isLoading ? <LoadingSpinner/> : visibleSubmissions.map(s => <SubmissionRow user={user} sub={s} key={s.id}
+                                                                                    activeHandler={btnHandler}/>)}
       </>
 
   );
@@ -883,8 +883,7 @@ const App = ({subs, initialResources, userData, coordinators, helped}) => {
                          statusFilter={statusFilter}
                          setStatusFilter={(v) => setStatusFilter(v)}
                          droppedFilter={droppedFilter} setDropped={(v) => setDroppedFilter(v)}
-    />
-    }
+    />}
   </>;
 };
 
