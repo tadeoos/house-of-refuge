@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import styled from 'styled-components';
 import Header from '../components/Header.js';
@@ -11,19 +11,20 @@ import {
   BrowserRouter,
   Routes,
   Route,
-  Link
+  Link,
+  useLocation
 } from "react-router-dom";
 
 const StyledApp = styled.div`
-  max-width: 1400px;
-  margin: auto;
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  justify-content: space-between;
-  height: 100%;
   font-family: 'Roboto', sans-serif;
+  max-width: 1400px;
   color: #212121;
+  margin: auto;
+  display: ${p => p.homapage ? 'flex' : 'initial'};
+  flex-direction: ${p => p.homapage ? 'column' : 'initial'};
+  position: ${p => p.homapage ? 'relative' : 'initial'};
+  justify-content: ${p => p.homapage ? 'space-between' : 'initial'};
+  min-height: ${p => p.homapage ? '100%' : 'initial'};
 
   .Footer {
     justify-content: flex-end;
@@ -52,16 +53,20 @@ const ButtonWrap = styled.div`
 `;
 
 
-
 const App = ({ userData }) => {
   const [user] = useState(userData);
+  const [isHomePage, setIsHomePage] = useState(false);
+  let location = useLocation();
+  useEffect(() => {
+    location.pathname === '/' ? setIsHomePage(true) : setIsHomePage(false);
+  }, [location]);
 
   return (
-    <BrowserRouter>
-      <StyledApp>
-        <Header />
-        <Routes>
-          <Route index element={<ButtonWrap>
+    <StyledApp homapage={isHomePage}>
+      <Header />
+      <Routes>
+        <Route index element={<>
+          <ButtonWrap>
             <Link to="/share">
               <BigButton
                 primaryText="Udostępniam nocleg"
@@ -78,16 +83,22 @@ const App = ({ userData }) => {
                 backgroundColor="#FFD200"
               />
             </Link>
-          </ButtonWrap>} />
-          <Route path="/share" element={<Form
+          </ButtonWrap>
+          <Footer className="Footer" />
+        </>} />
+        <Route path="/share" element={<>
+          <Form
             primaryText="Udostępniam nocleg"
             secondaryText="Можу надати житло"
             fields={fields1}
             validationSchema={validationSchema1}
             url='/api/stworz_zasob'
             successInfo='Dziękujemy za zgłoszenie.'
-          />} />
-          <Route path="/find" element={<Form
+          />
+          <Footer className="Footer" />
+        </>} />
+        <Route path="/find" element={<>
+          <Form
             primaryText="Потребує житло"
             secondaryText="Szukam noclegu"
             fields={fields2}
@@ -95,18 +106,17 @@ const App = ({ userData }) => {
             url='/api/zglos'
             successInfo='Дякуємо за подання.'
             user={user}
-          />} />
-          <Route path="/privacy" element={<Privacy />} />
-        </Routes>
-        <Footer className="Footer" />
-      </StyledApp >
-    </BrowserRouter>
+          />
+          <Footer className="Footer" />
+        </>} />
+        <Route path="/privacy" element={<Privacy />} />
+      </Routes>
+
+    </StyledApp>
   );
 };
 
-
-
 ReactDOM.render(
-  React.createElement(App, window.props), // gets the props that are passed in the template
-  window.react_mount, // a reference to the #react div that we render to
+  <BrowserRouter><App /></BrowserRouter>,
+  window.react_mount,
 );
