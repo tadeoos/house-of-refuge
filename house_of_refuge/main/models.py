@@ -281,6 +281,7 @@ class Submission(TimeStampedModel):
             self.resource.is_dropped = True
             self.resource.note += f"\nHosta znaleziony przez: {self.resource.owner}"
             self.resource.owner = None
+            self.resource.availability = get_our_today_cutoff()
             self.resource.save()
             self.resource = None
         self.note += f' \nDropped at {timezone.now().strftime("%Y-%m-%d %H:%M:%S")}'
