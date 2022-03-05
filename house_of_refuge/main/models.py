@@ -39,7 +39,8 @@ class HousingResourceManager(Manager):
 
     def for_remote(self, user):
         return self.filter(
-            Q(status__in=[Status.NEW]) | Q(owner=user)
+            Q(status__in=[Status.NEW])
+            # | Q(owner=user)
         )
 
 
@@ -210,21 +211,22 @@ class Submission(TimeStampedModel):
     can_stay_with_pets = models.CharField(max_length=512, null=True, blank=True)  # zrobic dropdown na froncie do tego?
     contact_person = models.CharField(max_length=1024, null=True, blank=True)
     languages = models.CharField(max_length=1024, null=True, blank=True)
-    when = models.DateField(default=timezone.now, null=True, blank=True)
+    when = models.DateField(default=timezone.now, null=True, blank=True, help_text="Od kiedy potrzebuje")
     transport_needed = models.BooleanField(default=True)
     # ponizej dla zalogowanych
     note = models.TextField(max_length=2048, null=True, blank=True)
     status = models.CharField(choices=SubStatus.choices, default=Status.NEW, max_length=32)
     person_in_charge_old = models.CharField(max_length=512, default="", blank=True)
     receiver = models.ForeignKey(User, on_delete=models.SET_NULL, default=None, blank=True, null=True,
-                                 related_name="received_subs")
+                                 related_name="received_subs", help_text="Przyjmujący zgłoszenie")
     coordinator = models.ForeignKey(User, on_delete=models.SET_NULL, default=None, blank=True, null=True,
-                                    related_name="coord_subs")
+                                    related_name="coord_subs", help_text="Łącznik")
     matcher = models.ForeignKey(User, on_delete=models.SET_NULL, default=None, blank=True, null=True,
-                                related_name="matched_subs")
-    resource = models.ForeignKey(HousingResource, on_delete=models.SET_NULL, default=None, blank=True, null=True)
+                                related_name="matched_subs", help_text="Kto znalazł hosta")
+    resource = models.ForeignKey(HousingResource, on_delete=models.SET_NULL, default=None, blank=True, null=True, help_text="Zasób (Host)")
     priority = models.IntegerField(default=1)
     source = models.CharField(choices=SubSource.choices, default=SubSource.WEBFORM, max_length=64)
+    should_be_deleted = models.BooleanField(default=False)
 
     finished_at = models.DateTimeField(null=True, blank=True)
 

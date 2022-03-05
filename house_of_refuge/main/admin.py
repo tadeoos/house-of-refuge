@@ -206,7 +206,7 @@ class SubmissionAdmin(ImportExportModelAdmin):
     # resource_class = HousingRow
     search_fields = ("id", "name", "languages", "receiver__name", "coordinator__name", "note", "contact_person", "matcher__name")
     list_display = ("id", "name", "people", "how_long", "source", "status", "receiver", "matcher", "coordinator")
-    list_filter = ("status", "source")
+    list_filter = ("status", "source", "should_be_deleted")
     list_editable = ("status", "source")
     autocomplete_fields = ['resource', 'matcher', 'coordinator', 'receiver']
     inlines = [ChangeInline]

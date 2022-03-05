@@ -32,14 +32,14 @@ def resource_gathering(request):
 
 @login_required
 def housing_list(request):
-    resources = [
-        r.as_prop()
-        for r in HousingResource.objects.for_remote(request.user)
-    ]
-    subs = [
-        s.as_prop()
-        for s in Submission.objects.all()
-    ]
+    # resources = [
+    #     r.as_prop()
+    #     for r in HousingResource.objects.for_remote(request.user)
+    # ]
+    # subs = [
+    #     s.as_prop()
+    #     for s in Submission.objects.all()
+    # ]
     coords = defaultdict(list)
     for c in Coordinator.objects.all():
         coords[c.group].append(c.as_json())
@@ -51,7 +51,9 @@ def housing_list(request):
 
     return render(
         request, "main/housing_list.html", {"props": dict(
-            initialResources=resources, subs=subs, userData=request.user.as_json(),
+            initialResources=[],
+            subs=[],
+            userData=request.user.as_json(),
             coordinators=coords, helped=people_helped,
         ), "show_nav": False}
     )
