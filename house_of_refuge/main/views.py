@@ -1,6 +1,7 @@
 from collections import defaultdict
 
 from django.contrib.auth.decorators import login_required
+from django.db import transaction
 from django.db.models import Q
 from django.http import JsonResponse, HttpResponse
 from django.utils import timezone
@@ -77,6 +78,7 @@ def get_resources(request):
 
 @require_http_methods(["POST"])
 @login_required
+@transaction.atomic
 def resource_match_found(request):
     data = json.loads(request.body)
     print(f"Host znaleziony: {data}")
@@ -178,6 +180,7 @@ def create_resource(request):
 
 
 @require_http_methods(["POST"])
+@transaction.atomic
 def update_sub(request, sub_id):
     data = json.loads(request.body)
     sub = Submission.objects.get(id=sub_id)
@@ -196,6 +199,7 @@ def update_sub(request, sub_id):
 
 
 @api_view(['POST'])
+@transaction.atomic
 def update_resource(request, resource_id):
     resource = HousingResource.objects.get(id=resource_id)
     serializer = HousingResourceSerializer(instance=resource, data=request.data['fields'], partial=True)
@@ -210,6 +214,7 @@ def update_resource(request, resource_id):
 
 
 @require_http_methods(["POST"])
+@transaction.atomic
 def set_sub_matcher(request):
     data = json.loads(request.body)
     sub = Submission.objects.get(id=data['sub_id'])
