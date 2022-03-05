@@ -20,7 +20,7 @@ services:
     region: frankfurt
     branch: master
     buildCommand: "./build.sh"
-    startCommand: "gunicorn config.wsgi:application -k gevent --worker-connections=100 --config=gunicorn_config.py"
+    startCommand: "NEW_RELIC_CONFIG_FILE=newrelic.ini newrelic-admin run-program gunicorn config.wsgi:application -k gevent --worker-connections=100 --config=gunicorn_config.py"
     healthCheckPath: /healthz
     scaling:
       minInstances: 1
