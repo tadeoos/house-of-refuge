@@ -24,7 +24,7 @@ services:
     healthCheckPath: /healthz
     scaling:
       minInstances: 1
-      maxInstances: 8
+      maxInstances: 5
       targetMemoryPercent: 85 # optional if targetCPUPercent is set (valid: 1-90)
       targetCPUPercent: 80 # optional if targetMemory is set (valid: 1-90)
     envVars:
@@ -37,7 +37,7 @@ services:
       - key: DJANGO_ADMIN_URL
         value: "kijow/"
       - key: WEB_CONCURRENCY
-        value: 5
+        value: 4
       - key: DJANGO_SETTINGS_MODULE
         value: "config.settings.production"
       - key: REDIS_URL
