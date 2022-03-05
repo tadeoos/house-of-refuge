@@ -186,7 +186,7 @@ class SubmissionManager(Manager):
             Q(status__in=[Status.NEW])
         )
 
-    def todays(self):
+    def active_today(self):
         return self.filter(when__lte=get_our_today_cutoff())
 
     def for_happy_message(self):

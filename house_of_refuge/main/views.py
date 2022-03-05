@@ -162,9 +162,7 @@ def create_submission(request):
     print(f"Got sub data: {request.data}")
     if serializer.is_valid():
         serializer.save()
-        print(f"Seralizer saved")
         return Response(serializer.data, status=status.HTTP_201_CREATED)
-    print(f"Seralizer BAD")
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -175,9 +173,7 @@ def create_resource(request):
     print(f"Got resource data: {request.data}")
     if serializer.is_valid():
         serializer.save()
-        print(f"Seralizer saved")
         return Response(serializer.data, status=status.HTTP_201_CREATED)
-    print(f"Seralizer BAD")
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -254,7 +250,7 @@ def latest_resource(request):
 def get_submissions(request):
     subs = [
         s.as_prop()
-        for s in Submission.objects.todays()
+        for s in Submission.objects.all()
     ]
     dropped = [hr.as_prop() for hr in HousingResource.objects.filter(is_dropped=True)]
     return JsonResponse({"data": dict(submissions=subs, dropped=dropped)})
