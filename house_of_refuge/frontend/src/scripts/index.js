@@ -862,7 +862,7 @@ const App = ({subs, initialResources, userData, coordinators, helped}) => {
       }, body: JSON.stringify({"fields": fields})
     }).then(response => response.json()).then(data => {
       console.log('Response: ', data);
-      // toast(`${data.message}`, {type: data.status});
+      toast(`${data.message}`, {type: data.status});
       if (!isActive) {
         setActiveSub(data.data);
       } else {

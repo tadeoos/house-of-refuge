@@ -192,6 +192,11 @@ def update_sub(request, sub_id):
         if field == "status" and value == SubStatus.GONE:
             # zniknął!
             sub.handle_gone()
+        if "matcher" in field and sub.matcher and sub.matcher != request.user:
+            return JsonResponse(
+                {"data": None,
+                 "message": "ktoś już szuka tego zgłoszenia",
+                 "status": "error"}, status=400)
         else:
             setattr(sub, field, value)
             sub.save()
