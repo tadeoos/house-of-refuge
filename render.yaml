@@ -20,11 +20,12 @@ services:
     region: frankfurt
     branch: master
     buildCommand: "./build.sh"
-    startCommand: "NEW_RELIC_CONFIG_FILE=newrelic.ini newrelic-admin run-program gunicorn config.wsgi:application -k gevent --worker-connections=100 --config=gunicorn_config.py"
+#    startCommand: "NEW_RELIC_CONFIG_FILE=newrelic.ini newrelic-admin run-program gunicorn config.wsgi:application -k gevent --worker-connections=100 --config=gunicorn_config.py"
+    startCommand: "NEW_RELIC_CONFIG_FILE=newrelic.ini newrelic-admin run-program gunicorn config.wsgi:application"
     healthCheckPath: /healthz
     scaling:
       minInstances: 1
-      maxInstances: 4
+      maxInstances: 8
       targetMemoryPercent: 85 # optional if targetCPUPercent is set (valid: 1-90)
       targetCPUPercent: 80 # optional if targetMemory is set (valid: 1-90)
     envVars:
@@ -37,7 +38,7 @@ services:
       - key: DJANGO_ADMIN_URL
         value: "kijow/"
       - key: WEB_CONCURRENCY
-        value: 4
+        value: 5
       - key: DJANGO_SETTINGS_MODULE
         value: "config.settings.production"
       - key: REDIS_URL
