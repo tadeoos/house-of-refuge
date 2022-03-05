@@ -119,6 +119,7 @@ def resource_match_found(request):
 
 @require_http_methods(["POST"])
 @login_required
+@transaction.atomic
 def update_resource_status(request, resource_id, **kwargs):
     user = request.user
     data = json.loads(request.body)
@@ -139,6 +140,7 @@ def update_resource_status(request, resource_id, **kwargs):
 
 @require_http_methods(["POST"])
 @login_required
+@transaction.atomic
 def update_resource_note(request, resource_id, **kwargs):
     data = json.loads(request.body)
     resource = HousingResource.objects.select_for_update().get(id=resource_id)
