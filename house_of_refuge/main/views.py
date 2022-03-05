@@ -71,7 +71,8 @@ def home(request):
 def get_resources(request):
     resources = [
         r.as_prop()
-        for r in HousingResource.objects.select_related("owner").filter(status__in=Status.NEW)
+        for r in HousingResource.objects.select_related("owner").filter(
+            status=Status.NEW)
     ]
     return JsonResponse({"data": resources})
 
