@@ -71,7 +71,7 @@ def home(request):
 def get_resources(request):
     resources = [
         r.as_prop()
-        for r in HousingResource.objects.for_remote(request.user)
+        for r in HousingResource.objects.select_related("owner").for_remote(request.user)
     ]
     return JsonResponse({"data": resources})
 
@@ -261,7 +261,9 @@ def latest_resource(request):
 def get_submissions(request):
     subs = [
         s.as_prop()
-        for s in Submission.objects.all()
+        for s in Submission.objects.select_related(
+            "resource", "coordinator", "matcher", "receiver"
+        ).all()
     ]
     dropped = [hr.as_prop() for hr in HousingResource.objects.filter(is_dropped=True)]
     return JsonResponse({"data": dict(submissions=subs, dropped=dropped)})
