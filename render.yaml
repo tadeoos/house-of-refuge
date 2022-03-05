@@ -24,7 +24,7 @@ services:
     healthCheckPath: /healthz
     scaling:
       minInstances: 1
-      maxInstances: 5
+      maxInstances: 4
       targetMemoryPercent: 85 # optional if targetCPUPercent is set (valid: 1-90)
       targetCPUPercent: 80 # optional if targetMemory is set (valid: 1-90)
     envVars:
