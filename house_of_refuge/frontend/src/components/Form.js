@@ -106,7 +106,7 @@ const Success = styled.div`
   text-align: center;
 `;
 
-const Primary = styled.span`
+const Primary = styled.div`
    font-size: 34px;
    font-weight: 700;
    margin-top: 80px;
