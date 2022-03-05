@@ -13,7 +13,7 @@ from rest_framework.response import Response
 
 from .forms import HousingResourceForm
 # Create your views here.
-from .models import HousingResource, Submission, SubStatus, Coordinator, ObjectChange
+from .models import HousingResource, Submission, SubStatus, Coordinator, ObjectChange, Status
 from .serializers import SubmissionSerializer, HousingResourceSerializer
 
 
@@ -71,7 +71,7 @@ def home(request):
 def get_resources(request):
     resources = [
         r.as_prop()
-        for r in HousingResource.objects.select_related("owner").for_remote(request.user)
+        for r in HousingResource.objects.select_related("owner").filter(status__in=Status.NEW)
     ]
     return JsonResponse({"data": resources})
 
