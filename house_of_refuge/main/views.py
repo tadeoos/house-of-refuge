@@ -1,21 +1,19 @@
+import json
 from collections import defaultdict
 
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
-from django.db.models import Q
 from django.http import JsonResponse, HttpResponse
-from django.utils import timezone
-from django.views.decorators.http import require_http_methods
 from django.shortcuts import render
-import json
 from django.views.decorators.csrf import ensure_csrf_cookie
+from django.views.decorators.http import require_http_methods
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from .forms import HousingResourceForm
 # Create your views here.
-from .models import HousingResource, Status, Submission, SubStatus, Coordinator, ObjectChange
+from .models import HousingResource, Submission, SubStatus, Coordinator, ObjectChange
 from .serializers import SubmissionSerializer, HousingResourceSerializer
 
 

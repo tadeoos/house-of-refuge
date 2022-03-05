@@ -130,6 +130,7 @@ const ResourceRow = ({resource, isExpanded, onMatch, compact = false}) => {
   const [showModal, setShowModal] = useState(false);
   const [availableFrom, setAvailableFrom] = useState(resource.availability);
   const [status, setStatus] = useState(resource.status);
+  const [note, setNote] = useState(resource.note);
 
   useEffect(() => {
     return () => {
@@ -147,6 +148,7 @@ const ResourceRow = ({resource, isExpanded, onMatch, compact = false}) => {
     }).then(response => response.json()).then(data => {
       console.log('Response: ', data);
       // toast(`${data.message}`, {type: data.status});
+      setNote(value);
     }).catch((error) => {
       console.error('Error:', error);
     });
@@ -221,8 +223,8 @@ const ResourceRow = ({resource, isExpanded, onMatch, compact = false}) => {
         </tr>
         <tr>
           <th>Notatka</th>
-          {compact ? <td>{resource.note}</td> : <>
-            <td><EditableField value={resource.note} onRename={updateNote}/></td>
+          {compact ? <td>{note}</td> : <>
+            <td><EditableField value={note} onRename={updateNote}/></td>
             <td colSpan="2"><Button size={"sm"} onClick={() => setShowModal(true)}>ZGODZIŁ SIĘ PRZYJĄC</Button></td>
           </>}
         </tr>
