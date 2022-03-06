@@ -19,7 +19,7 @@
         </tr>
         {% for user in top_receivers %}
           <tr>
-            <td>{{ user }}</td>
+            <td>{{ user.name }}</td>
             <td>{{ user.mc }}</td>
           </tr>
         {% endfor %}
@@ -32,7 +32,7 @@
         </tr>
         {% for user in top_matchers %}
           <tr>
-            <td>{{ user }}</td>
+            <td>{{ user.name }}</td>
             <td>{{ user.mc }}</td>
           </tr>
         {% endfor %}
@@ -45,7 +45,7 @@
         </tr>
         {% for user in top_coords %}
           <tr>
-            <td>{{ user }}</td>
+            <td>{{ user.name }}</td>
             <td>{{ user.mc }}</td>
           </tr>
         {% endfor %}
@@ -74,6 +74,7 @@
   {{ labels|json_script:"labels" }}
   {{ chart_data|json_script:"chartData" }}
   {{ success_data|json_script:"successData" }}
+  {{ people_data|json_script:"peopleData" }}
 {#  {{ users_data|json_script:"usersData" }}#}
 {#  {{ events_times_chart|json_script:"eventsTimesChartData" }}#}
   <script type="text/javascript">
@@ -111,6 +112,12 @@
           backgroundColor: '#5fb93d',
           borderColor: '#5fb93d',
           data: JSON.parse(document.getElementById('successData').textContent),
+        },
+        {
+          label: 'Zakwaterowani ludzie',
+          backgroundColor: '#273cc0',
+          borderColor: '#273cc0',
+          data: JSON.parse(document.getElementById('peopleData').textContent),
         },
       ]
     };

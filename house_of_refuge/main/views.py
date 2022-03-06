@@ -297,27 +297,32 @@ def activity_stats_view(request):
     labels = []
     subs_data = []
     success_data = []
+    people_data = []
 
-    start = Submission.objects.earliest("created").created
-    for start, end in day_iterator(start):
+    base_start = Submission.objects.earliest("created").created
+    for start, end in day_iterator(base_start):
         subs_created = Submission.objects.filter(created__range=(start, end))
-        successful = subs_created.filter(status="success")
+        successful = Submission.objects.filter(finished_at__range=(start, end), status="success")
         labels.append(str(start.date()))
         subs_data.append(subs_created.count())
         success_data.append(successful.count())
+        people_data.append(sum(s.people_as_int for s in successful))
 
     all_subs = Submission.objects.all().count()
     all_hosts = HousingResource.objects.all().count()
 
-    top_matchers = User.objects.all().annotate(mc=Count('matched_subs')).order_by('-mc')
-    top_receivers = User.objects.all().annotate(mc=Count('received_subs')).order_by('-mc')
-    top_coords = User.objects.all().annotate(mc=Count('coord_subs')).order_by('-mc')
+    TOP = 10
+
+    top_matchers = User.objects.all().annotate(mc=Count('matched_subs')).order_by('-mc')[:TOP]
+    top_receivers = User.objects.all().annotate(mc=Count('received_subs')).order_by('-mc')[:TOP]
+    top_coords = User.objects.all().annotate(mc=Count('coord_subs')).order_by('-mc')[:TOP]
 
     context = {
 
         "labels": labels,
         "chart_data": subs_data,
         "success_data": success_data,
+        "people_data": people_data,
         "all_subs": all_subs,
         "all_hosts": all_hosts,
         "top_matchers": top_matchers,
