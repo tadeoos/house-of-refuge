@@ -190,14 +190,14 @@ def update_sub(request, sub_id):
     data = json.loads(request.body)
     sub = Submission.objects.get(id=sub_id)
     for field, value in data['fields'].items():
-        if field == "status" and value == SubStatus.GONE:
-            # zniknął!
-            sub.handle_gone()
-        if "matcher" in field and sub.matcher and sub.matcher != request.user:
+        if value and "matcher" in field and sub.matcher and sub.matcher != request.user:
             return JsonResponse(
                 {"data": None,
                  "message": "ktoś już szuka tego zgłoszenia",
                  "status": "error"}, status=400)
+        if field == "status" and value == SubStatus.GONE:
+            # zniknął!
+            sub.handle_gone()
         else:
             setattr(sub, field, value)
             sub.save()
