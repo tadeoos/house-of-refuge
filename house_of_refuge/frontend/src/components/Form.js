@@ -70,6 +70,7 @@ const RadioChoice = styled.label`
   cursor: pointer;
   display: flex;
   align-items: center;
+  height: 28px;
 
   span {
       margin-left: 6px;

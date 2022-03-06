@@ -195,9 +195,9 @@ export const fields2 = [
     },
     {
         name: 'how_long',
-        label: 'На який час необхідне житло?',
-        subHeading: 'Na jak długo?',
-        type: 'text'
+        label: 'На який час необхідне житло? (кількість днів)',
+        subHeading: 'Na jak długo? (liczba dni)',
+        type: 'number'
     },
     {
         name: 'description',
@@ -298,7 +298,7 @@ export const validationSchema2 = ({ publicOnly }) => yup.object({
         .matches(/[\s#0-9_\-+/().]/, 'Niepoprawny numer telefonu')
         .required('Pole wymagane'),
     people: yup.number().required('Pole wymagane'),
-    how_long: yup.string().required('Pole wymagane'),
+    how_long: yup.number().required('Pole wymagane'),
     description: yup.string().required('Pole wymagane'),
     origin: yup.string().required('Pole wymagane'),
     traveling_with_pets: yup.string().required('Pole wymagane'),
