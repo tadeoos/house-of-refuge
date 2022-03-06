@@ -478,6 +478,11 @@ function SubmissionRow({sub, activeHandler, user, isGroupCoordinator, isActive =
   const [note, setNote] = useState(sub.note);
   const [localSub, setLocalSub] = useState(sub);
 
+  useEffect(() => {
+    setLocalSub(sub);
+  }, [sub]);
+
+
   const btnHandler = () => {
     console.log("btn handler clicked");
     activeHandler(sub, isActive);
