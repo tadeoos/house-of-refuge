@@ -16,7 +16,7 @@ import {
 } from "react-router-dom";
 
 const StyledApp = styled.div`
-  font-family: 'Roboto', sans-serif;
+  font-family: 'proxima-nova', sans-serif;
   max-width: 1400px;
   color: #212121;
   margin: auto;

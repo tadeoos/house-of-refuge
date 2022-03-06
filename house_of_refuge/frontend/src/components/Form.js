@@ -16,21 +16,21 @@ const StyledForm = styled.form`
 `;
 
 const Label = styled.label`
-  text-align: left;
+  font-weight: 700;
+  font-size: 16.88px;
+  line-height: 19px;
   margin-top: 28px;
-  font-size: 17px;
-  line-height: 24px;
   margin-left: ${p => p.type === 'checkbox' ? '20px' : 'initial'};
   position: ${p => p.type === 'checkbox' ? 'absolute' : 'initial'};
   cursor: ${p => p.type === 'checkbox' ? 'pointer' : 'initial'};
-`;
+  `;
 
 const SubHeading = styled.span`
-  text-align: left;
+  font-weight: 400;
   font-size: 13.5px;
-  line-height: 19px;
-  opacity: 0.6;
-  margin-top: 2px;
+  line-height: 16px;
+  margin-top: 3px;
+  margin-left: ${p => p.indent ? '20px' : 0};
 `;
 
 const CustomIntRange = styled.span`
@@ -48,7 +48,6 @@ const Input = styled.input.attrs(({ type }) => ({
     as: type === 'textarea' ? type : 'input'
 }))`
   height: ${p => p.type === 'checkbox' ? '22px' : '44px'};
-  margin-top: ${p => p.type === 'checkbox' ? '28px' : '9px'};
   cursor: ${p => p.type === 'checkbox' ? 'pointer' : 'initial'};
   padding: 0 8px;
   box-sizing: border-box;
@@ -57,20 +56,34 @@ const Input = styled.input.attrs(({ type }) => ({
   min-height: ${p => p.type === 'textarea' ? '70px' : 'initial'};
   max-height: ${p => p.type === 'textarea' ? '140px' : 'initial'};
   padding-top: ${p => p.type === 'textarea' ? '8px' : 'initial'};
+  margin-top: ${p => p.type === 'checkbox' ? '27px' : '10px'};
+
 `;
 
+const RadioField = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-top: 8px;
+`;
 
-const Radiolabel = styled.label`
+const RadioChoice = styled.label`
   cursor: pointer;
+  display: flex;
+  align-items: center;
+
   span {
       margin-left: 6px;
+      font-size: 14px;
   }
 `;
 
-const Radio = styled.input`
+const SelectField = styled.select`
+  height: 44px;
+  cursor: pointer;
+  padding-left: 6px;
   margin-top: 10px;
-  margin-bottom: 10px;
 `;
+
 
 const Button = styled.button`
   margin-top: 36px; 
@@ -96,7 +109,7 @@ const Field = styled.div`
   flex-direction: column;
   
   * {
-  color:  ${p => p.alert ? '#d93025' : 'inherit'};
+    color:  ${p => p.alert ? '#d93025' : 'inherit'};
   }
 `;
 
@@ -212,21 +225,21 @@ const Form = ({ fields, validationSchema, url, successInfo, user, primaryText, s
                                         {field.subHeading && <SubHeading> {field.subHeading}</SubHeading>}
                                     </>}
                                 {field.type === 'radio' ?
-                                    <>
+                                    <RadioField>
                                         {field.choice.map(choice => {
-                                            return <Radiolabel key={choice.value} >
-                                                <Radio
+                                            return <RadioChoice key={choice.value} >
+                                                <input
                                                     type={field.type}
                                                     name={field.name}
                                                     value={choice.value}
                                                     onChange={formik.handleChange}
                                                 />
                                                 <span>{choice.label}</span>
-                                            </Radiolabel>;
+                                            </RadioChoice>;
                                         })}
-                                    </> : field.type === 'select' ?
-                                        <select
-                                            style={{ height: 44, cursor: 'pointer', paddingLeft: 6 }}
+                                    </RadioField>
+                                    : field.type === 'select' ?
+                                        <SelectField
                                             name={field.name}
                                             value={field.value}
                                             onChange={formik.handleChange}
@@ -234,7 +247,7 @@ const Form = ({ fields, validationSchema, url, successInfo, user, primaryText, s
                                             {field.options.map(option => <option key={option.value} value={option.value}>
                                                 {option.label}
                                             </option>)}
-                                        </select>
+                                        </SelectField>
                                         : field.type === 'custom_int_range' && field.name === 'when_to_call' ?
                                             <CustomIntRange>
                                                 <Input
@@ -268,7 +281,7 @@ const Form = ({ fields, validationSchema, url, successInfo, user, primaryText, s
                                 }
                                 {field.type === 'checkbox' ? <>
                                     <Label type='checkbox' htmlFor={field.name}>{field.label}</Label>
-                                    {field.subHeading && <SubHeading> {field.subHeading}</SubHeading>}
+                                    {field.subHeading && <SubHeading indent> {field.subHeading}</SubHeading>}
                                 </> : null}
                                 {formik.errors[field.name] && formik.touched[field.name] ? (
                                     <Alert role="alert"> {formik.errors[field.name]} </Alert>
