@@ -1,10 +1,14 @@
 import json
 from collections import defaultdict
+from datetime import timedelta
 
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
+from django.db.models import Count
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render
+from django.utils import timezone
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.http import require_http_methods
 from rest_framework import status
@@ -13,7 +17,7 @@ from rest_framework.response import Response
 
 from .forms import HousingResourceForm
 # Create your views here.
-from .models import HousingResource, Submission, SubStatus, Coordinator, ObjectChange, Status
+from .models import HousingResource, Submission, SubStatus, Coordinator, ObjectChange, Status, User, END_OF_DAY
 from .serializers import SubmissionSerializer, HousingResourceSerializer
 
 
@@ -271,3 +275,53 @@ def get_submissions(request):
 def healthcheck(request):
     HousingResource.objects.first()
     return HttpResponse("", status=204)
+
+
+def day_iterator(start_date):
+    now = timezone.now()
+    start_date = start_date.replace(hour=END_OF_DAY, minute=0, second=0, microsecond=0)
+    if start_date.hour < END_OF_DAY:
+        start_date -= timedelta(days=1)
+
+    end_date = start_date + timedelta(days=1)
+
+    yield start_date, end_date
+    while end_date < now:
+        start_week = end_date
+        end_date += timedelta(days=1)
+        yield start_week, end_date
+
+
+@staff_member_required
+def activity_stats_view(request):
+    labels = []
+    subs_data = []
+    success_data = []
+
+    start = Submission.objects.earliest("created").created
+    for start, end in day_iterator(start):
+        subs_created = Submission.objects.filter(created__range=(start, end))
+        successful = subs_created.filter(status="success")
+        labels.append(str(start.date()))
+        subs_data.append(subs_created.count())
+        success_data.append(successful.count())
+
+    all_subs = Submission.objects.all().count()
+    all_hosts = HousingResource.objects.all().count()
+
+    top_matchers = User.objects.all().annotate(mc=Count('matched_subs')).order_by('-mc')
+    top_receivers = User.objects.all().annotate(mc=Count('received_subs')).order_by('-mc')
+    top_coords = User.objects.all().annotate(mc=Count('coord_subs')).order_by('-mc')
+
+    context = {
+
+        "labels": labels,
+        "chart_data": subs_data,
+        "success_data": success_data,
+        "all_subs": all_subs,
+        "all_hosts": all_hosts,
+        "top_matchers": top_matchers,
+        "top_receivers": top_receivers,
+        "top_coords": top_coords,
+    }
+    return render(request, "users/stats.html", context=context)

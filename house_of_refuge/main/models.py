@@ -3,7 +3,7 @@ import re
 
 from django.db import models
 from django.contrib.auth import get_user_model
-from django.db.models import Manager, Q
+from django.db.models import Manager, Q, Count
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from model_utils.models import TimeStampedModel
@@ -201,6 +201,9 @@ class SubmissionManager(Manager):
             cut_off = now.replace(day=now.day - 1, hour=END_OF_DAY, minute=0, second=0)
         return self.filter(finished_at__gte=cut_off, status=SubStatus.SUCCESS)
 
+    def get_best_matchers(self):
+        qs = self.all().values("matcher").annotate(mc=Count("matcher")).order_by().order_by('-mc')[:5]
+        matchers_ids = []
 
 class Submission(TimeStampedModel):
     name = models.CharField(max_length=512, null=False, verbose_name="Imię i nazwisko")
