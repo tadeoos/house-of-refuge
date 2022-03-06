@@ -129,12 +129,13 @@ const Secondary = styled.div`
 const Info = styled.div`
    font-size: 14px;
    text-align: center;
-   color: #fff;
-   width: auto;
-   background-color: #212121;
-   margin: auto;
-   padding: 0 6px;
    margin-top: ${p => p.marginTop + 'px'};
+
+   span {
+    color: #fff;
+    padding: 0 6px;
+    background-color: #212121; 
+   }
 `;
 
 const Form = ({ fields, validationSchema, url, successInfo, user, primaryText, secondaryText }) => {
@@ -200,7 +201,7 @@ const Form = ({ fields, validationSchema, url, successInfo, user, primaryText, s
             <>
                 <Primary> {primaryText} </Primary>
                 <Secondary> {secondaryText} </Secondary>
-                {user && <Info marginTop={48} > Zalogowany: {user.name} </Info>}
+                {user && <Info marginTop={48} > <span> Zalogowany: {user.name} </span> </Info>}
                 {/*{error && <Info marginTop={3} > Błąd serwera. Spróbuj jeszcze raz. </Info>}*/}
 
                 <StyledForm onSubmit={formik.handleSubmit} >
