@@ -310,6 +310,8 @@ def activity_stats_view(request):
 
     all_subs = Submission.objects.all().count()
     all_hosts = HousingResource.objects.all().count()
+    all_success = Submission.objects.filter(status=SubStatus.SUCCESS).count()
+    all_cancelled = Submission.objects.filter(status=SubStatus.CANCELLED).count()
 
     TOP = 10
 
@@ -328,5 +330,7 @@ def activity_stats_view(request):
         "top_matchers": top_matchers,
         "top_receivers": top_receivers,
         "top_coords": top_coords,
+        "all_success": all_success,
+        "all_cancelled": all_cancelled,
     }
     return render(request, "users/stats.html", context=context)
