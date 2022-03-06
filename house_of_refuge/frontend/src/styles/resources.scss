@@ -202,3 +202,20 @@
   max-width: 60px;
   overflow: scroll;
 }
+
+.col-short {
+  max-width: 100px;
+}
+
+.sub-active {
+  position: sticky;
+  top: 40px;
+}
+
+.sub-cancelled {
+  background-color: #738085;
+
+  .table {
+    background-color: #738085;
+  }
+}

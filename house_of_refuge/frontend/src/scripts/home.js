@@ -117,6 +117,6 @@ const App = ({ userData }) => {
 };
 
 ReactDOM.render(
-  <BrowserRouter><App /></BrowserRouter>,
+  <BrowserRouter ><App {...props} /></BrowserRouter>,
   window.react_mount,
 );

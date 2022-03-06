@@ -36,7 +36,7 @@ const SubHeading = styled.span`
 const CustomIntRange = styled.span`
   justify-content: space-between;
   display: flex;
-   
+
    > input {
        width: calc(50% - 8px);
    }
@@ -51,7 +51,7 @@ const Input = styled.input.attrs(({ type }) => ({
   cursor: ${p => p.type === 'checkbox' ? 'pointer' : 'initial'};
   padding: 0 8px;
   box-sizing: border-box;
-  border-radius: 3px; 
+  border-radius: 3px;
   border: 1px solid #898F9C;
   min-height: ${p => p.type === 'textarea' ? '70px' : 'initial'};
   max-height: ${p => p.type === 'textarea' ? '140px' : 'initial'};
@@ -86,7 +86,7 @@ const SelectField = styled.select`
 
 
 const Button = styled.button`
-  margin-top: 36px; 
+  margin-top: 36px;
   padding: 0;
   cursor: pointer;
   width: 100%;
@@ -107,7 +107,7 @@ const Alert = styled.div`
 const Field = styled.div`
   display: flex;
   flex-direction: column;
-  
+
   * {
     color:  ${p => p.alert ? '#d93025' : 'inherit'};
   }
@@ -133,7 +133,7 @@ const Primary = styled.div`
 const Secondary = styled.div`
    font-size: 18px;
    text-align: center;
-   
+
    @media (max-width: 600px) {
        font-size: 16px;
     }
@@ -142,12 +142,13 @@ const Secondary = styled.div`
 const Info = styled.div`
    font-size: 14px;
    text-align: center;
-   color: #fff;
-   width: auto;
-   background-color: #212121;
-   margin: auto;
-   padding: 0 6px;
    margin-top: ${p => p.marginTop + 'px'};
+
+   span {
+    color: #fff;
+    padding: 0 6px;
+    background-color: #212121; 
+   }
 `;
 
 const Form = ({ fields, validationSchema, url, successInfo, user, primaryText, secondaryText }) => {
@@ -191,11 +192,14 @@ const Form = ({ fields, validationSchema, url, successInfo, user, primaryText, s
                 },
             })
                 .catch(error => {
+                    console.log("TADEK ERROR: ", error);
                     error && setError(true);
                 })
                 .then(res => {
+                    console.log("TADEK RESPONSE:", res);
                     if (res) {
-                        if (res.statusText === 'Created') {
+                        setSuccess(true);
+                        if (res.status === 201) {
                             setSuccess(true);
                         } else {
                             setError(true);
@@ -210,8 +214,8 @@ const Form = ({ fields, validationSchema, url, successInfo, user, primaryText, s
             <>
                 <Primary> {primaryText} </Primary>
                 <Secondary> {secondaryText} </Secondary>
-                {user && <Info marginTop={48} > Zalogowany: {user.name} </Info>}
-                {error && <Info marginTop={3} > Błąd serwera. Spróbuj jeszcze raz. </Info>}
+                {user && <Info marginTop={48} > <span> Zalogowany: {user.name} </span> </Info>}
+                {/*{error && <Info marginTop={3} > Błąd serwera. Spróbuj jeszcze raz. </Info>}*/}
 
                 <StyledForm onSubmit={formik.handleSubmit} >
                     {fields

@@ -8,7 +8,32 @@ from import_export.admin import ImportExportModelAdmin
 from import_export.fields import Field
 from import_export.widgets import DateTimeWidget, DateWidget, Widget
 
-from .models import HousingResource, HousingType, TransportRange, Submission, Coordinator, Status
+from .models import HousingResource, HousingType, TransportRange, Submission, Coordinator, Status, ObjectChange
+
+
+class ChangeInline(admin.TabularInline):
+    model = ObjectChange
+    extra = 0
+    can_delete = False
+    readonly_fields = [
+        "user",
+        "submission",
+        "host",
+        "change",
+        "created"
+    ]
+
+
+@admin.register(ObjectChange)
+class HousingResourceAdmin(ModelAdmin):
+    search_fields = ("pk", "change", "user__name", "host__id", "submission__id")
+    list_display = ("id", "user", "change", "host", "submission", "created")
+    readonly_fields = [
+        "user",
+        "submission",
+        "host",
+        "change",
+    ]
 
 VALUE_MAP = {
     "Tak, na terenie Warszawy": TransportRange.WARSAW,
@@ -168,21 +193,26 @@ class HousingRow(resources.ModelResource):
 @admin.register(HousingResource)
 class HousingResourceAdmin(ImportExportModelAdmin):
     resource_class = HousingRow
-    search_fields = ("pk", "name", "about_info", "city_and_zip_code", "email", "details", "extra")
+    search_fields = ("pk", "name", "about_info", "city_and_zip_code", "phone_number", "details", "extra", "address", "owner__name")
     list_display = ("id", "name", "email", "resource", "status", "cherry", "verified")
     list_filter = ("status", "cherry", "verified")
     list_editable = ("status", "cherry", "verified",)
     autocomplete_fields = ['owner']
+    inlines = [ChangeInline]
 
 
 @admin.register(Submission)
 class SubmissionAdmin(ImportExportModelAdmin):
     # resource_class = HousingRow
-    search_fields = ("id", "name", "languages", "receiver__name", "coordinator__name", "note", "contact_person")
-    list_display = ("id", "name", "people", "how_long", "source", "status", "receiver", "matcher", "coordinator")
-    list_filter = ("status", "source")
-    list_editable = ("status", "source")
+    search_fields = ("id", "name", "languages", "phone_number","receiver__name", "coordinator__name", "note", "contact_person", "matcher__name")
+    list_display = ("id", "name", "people","how_long",
+                    "contact_person", "description",
+                    "note", "source", "status",)
+    list_filter = ("status", "source", "should_be_deleted")
+    list_editable = ("status", "source", "note")
     autocomplete_fields = ['resource', 'matcher', 'coordinator', 'receiver']
+    inlines = [ChangeInline]
+    ordering = ["-pk"]
 
 
 @admin.register(Coordinator)
@@ -190,3 +220,7 @@ class CoordinatorAdmin(ModelAdmin):
     # resource_class = HousingRow
     list_display = ("pk", "user", "group",)
     list_editable = ("user", "group",)
+
+
+
+

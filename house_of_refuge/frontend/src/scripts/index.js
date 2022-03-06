@@ -46,31 +46,29 @@ const MatchModal = ({showModal, handleClose, matchHandle, resource}) => {
     // updateResource(resource, {"availability": newDate});
   };
 
-  return (
-      <Modal show={showModal} onHide={handleClose} className="" dialogClassName="">
-        <Modal.Body className={"text-center"}>
-          <h5>Od Kiedy host będzie znów dostępny?</h5>
-          <div style={{margin: "30px"}}>
-            <input required type="date" min={new Date().toJSON().slice(0, 10)} value={dateSet}
-                   onChange={handleDateChange}/>
-          </div>
-          <h5>Co z transportem?</h5>
-          <div className="transport-btns">
-            <Button variant="info" disabled={!dateSet} onClick={() => match(true)}>
-              Host przyjedzie na dworzec
-            </Button>
-            <Button variant="warning" disabled={!dateSet} onClick={() => match(false)}>
-              My musimy ogarnąć
-            </Button>
-          </div>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Cancel
-          </Button>
-        </Modal.Footer>
-      </Modal>
-  );
+  return (<Modal show={showModal} onHide={handleClose} className="" dialogClassName="">
+    <Modal.Body className={"text-center"}>
+      <h5>Od Kiedy host będzie znów dostępny?</h5>
+      <div style={{margin: "30px"}}>
+        <input required type="date" min={new Date().toJSON().slice(0, 10)} value={dateSet}
+               onChange={handleDateChange}/>
+      </div>
+      <h5>Co z transportem?</h5>
+      <div className="transport-btns">
+        <Button variant="info" disabled={!dateSet} onClick={() => match(true)}>
+          Host przyjedzie na dworzec
+        </Button>
+        <Button variant="warning" disabled={!dateSet} onClick={() => match(false)}>
+          My musimy ogarnąć
+        </Button>
+      </div>
+    </Modal.Body>
+    <Modal.Footer>
+      <Button variant="secondary" onClick={handleClose}>
+        Cancel
+      </Button>
+    </Modal.Footer>
+  </Modal>);
 };
 
 export const EditableField = ({value, classes = '', noEditClasses = '', onRename}) => {
@@ -106,19 +104,17 @@ export const EditableField = ({value, classes = '', noEditClasses = '', onRename
 
 const VISIBLE = ["name", "full_address", "people_to_accommodate", "accommodation_length", "resource"];
 
-const STATUS_OPTIONS = [{label: "Nowy", value: "new"},
-  {label: "Zajęta", value: "taken"}, {label: "Zignoruj", value: "ignore"},];
+const STATUS_OPTIONS = [{label: "Nowy", value: "new"}, {label: "Zajęta", value: "taken"}, {
+  label: "Zignoruj",
+  value: "ignore"
+},];
 
 const STATUS_MAP = {
   "new": "nowy", 'processing': "w procesie", "taken": "Zajęta", "ignore": "Zignoruj",
 };
 
 const RESOURCE_MAP = {
-  "home": "Dom",
-  "flat": "Mieszkanie",
-  "room": "Pokój",
-  "couch": "Kanapa",
-  "mattress": "Materac"
+  "home": "Dom", "flat": "Mieszkanie", "room": "Pokój", "couch": "Kanapa", "mattress": "Materac"
 };
 
 const getResourceDisplay = (r) => {
@@ -132,6 +128,10 @@ const getPickUpDisplay = (v) => {
 const ResourceRow = ({resource, isExpanded, onMatch, compact = false}) => {
   const [expanded, setExpanded] = useState(isExpanded);
   const [showModal, setShowModal] = useState(false);
+  const [availableFrom, setAvailableFrom] = useState(resource.availability);
+  const [status, setStatus] = useState(resource.status);
+  const [note, setNote] = useState(resource.note);
+
   useEffect(() => {
     return () => {
       setExpanded(isExpanded);
@@ -148,6 +148,7 @@ const ResourceRow = ({resource, isExpanded, onMatch, compact = false}) => {
     }).then(response => response.json()).then(data => {
       console.log('Response: ', data);
       // toast(`${data.message}`, {type: data.status});
+      setNote(value);
     }).catch((error) => {
       console.error('Error:', error);
     });
@@ -156,6 +157,7 @@ const ResourceRow = ({resource, isExpanded, onMatch, compact = false}) => {
   const handleDateChange = (e) => {
     const newDate = e.target.value;
     updateResource(resource, {"availability": newDate});
+    setAvailableFrom(newDate);
   };
 
   return <div className={`resource-row`}>
@@ -164,19 +166,25 @@ const ResourceRow = ({resource, isExpanded, onMatch, compact = false}) => {
       ${resource.is_dropped ? "row-dropped" : ""}
       `}>
       <div className={"col r-id-col"}>{resource.id}</div>
-      {VISIBLE.map(
-          (a) => <div onClick={() => setExpanded(e => !e)} className={"col"}
-                      key={`${resource.id}-${a}`}>{getResourceDisplay(resource[a])}</div>)}
+      {VISIBLE.map((a) => <div onClick={() => setExpanded(e => !e)}
+                               className={`col ${shortCols.includes(a) ? "col-short" : ""}`}
+                               key={`${resource.id}-${a}`}>{getResourceDisplay(resource[a])}</div>)}
       <div className={"col"}>
-        {compact ? getPickUpDisplay(resource.will_pick_up_now) : resource.is_prio ? "GOTOWY": ""}
+        {compact ? getPickUpDisplay(resource.will_pick_up_now) :
+            <input required type="date" min={new Date().toJSON().slice(0, 10)} value={availableFrom}
+                   onChange={handleDateChange}/>}
       </div>
-      {/*<div className={`col`}>*/}
-      {/*  <Select*/}
-      {/*      values={STATUS_OPTIONS.filter((o) => o.value === resource.status)}*/}
-      {/*      options={STATUS_OPTIONS}*/}
-      {/*      onChange={updateStatus}*/}
-      {/*  />*/}
-      {/*</div>*/}
+      <div className={`col`}>
+        {compact ? resource.note : <Select
+            values={STATUS_OPTIONS.filter((o) => o.value === status)}
+            options={STATUS_OPTIONS}
+            onChange={(values) => {
+              const status = values[0].value;
+              setStatus(status);
+              updateResource(resource, {"status": status});
+            }}
+        />}
+      </div>
     </div>
     {expanded && <div className="row-expanded">
       <Table bordered style={{borderColor: 'black'}}>
@@ -184,41 +192,41 @@ const ResourceRow = ({resource, isExpanded, onMatch, compact = false}) => {
         <tr>
           <th>Coś o sobie</th>
           <td>{resource.about_info}</td>
-          <th>Zasób</th>
-          <td>{resource.resource}</td>
-        </tr>
-        <tr>
-          <th>Miasto i kod</th>
-          <td>{resource.city_and_zip_code}</td>
-          <th>Koszty</th>
-          <td>{resource.costs}</td>
+          <th>Języki</th>
+          <td>{resource.languages}</td>
+          <th>Kiedy można dzwonić?</th>
+          <td>{resource.when_to_call}</td>
         </tr>
         <tr>
           <th>Info o miejscu</th>
           <td>{resource.details}</td>
+          <th>Czy są w domu zwierzęta?</th>
+          <td>{resource.living_with_pets}</td>
+          <th>Czy przyjmie zwierzęta?</th>
+          <td>{resource.can_take_person_with_pets}</td>
+        </tr>
+        <tr>
+          <th>Dodatkowe uwagi</th>
+          <td>{resource.extra}</td>
           <th>Transport</th>
           <td>{resource.transport}</td>
+          <th>Koszty</th>
+          <td>{resource.costs}</td>
         </tr>
         <tr>
           <th>Telefon</th>
           <td>{resource.phone_number}</td>
           <th>Telefon awaryjny</th>
           <td>{resource.backup_phone_number}</td>
-        </tr>
-        <tr>
           <th>Email</th>
           <td>{resource.email}</td>
-          <th>Dodatkowe uwagi</th>
-          <td>{resource.extra}</td>
         </tr>
         <tr>
           <th>Notatka</th>
-          {compact ? <td>{resource.note}</td> :
-              <>
-                <td><EditableField value={resource.note} onRename={updateNote}/></td>
-                <td colSpan="2"><Button size={"sm"} onClick={() => setShowModal(true)}>ZGODZIŁ SIĘ PRZYJĄC</Button></td>
-              </>
-          }
+          {compact ? <td>{note}</td> : <>
+            <td><EditableField value={note} onRename={updateNote}/></td>
+            <td colSpan="2"><Button size={"sm"} onClick={() => setShowModal(true)}>ZGODZIŁ SIĘ PRZYJĄC</Button></td>
+          </>}
         </tr>
         </tbody>
       </Table>
@@ -229,12 +237,14 @@ const ResourceRow = ({resource, isExpanded, onMatch, compact = false}) => {
   </div>;
 };
 
+const SHOW_NUMBER = 400;
+const shortCols = ["people_to_accommodate"];
 
 const ColumnHeader = ({col, sortHandler, isSorting, sortDirection, filterData}) => {
   const iconClass = isSorting ? "sort-active" : "sort-muted";
   const [showFilter, setShowFilter] = useState(false);
 
-  return <div className={"col-head col"}>
+  return <div className={`col-head col ${shortCols.includes(col.fieldName) ? "col-short" : ""}`}>
     <div className={'top'}>
       {col.display} {sortDirection === "asc" ?
         <SortUp className={iconClass} onClick={() => sortHandler(col.fieldName)}/> : <SortDown
@@ -266,15 +276,16 @@ const ResourceList = ({initialResources, sub, subHandler, user, clearActiveSub})
   const [expandAll, setExpandAll] = useState(false);
   const [dataSemaphore, setDataSemaphore] = useState(true);
   const [activeSub] = useState(sub);
+  const [isLoading, setIsLoading] = useState(true);
 
   const [columnsData] = useState({
     name: {fieldName: 'name', display: "Imie", sort: "asc"},
     address: {fieldName: 'address', display: "Adres", sort: "asc"},
-    people_to_accommodate: {fieldName: 'people_to_accommodate', display: "Ilu ludzi przyjmie?", sort: "asc"},
+    people_to_accommodate: {fieldName: 'people_to_accommodate', display: "Ilu ludzi?", sort: "asc"},
     accommodation_length: {fieldName: 'accommodation_length', display: "Na jak długo?", sort: "asc"},
     resource: {fieldName: 'resource', display: "Zasób", sort: "asc"},
-    is_prio: {fieldName: 'is_prio', display: "Gotowy?", sort: "asc"},
-
+    availability: {fieldName: 'availability', display: "Od kiedy?", sort: "asc"},
+    status: {fieldName: 'status', display: "Status", sort: "asc"},
   });
 
   const matchFound = (resource, payload) => {
@@ -296,7 +307,7 @@ const ResourceList = ({initialResources, sub, subHandler, user, clearActiveSub})
   useEffect(() => {
     const interval = setInterval(() => {
       setDataSemaphore((s) => !s);
-    }, getRandomInt(5000, 1000));
+    }, getRandomInt(2000, 4000));
     return () => clearInterval(interval);
   }, []);
 
@@ -308,6 +319,7 @@ const ResourceList = ({initialResources, sub, subHandler, user, clearActiveSub})
       return;
     }
     setResources(result.data);
+    setIsLoading(false);
   }, [dataSemaphore]);
 
   const resourceAsString = (r) => {
@@ -356,9 +368,7 @@ const ResourceList = ({initialResources, sub, subHandler, user, clearActiveSub})
 
   return (<>
         <ToastContainer autoClose={2000}/>
-        {activeSub && <div>
-          <SubmissionRow sub={activeSub} activeHandler={subHandler} user={user} isActive={true}/>
-        </div>}
+        {activeSub && <SubmissionRow sub={activeSub} activeHandler={subHandler} user={user} isActive={true}/>}
         <Table>
           <tbody>
           <tr>
@@ -393,7 +403,7 @@ const ResourceList = ({initialResources, sub, subHandler, user, clearActiveSub})
         {/*<Button>Do odbioru dzisiaj</Button>*/}
         {/*<Button>Na terenie warszawy</Button>*/}
         <div>
-          <p>{`${visibleResources.length} zasóbów ${visibleResources.length > 150 ? "(pokazuje pierwsze 150 wyników)" : ""}`}</p>
+          <p>{`${visibleResources.length} zasóbów ${visibleResources.length > SHOW_NUMBER ? `(pokazuje pierwsze ${SHOW_NUMBER} wyników)` : ""}`}</p>
         </div>
         <div className={"column-headers mt-3"}>
           <div className={"col dol-head r-id-col"}>ID</div>
@@ -403,8 +413,10 @@ const ResourceList = ({initialResources, sub, subHandler, user, clearActiveSub})
                            filterData={filters[colData.fieldName]}
           />)}
         </div>
-        {visibleResources.slice(0, 150).map(r => <ResourceRow resource={r} isExpanded={expandAll}
-                                                              key={r.id} onMatch={matchFound}/>)}
+        {isLoading ? <LoadingSpinner/> : visibleResources.slice(0, SHOW_NUMBER).map(r => <ResourceRow resource={r}
+                                                                                                      isExpanded={expandAll}
+                                                                                                      key={r.id}
+                                                                                                      onMatch={matchFound}/>)}
       </>
 
   );
@@ -413,19 +425,17 @@ const ResourceList = ({initialResources, sub, subHandler, user, clearActiveSub})
 
 
 const SOURCE_OPTIONS = [{label: "Strona", value: "webform"}, {label: "Mail", value: "mail"}, {
-  label: "Teren",
-  value: "terrain"
+  label: "Teren", value: "terrain"
 }, {label: "Inne", value: "other"},];
 
 
-const SUB_STATE_OPTIONS = [
-  {value: "new", label: "Świeżak"},
-  {value: "searching", label: "Szukamy"},
-  {value: "in_progress", label: "Host znaleziony"},
-  {value: "gone", label: "Zniknęła"},
-  {value: "success", label: "Sukces"},
-  {value: "cancelled", label: "Nieaktualne"},
-];
+const SUB_STATE_OPTIONS = [{value: "new", label: "Świeżak"}, {
+  value: "searching",
+  label: "Szukamy"
+}, {value: "in_progress", label: "Host znaleziony"}, {value: "gone", label: "Zniknęła"}, {
+  value: "success",
+  label: "Sukces"
+}, {value: "cancelled", label: "Nieaktualne"},];
 
 const getStatusDisplay = (status) => {
   const option = SUB_STATE_OPTIONS.filter(o => o.value === status)[0];
@@ -458,13 +468,20 @@ const updateSub = (sub, fields, onCorrect = null) => {
 };
 
 
-function SubmissionRow({sub, activeHandler, user, isActive = false}) {
+function SubmissionRow({sub, activeHandler, user, isGroupCoordinator, isActive = false}) {
 
+
+  const isGroupAdmin = isGroupCoordinator;
   const isOwner = user.id === sub.matcher?.id;
   const isCoordinator = user.id === sub.coordinator?.id;
-  const isGroupAdmin = user.coordinator;
   const [status, setStatus] = useState(sub.status);
   const [note, setNote] = useState(sub.note);
+  const [localSub, setLocalSub] = useState(sub);
+
+  useEffect(() => {
+    setLocalSub(sub);
+  }, [sub]);
+
 
   const btnHandler = () => {
     console.log("btn handler clicked");
@@ -472,16 +489,18 @@ function SubmissionRow({sub, activeHandler, user, isActive = false}) {
   };
 
   const getActionBtn = () => {
-    if (sub.status === "in_progress") {
-      if (sub.coordinator) {
-        return isCoordinator ? "" : <Button size={"sm"} disabled>{sub.coordinator.display}</Button>;
+    if (localSub.status === "in_progress") {
+      if (localSub.coordinator) {
+        return isCoordinator ? "" : <Button size={"sm"} disabled>{localSub.coordinator.display}</Button>;
       } else {
         return <Button size={"sm"} onClick={setCoordinator}>Przypisz do siebie</Button>;
       }
-    } else if (sub.status === "searching" && !isOwner) {
+    } else if (localSub.status === "searching" && !isOwner) {
       return "";
-    } else if (sub.matcher && !isActive && !isOwner) {
-      return <Button size={"sm"} disabled>{sub.matcher.display}</Button>;
+    } else if (localSub.matcher && !isActive && !isOwner) {
+      return <Button size={"sm"} disabled>{localSub.matcher.display}</Button>;
+    } else if (localSub.status === "cancelled") {
+      return "NIEKATUALNE";
     } else {
       return <Button size={"sm"} onClick={btnHandler}>{isActive ? "Zwolnij" : "Szukaj Hosta"}</Button>;
     }
@@ -490,8 +509,9 @@ function SubmissionRow({sub, activeHandler, user, isActive = false}) {
   const updateStatus = (value) => {
     console.log("Updating sub value: ", value);
     const newStatus = value[0].value;
-    if (newStatus !== sub.status) {
-      updateSub(sub, {"status": newStatus}, () => setStatus(newStatus));
+    if (newStatus !== localSub.status) {
+      updateSub(localSub, {"status": newStatus}, () => setStatus(newStatus));
+      setLocalSub((s) => ({...s, status: newStatus}));
     } else {
       console.log("would update but we're smart now..");
     }
@@ -499,16 +519,18 @@ function SubmissionRow({sub, activeHandler, user, isActive = false}) {
 
   const freeUpMatcher = () => {
     updateSub(sub, {"matcher": null, "status": "new"}, () => setStatus("new"));
+    setLocalSub((s) => ({...s, matcher: null}));
   };
 
   const freeUpCoord = () => {
-    updateSub(sub, {"coordinator": null}, ()=>null);
+    updateSub(sub, {"coordinator": null}, () => null);
+    setLocalSub((s) => ({...s, coordinator: null}));
   };
 
 
   const setCoordinator = () => {
     console.log("sub status update");
-    fetch(`/api/sub/update/${sub.id}`, {
+    fetch(`/api/sub/update/${localSub.id}`, {
       method: 'POST', // *GET, POST, PUT, DELETE, etc.
       headers: {
         'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken')
@@ -516,61 +538,64 @@ function SubmissionRow({sub, activeHandler, user, isActive = false}) {
     }).then(response => response.json()).then(data => {
       console.log('Response: ', data);
       // toast(`${data.message}`, {type: data.status});
+      setLocalSub(s => ({...s, coordinator: user}));
     }).catch((error) => {
       console.error('Error:', error);
     });
   };
 
   return <div
-      className={`submission-row sub-${sub.status.replace("_", "-")} ${sub.accomodation_in_the_future ? "sub-in-future" : ""}`}>
-    <p className='sub-id'>ID ZGŁOSZENIA: {sub.id}</p>
+      className={`submission-row sub-${localSub.status.replace("_", "-")}
+       ${localSub.accomodation_in_the_future ? "sub-in-future" : ""} ${isActive ? "sub-active" : ""}`}>
+    <p className="sub-id">ID ZGŁOSZENIA: {localSub.id}</p>
     <Table className="sub-table">
       <tbody>
       <tr>
         <th>Imie</th>
-        <td>{sub.name}</td>
+        <td>{localSub.name}</td>
         <th>Ile Osób?</th>
-        <td>{sub.people}</td>
+        <td>{localSub.people}</td>
         <th>Jak dlugo?</th>
-        <td>{sub.how_long}</td>
+        <td>{localSub.how_long}</td>
         <th>Telefon</th>
-        <td>{sub.phone_number}</td>
+        <td>{localSub.phone_number}</td>
       </tr>
       <tr>
         <th>Od Kiedy?</th>
-        <td>{sub.when}</td>
+        <td>{localSub.when}</td>
         <th>Opis:</th>
-        <td>{sub.description}</td>
+        <td>{localSub.description}</td>
         <th>Języki</th>
-        <td>{sub.languages}</td>
+        <td>{localSub.languages}</td>
         <th>Narodowość</th>
-        <td>{sub.origin}</td>
+        <td>{localSub.origin}</td>
       </tr>
       <tr>
         <th>Ma zwierzęta</th>
-        <td>{sub.traveling_with_pets}</td>
+        <td>{localSub.traveling_with_pets}</td>
         <th>Czy może spać ze zwierzętami?</th>
-        <td>{sub.can_stay_with_pets}</td>
+        <td>{localSub.can_stay_with_pets}</td>
         <th>Potrzebuje transportu?</th>
-        <td>{sub.transport_needed ? "tak" : "nie"}</td>
+        <td>{localSub.transport_needed ? "tak" : "nie"}</td>
         <th>Notka</th>
-        <td><EditableField value={note} onRename={(note) => updateSub(sub, {"note": note}, () => setNote(note))}/></td>
+        <td><EditableField value={note} onRename={(note) => updateSub(localSub, {"note": note}, () => setNote(note))}/>
+        </td>
       </tr>
-      {sub.resource && <tr className="tr-host">
+      {localSub.resource && <tr className="tr-host">
         <th>HOST</th>
-        <td>{sub.resource.name}</td>
-        <td>{sub.resource.address}</td>
-        <td>{sub.resource.phone_number}</td>
-        <td>{getPickUpDisplay(sub.resource.will_pick_up_now)}</td>
-        <td colSpan={3}>{sub.resource.note}</td>
+        <td>{localSub.resource.name}</td>
+        <td>{localSub.resource.address}</td>
+        <td>{localSub.resource.phone_number}</td>
+        <td>{getPickUpDisplay(localSub.resource.will_pick_up_now)}</td>
+        <td colSpan={3}>{localSub.resource.note}</td>
       </tr>}
       <tr>
         <th>Osoba zgłaszająca:</th>
-        <td>{sub.receiver?.display || sub.contact_person}</td>
-        <th>Hosta {["searching", "new"].includes(sub.status) ? "szuka" : "znalazł"}:</th>
-        <td>{sub.matcher?.display || getActionBtn()}</td>
+        <td>{localSub.receiver?.display || localSub.contact_person}</td>
+        <th>Hosta {["searching", "new"].includes(localSub.status) ? "szuka" : "znalazł"}:</th>
+        <td>{localSub.matcher?.display || getActionBtn()}</td>
         <th>Łącznik:</th>
-        <td>{sub.coordinator?.display || (sub.matcher ? getActionBtn() : "")}</td>
+        <td>{localSub.coordinator?.display || (localSub.matcher ? getActionBtn() : "")}</td>
         <th>
           status
         </th>
@@ -579,24 +604,23 @@ function SubmissionRow({sub, activeHandler, user, isActive = false}) {
               values={SUB_STATE_OPTIONS.filter((o) => o.value === status)}
               options={SUB_STATE_OPTIONS}
               onChange={updateStatus}
-          /> : getStatusDisplay(status)
-          }
+          /> : getStatusDisplay(status)}
         </td>
       </tr>
-      {
-          isGroupAdmin && !isActive && <tr>
-            <th>Akcje koordynatora</th>
-            <td colSpan={6}>
-              <div className={"d-flex justify-content-evenly"}>
-                {sub.matcher && <Button variant={"warning"}  size={"sm"} onClick={freeUpMatcher}>Zwolnij zgłoszenie</Button>}
-                {sub.coordinator && <Button variant={"warning"} size={"sm"} onClick={freeUpCoord}>Zwolnij łącznika</Button>}
-              </div>
-            </td>
-          </tr>
-      }
+      {isGroupAdmin && !isActive && <tr>
+        <th>Akcje koordynatora</th>
+        <td colSpan={6}>
+          <div className={"d-flex justify-content-evenly"}>
+            {localSub.matcher &&
+                <Button variant={"warning"} size={"sm"} onClick={freeUpMatcher}>Zwolnij zgłoszenie</Button>}
+            {localSub.coordinator &&
+                <Button variant={"warning"} size={"sm"} onClick={freeUpCoord}>Zwolnij łącznika</Button>}
+          </div>
+        </td>
+      </tr>}
       </tbody>
     </Table>
-    <p className='sub-id'>Przyjęte: {sub.created}</p>
+    <p className="sub-id">Przyjęte: {localSub.created}</p>
   </div>;
 }
 
@@ -621,21 +645,40 @@ const getLatestSubId = async () => {
 };
 
 
-const SubmissionList = ({user, subs, btnHandler, sourceFilter,
-                          setStatusFilter, setSourceFilter, statusFilter, droppedFilter, setDropped
-}) => {
+function LoadingSpinner() {
+  return <div style={{margin: "0 auto", width: "fit-content"}}>
+    <div className="spinner-border text-center mt-5" role="status">
+      <span className="visually-hidden">Loading...</span>
+    </div>
+  </div>;
+}
+
+const SubmissionList = ({
+                          user,
+                          subs,
+                          btnHandler,
+                          sourceFilter,
+                          setStatusFilter,
+                          setSourceFilter,
+                          statusFilter,
+                          droppedFilter,
+                          setDropped,
+                          isCoordinator
+                        }) => {
   const [submissions, setSubmissions] = useState(subs);
   const [droppedHosts, setDroppedHosts] = useState([]);
   const [visibleSubmissions, setVisibleSubmissions] = useState(submissions);
   const [searchQuery, setSearchQuery] = useState("");
   const [userOnly, setUserOnly] = useState(false);
+  const [todayFilter, setTodayFilter] = useState(true);
   const [dataSemaphore, setDataSemaphore] = useState(true);
   const [latestChange, setLatestChange] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const interval = setInterval(() => {
       setDataSemaphore((s) => !s);
-    }, getRandomInt(1000, 2000));
+    }, getRandomInt(1000, 1300));
     return () => clearInterval(interval);
   }, []);
 
@@ -653,6 +696,7 @@ const SubmissionList = ({user, subs, btnHandler, sourceFilter,
     setSubmissions(result.data.submissions);
     // do latest for dropped
     setDroppedHosts(result.data.dropped);
+    setIsLoading(false);
   }, [latestChange]);
 
 
@@ -670,18 +714,8 @@ const SubmissionList = ({user, subs, btnHandler, sourceFilter,
   };
 
   useEffect(() => {
-    setVisibleSubmissions(
-        submissions.filter(
-            s => sourceFilter.length ? sourceFilter.map(o => o.value).includes(s.source) : true
-        ).filter(
-            s => statusFilter.length ? statusFilter.map(o => o.value).includes(s.status) : true
-        ).filter(
-            s => userOnly ? subBelongsToUser(s) : true
-        ).filter(
-            s => searchQuery ? Object.values(s).join(' ').toLowerCase().search(searchQuery) > -1 : true
-        )
-    );
-  }, [sourceFilter, statusFilter, submissions, searchQuery, userOnly]);
+    setVisibleSubmissions(submissions.filter(s => sourceFilter.length ? sourceFilter.map(o => o.value).includes(s.source) : true).filter(s => statusFilter.length ? statusFilter.map(o => o.value).includes(s.status) : true).filter(s => userOnly ? subBelongsToUser(s) : true).filter(s => todayFilter ? s.is_today : true).filter(s => searchQuery ? Object.values(s).join(' ').toLowerCase().search(searchQuery) > -1 : true));
+  }, [sourceFilter, todayFilter, statusFilter, submissions, searchQuery, userOnly]);
 
   // useEffect(() => {
   //   setVisibleResources(
@@ -746,6 +780,15 @@ const SubmissionList = ({user, subs, btnHandler, sourceFilter,
                     setDropped(checked);
                   }}
               /></td>
+            <td>Przyjęte dzisiaj</td>
+            <td>
+              <BootstrapSwitchButton
+                  size={"sm"}
+                  checked={todayFilter}
+                  onChange={(checked) => {
+                    setTodayFilter(checked);
+                  }}
+              /></td>
             <td>Tylko moje</td>
             <td>
               <BootstrapSwitchButton
@@ -768,9 +811,12 @@ const SubmissionList = ({user, subs, btnHandler, sourceFilter,
         {/*  {SUB_COLUMNS.map(colName => <div className={"col-head col"}>{colName}</div>)}*/}
         {/*</div>*/}
 
-        {droppedFilter && droppedHosts && <div className={"dropped-container"}>{droppedHosts.map(r => <DroppedHost resource={r}
-                                                                                                  key={r.id}/>)}</div>}
-        {visibleSubmissions.map(s => <SubmissionRow user={user} sub={s} key={s.id} activeHandler={btnHandler}/>)}
+        {droppedFilter && droppedHosts &&
+            <div className={"dropped-container"}>{droppedHosts.map(r => <DroppedHost resource={r}
+                                                                                     key={r.id}/>)}</div>}
+        {isLoading ? <LoadingSpinner/> : visibleSubmissions.map(s => <SubmissionRow user={user} sub={s} key={s.id}
+                                                                                    isGroupCoordinator={isCoordinator}
+                                                                                    activeHandler={btnHandler}/>)}
       </>
 
   );
@@ -798,10 +844,13 @@ const CoordinaotrsHeader = ({coordinators, helped}) => {
 
 
 const App = ({subs, initialResources, userData, coordinators, helped}) => {
-  const [activeSub, setActiveSub] = useState(subs[0]);
+  const [activeSub, setActiveSub] = useState(null);
   const [sourceFilter, setSourceFilter] = useState([{label: "Teren", value: "terrain"}]);
   const [statusFilter, setStatusFilter] = useState([]);
   const [droppedFilter, setDroppedFilter] = useState(true);
+  const coordIds = Object.values(coordinators).map(g => g.map(c => c.user.id)).flat();
+  const isCoordinator = coordIds.includes(userData.id);
+  console.log("IsCoordinator: ", isCoordinator, coordIds, userData);
 
   const clearActiveSub = () => setActiveSub(null);
 
@@ -822,7 +871,7 @@ const App = ({subs, initialResources, userData, coordinators, helped}) => {
       }, body: JSON.stringify({"fields": fields})
     }).then(response => response.json()).then(data => {
       console.log('Response: ', data);
-      // toast(`${data.message}`, {type: data.status});
+      toast(`${data.message}`, {type: data.status});
       if (!isActive) {
         setActiveSub(data.data);
       } else {
@@ -843,10 +892,10 @@ const App = ({subs, initialResources, userData, coordinators, helped}) => {
     /> : <SubmissionList user={userData} subs={subs} btnHandler={subIsTaken}
                          sourceFilter={sourceFilter} setSourceFilter={(v) => setSourceFilter(v)}
                          statusFilter={statusFilter}
+                         isCoordinator={isCoordinator}
                          setStatusFilter={(v) => setStatusFilter(v)}
                          droppedFilter={droppedFilter} setDropped={(v) => setDroppedFilter(v)}
-    />
-    }
+    />}
   </>;
 };
 

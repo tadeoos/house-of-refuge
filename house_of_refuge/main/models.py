@@ -3,7 +3,7 @@ import re
 
 from django.db import models
 from django.contrib.auth import get_user_model
-from django.db.models import Manager, Q
+from django.db.models import Manager, Q, Count
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from model_utils.models import TimeStampedModel
@@ -39,7 +39,8 @@ class HousingResourceManager(Manager):
 
     def for_remote(self, user):
         return self.filter(
-            Q(status__in=[Status.NEW]) | Q(owner=user)
+            Q(status__in=[Status.NEW])
+            # | Q(owner=user)
         )
 
 
@@ -93,7 +94,7 @@ class HousingResource(TimeStampedModel):
     objects = HousingResourceManager()
 
     def __str__(self):
-        return f"{self.name} {self.phone_number} {self.full_address} {self.pk}"
+        return f"{self.id} {self.name} {self.phone_number} {self.full_address} {self.pk}"
 
     class Meta:
         verbose_name = "Zasób"
@@ -143,6 +144,10 @@ class HousingResource(TimeStampedModel):
             status=self.status,
             cherry=self.cherry,
             verified=self.verified,
+            languages=self.languages,
+            when_to_call=self.when_to_call,
+            living_with_pets=self.living_with_pets,
+            can_take_person_with_pets=self.can_take_person_with_pets,
             note=self.note,
             is_prio=self.is_dropped or self.is_ready,
             compact_display=self.compact_display,
@@ -166,9 +171,12 @@ class SubStatus(models.TextChoices):
     CANCELLED = "cancelled", _("Nieaktualne")
 
 
-def get_our_today_cutoff():
-    now = timezone.now()
-    if now.hour > 9:
+END_OF_DAY = 7
+
+
+def get_our_today_cutoff(date=None):
+    now = date or timezone.now()
+    if now.hour > END_OF_DAY:
         cut_off = now.date()
     else:
         cut_off = (now - datetime.timedelta(days=1)).date()
@@ -182,17 +190,20 @@ class SubmissionManager(Manager):
             Q(status__in=[Status.NEW])
         )
 
-    def todays(self):
+    def active_today(self):
         return self.filter(when__lte=get_our_today_cutoff())
 
     def for_happy_message(self):
         now = timezone.now()
-        if now.hour > 9:
-            cut_off = now.replace(hour=9, minute=0, second=0)
+        if now.hour > END_OF_DAY:
+            cut_off = now.replace(hour=END_OF_DAY, minute=0, second=0)
         else:
-            cut_off = now.replace(day=now.day - 1, hour=9, minute=0, second=0)
+            cut_off = now.replace(day=now.day - 1, hour=END_OF_DAY, minute=0, second=0)
         return self.filter(finished_at__gte=cut_off, status=SubStatus.SUCCESS)
 
+    def get_best_matchers(self):
+        qs = self.all().values("matcher").annotate(mc=Count("matcher")).order_by().order_by('-mc')[:5]
+        matchers_ids = []
 
 class Submission(TimeStampedModel):
     name = models.CharField(max_length=512, null=False, verbose_name="Imię i nazwisko")
@@ -207,21 +218,22 @@ class Submission(TimeStampedModel):
     can_stay_with_pets = models.CharField(max_length=512, null=True, blank=True)  # zrobic dropdown na froncie do tego?
     contact_person = models.CharField(max_length=1024, null=True, blank=True)
     languages = models.CharField(max_length=1024, null=True, blank=True)
-    when = models.DateField(default=timezone.now, null=True, blank=True)
+    when = models.DateField(default=timezone.now, null=True, blank=True, help_text="Od kiedy potrzebuje")
     transport_needed = models.BooleanField(default=True)
     # ponizej dla zalogowanych
-    note = models.TextField(max_length=2048, null=True, blank=True)
+    note = models.CharField(max_length=2048, null=True, blank=True)
     status = models.CharField(choices=SubStatus.choices, default=Status.NEW, max_length=32)
     person_in_charge_old = models.CharField(max_length=512, default="", blank=True)
     receiver = models.ForeignKey(User, on_delete=models.SET_NULL, default=None, blank=True, null=True,
-                                 related_name="received_subs")
+                                 related_name="received_subs", help_text="Przyjmujący zgłoszenie")
     coordinator = models.ForeignKey(User, on_delete=models.SET_NULL, default=None, blank=True, null=True,
-                                    related_name="coord_subs")
+                                    related_name="coord_subs", help_text="Łącznik")
     matcher = models.ForeignKey(User, on_delete=models.SET_NULL, default=None, blank=True, null=True,
-                                related_name="matched_subs")
-    resource = models.ForeignKey(HousingResource, on_delete=models.SET_NULL, default=None, blank=True, null=True)
+                                related_name="matched_subs", help_text="Kto znalazł hosta")
+    resource = models.ForeignKey(HousingResource, on_delete=models.SET_NULL, default=None, blank=True, null=True, help_text="Zasób (Host)")
     priority = models.IntegerField(default=1)
     source = models.CharField(choices=SubSource.choices, default=SubSource.WEBFORM, max_length=64)
+    should_be_deleted = models.BooleanField(default=False)
 
     finished_at = models.DateTimeField(null=True, blank=True)
 
@@ -230,7 +242,7 @@ class Submission(TimeStampedModel):
     objects = SubmissionManager()
 
     def __str__(self):
-        return f"{self.name} {self.people} na {self.how_long}"
+        return f"{self.id} {self.name} {self.people} na {self.how_long}"
 
     class Meta:
         verbose_name = "Zgłoszenie"
@@ -270,8 +282,9 @@ class Submission(TimeStampedModel):
         self.status = SubStatus.CANCELLED
         if self.resource:
             self.resource.is_dropped = True
-            self.resource.note += f"\nHosta znalazł: {self.resource.owner}"
+            self.resource.note += f"\nHosta znaleziony przez: {self.resource.owner}"
             self.resource.owner = None
+            self.resource.availability = get_our_today_cutoff()
             self.resource.save()
             self.resource = None
         self.note += f' \nDropped at {timezone.now().strftime("%Y-%m-%d %H:%M:%S")}'
@@ -280,7 +293,7 @@ class Submission(TimeStampedModel):
     def as_prop(self):
         return dict(
             id=self.id,
-            created=self.created.strftime("%-d %B %H:%M:%S"),
+            created=self.created.astimezone(timezone.get_default_timezone()).strftime("%-d %B %H:%M:%S"),
             name=self.name,
             phone_number=self.phone_number,
             people=self.people,
@@ -299,6 +312,7 @@ class Submission(TimeStampedModel):
             accomodation_in_the_future=self.accomodation_in_the_future,
             status=self.status,
             origin=self.origin,
+            is_today=get_our_today_cutoff(self.created) >= get_our_today_cutoff(),
             traveling_with_pets=self.traveling_with_pets,
             can_stay_with_pets=self.can_stay_with_pets,
             resource=self.resource.sub_representation() if self.resource else None,
@@ -320,3 +334,14 @@ class Coordinator(TimeStampedModel):
 
     def as_json(self):
         return dict(user=self.user.as_json(), group=self.group)
+
+
+class ObjectChange(TimeStampedModel):
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    submission = models.ForeignKey(Submission, on_delete=models.SET_NULL, null=True)
+    host = models.ForeignKey(HousingResource, on_delete=models.SET_NULL, null=True)
+    change = models.CharField(max_length=2048)
+
+    class Meta:
+        verbose_name = "Zmiana Rekordu"
+        verbose_name_plural = "Zmiany Rekordów"

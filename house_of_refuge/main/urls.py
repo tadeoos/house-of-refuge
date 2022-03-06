@@ -6,6 +6,7 @@ app_name = "main"
 urlpatterns = [
     path("", views.home, name="home"),
     path("healthz/", views.healthcheck, name="health"),
+    path("statsy/", views.activity_stats_view, name="health"),
     path("share", views.home, name="home"),
     path("find", views.home, name="home"),
     path("privacy/", views.home, name="home"),

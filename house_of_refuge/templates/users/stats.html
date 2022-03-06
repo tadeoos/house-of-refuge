@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+
+{% block title %}User stats{% endblock %}
+
+{% block content %}
+  <div class="row">
+    <div class="col col-12" style="margin-bottom: 1em">
+      <canvas id="myChart" width="400" height="100"></canvas>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-3 table-responsive">
+      <table class="table table-bordered">
+        <tr>
+          <th colspan="2">Top Przyjmujący</th>
+        </tr>
+        {% for user in top_receivers %}
+          <tr>
+            <td>{{ user.name }}</td>
+            <td>{{ user.mc }}</td>
+          </tr>
+        {% endfor %}
+      </table>
+    </div>
+    <div class="col-3 table-responsive">
+      <table class="table table-bordered">
+        <tr>
+          <th colspan="2">Top Znajdujący</th>
+        </tr>
+        {% for user in top_matchers %}
+          <tr>
+            <td>{{ user.name }}</td>
+            <td>{{ user.mc }}</td>
+          </tr>
+        {% endfor %}
+      </table>
+    </div>
+    <div class="col-3 table-responsive">
+      <table class="table table-bordered">
+        <tr>
+          <th colspan="2">Top Łącznicy</th>
+        </tr>
+        {% for user in top_coords %}
+          <tr>
+            <td>{{ user.name }}</td>
+            <td>{{ user.mc }}</td>
+          </tr>
+        {% endfor %}
+      </table>
+    </div>
+    <div class="col-3 table-responsive">
+      <table class="table table-bordered table-striped table-sm">
+        <tr>
+          <td>Liczba wszystkich hostów</td>
+          <td>{{ all_hosts }}</td>
+        </tr>
+        <tr>
+          <td>Liczba wszystkich zgłoszeń</td>
+          <td> {{ all_subs }}</td>
+        </tr>
+        <tr>
+          <td>Liczba wszystkich sukcesów</td>
+          <td> {{ all_success }}</td>
+        </tr>
+        <tr>
+          <td>Liczba wszystkich anulowanych</td>
+          <td> {{ all_cancelled }}</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+
+{% endblock content %}
+
+{% block inline_javascript %}
+  {{ block.super }}
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  {{ labels|json_script:"labels" }}
+  {{ chart_data|json_script:"chartData" }}
+  {{ success_data|json_script:"successData" }}
+  {{ people_data|json_script:"peopleData" }}
+{#  {{ users_data|json_script:"usersData" }}#}
+{#  {{ events_times_chart|json_script:"eventsTimesChartData" }}#}
+  <script type="text/javascript">
+
+//    const getCellValue = (tr, idx) => tr.children[idx].innerText || tr.children[idx].textContent;
+//
+//    const comparer = (idx, asc) => (a, b) => ((v1, v2) =>
+//        v1 !== '' && v2 !== '' && !isNaN(v1) && !isNaN(v2) ? v1 - v2 : v1.toString().localeCompare(v2)
+//    )(getCellValue(asc ? a : b, idx), getCellValue(asc ? b : a, idx));
+//
+//    // do the work...
+//    document.querySelectorAll('th').forEach(th => th.addEventListener('click', (() => {
+//      const table = th.closest('table');
+//      Array.from(table.querySelectorAll('tr:nth-child(n+2)'))
+//        .sort(comparer(Array.from(th.parentNode.children).indexOf(th), this.asc = !this.asc))
+//        .forEach((tr, index) => {
+//          tr.querySelector('td:first-child').innerHTML = index + 1;
+//          table.appendChild(tr)
+//        });
+//    })));
+
+    const ctx = document.getElementById('myChart').getContext('2d');
+    const labels = JSON.parse(document.getElementById('labels').textContent);
+    const data = {
+      labels: labels,
+      datasets: [
+        {
+          label: 'Zgłoszenia',
+          backgroundColor: '#d3be2d',
+          borderColor: '#d3be2d',
+          data: JSON.parse(document.getElementById('chartData').textContent),
+        },
+        {
+          label: 'Sukcesy',
+          backgroundColor: '#5fb93d',
+          borderColor: '#5fb93d',
+          data: JSON.parse(document.getElementById('successData').textContent),
+        },
+        {
+          label: 'Zakwaterowani ludzie',
+          backgroundColor: '#273cc0',
+          borderColor: '#273cc0',
+          data: JSON.parse(document.getElementById('peopleData').textContent),
+        },
+      ]
+    };
+    const config = {
+      type: 'line',
+      data: data,
+      options: {}
+    };
+    const myChart = new Chart(ctx, config);
+
+  </script>
+{% endblock %}
