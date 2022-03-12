@@ -212,7 +212,7 @@ export function SubmissionRow({sub, activeHandler, user, isGroupCoordinator, isA
                                                           onClick={btnHandler}>Zwolnij</Button>
         </td>
       </tr>}
-      {isGroupAdmin && !isActive && !readOnly && <tr>
+      {isGroupAdmin && !isActive && !readOnly && <tr className="no-striping">
         <th>Akcje koordynatora</th>
         <td colSpan={1} className={"text-center"}>
           <Dropdown>
