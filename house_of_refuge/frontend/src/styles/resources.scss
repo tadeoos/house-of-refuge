@@ -23,7 +23,7 @@ a {
 
 .column-headers {
   display: flex;
-  border-bottom: 2px solid black;
+  border-bottom: 2px solid #696969;
 
   /* Hack to align with body columns when scrollbar is not overlayed but takes up space */
   overflow-y: scroll;
@@ -54,13 +54,13 @@ a {
 .col {
   padding: 2px;
   width: 250px;
-  border-top: 1px solid black;
-  border-right: 1px solid black;
+  border-top: 1px solid #696969;
+  border-right: 1px solid #696969;
   font-size: 12px;
   text-align: center;
 
   &:first-child {
-    border-left: 1px solid black;
+    border-left: 1px solid #696969;
   }
 
   &:last-child {
@@ -98,8 +98,9 @@ a {
 
       .btn {
         border: 0;
-        border-right: 1px solid #bcbcbc;
+        border-right: 1px solid #696969;
         border-radius: 0;
+        margin: 0 !important;
 
         &:last-child {
           border: 0;
@@ -125,7 +126,7 @@ a {
   /* border: 1px solid black;
   border-bottom: 0; */
   &:last-child {
-    border-bottom: 1px solid black;
+    border-bottom: 1px solid #696969;
   }
 }
 
