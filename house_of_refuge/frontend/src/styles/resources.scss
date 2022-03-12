@@ -272,7 +272,7 @@ a {
     &:not(:last-child) td:nth-of-type(odd),
     &:last-child td:nth-of-type(odd):not(:empty),
     &:last-child th:nth-of-type(odd):not(:empty) {
-      background-color: rgba(#000, 0.05) !important;
+      background-color: rgba(#000, 0.03) !important;
     }
   }
 
