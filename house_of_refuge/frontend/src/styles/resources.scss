@@ -16,6 +16,11 @@ a {
   color: black;
 }
 
+.r-id-col {
+  max-width: 60px;
+  overflow: auto;
+}
+
 .column-headers {
   display: flex;
   border-bottom: 2px solid black;
@@ -312,11 +317,6 @@ a {
   margin: 0 auto;
   text-align: center;
   font-weight: bolder;
-}
-
-.r-id-col {
-  max-width: 60px;
-  overflow: auto;
 }
 
 .col-short {
