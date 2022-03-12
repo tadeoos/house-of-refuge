@@ -502,6 +502,12 @@ a {
   transform-origin: 0 0;
 }
 
+.switch.on,
+.switch-on {
+  background-color: green !important;
+  border-color: green !important;
+}
+
 /* animations */
 
 @keyframes main {
