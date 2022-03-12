@@ -188,6 +188,11 @@ export const ResourceRow = ({resource, isExpanded, onMatch, user, activeSub, com
                       onClick={() => updateResource(resource, {"verified": true})}
               >👍
               </Button>
+              <Button variant={resource.turtle ? "success" : "outline-success"}
+                      disabled={resource.turtle}
+                      onClick={() => updateResource(resource, {"turtle": true})}
+              >🐢
+              </Button>
             </ButtonGroup>
           // <Dropdown as={ButtonGroup}>
           // <Button variant="info" size={"sm"} disabled={resource.is_hot}

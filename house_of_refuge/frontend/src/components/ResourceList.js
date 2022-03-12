@@ -40,12 +40,12 @@ export const ResourceList = ({initialResources, sub, subHandler, user, clearActi
   const [onlyWarsaw, setOnlyWarsaw] = useState(false);
   const [onlyAvailable, setOnlyAvailable] = useState(true);
   const [hotTopic, setHotTopic] = useState(false);
+  const [turtleFilter, setTurtleFilter] = useState(false);
   const [peopleFilter, setPeopleFilter] = useState(null);
   const [statusFilter, setStatusFilter] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState("hot_sort");
   const [sortOrder, setSortOrder] = useState("desc");
-  const [expandAll, setExpandAll] = useState(false);
   const [activeSub] = useState(sub);
   const [page, setPage] = useState(1);
   const resourceList = useRef(null);
@@ -116,13 +116,14 @@ export const ResourceList = ({initialResources, sub, subHandler, user, clearActi
                 .filter(r => peopleFilter ? peopleFilter.includes(r.people_to_accommodate) : true)
                 .filter(r => statusFilter ? statusFilter.includes(r.resource) : true)
                 .filter(r => hotTopic ? isHot(r) : true)
+                .filter(r => turtleFilter ? r.turtle : true)
                 .filter(r => searchQuery ? resourceAsString(r).search(searchQuery) > -1 : true),
             [sortBy, "id"], [sortOrder, "asc"]));
-  }, [onlyWarsaw, onlyAvailable, peopleFilter, statusFilter, hotTopic, searchQuery, resources]);
+  }, [onlyWarsaw, onlyAvailable, peopleFilter, statusFilter, hotTopic, searchQuery, turtleFilter, resources]);
 
   useEffect(() => {
     setPage(1);
-  }, [onlyWarsaw, onlyAvailable, peopleFilter, statusFilter, hotTopic, searchQuery]);
+  }, [onlyWarsaw, onlyAvailable, peopleFilter, statusFilter, hotTopic, searchQuery, turtleFilter]);
 
   useEffect(() => {
     setVisibleResources(vr => orderBy(vr, [sortBy, "id"], [sortOrder, "asc"]));
@@ -179,6 +180,15 @@ export const ResourceList = ({initialResources, sub, subHandler, user, clearActi
                 }}
             />
           </QuickFilter>
+          <QuickFilter label={"Żółwie"}>
+            <BootstrapSwitchButton
+                size={"sm"}
+                checked={turtleFilter}
+                onChange={(checked) => {
+                  setTurtleFilter(checked);
+                }}
+            />
+          </QuickFilter>
           <QuickFilter>
             <Search/>
             <input className="search-input" onChange={(e) => setSearchQuery(e.target.value.toLowerCase())}/>
@@ -209,7 +219,7 @@ export const ResourceList = ({initialResources, sub, subHandler, user, clearActi
           </div>
           <div className="resource-rows" ref={resourceList}>
             {isLoading ? <LoadingSpinner/> : visibleResources.slice(SHOW_NUMBER * (page - 1), SHOW_NUMBER * page).map(
-                r => <ResourceRow resource={r} isExpanded={expandAll}
+                r => <ResourceRow resource={r} isExpanded={false}
                                   key={r.id} onMatch={matchFound} user={user}
                                   activeSub={activeSub}
                 />)}

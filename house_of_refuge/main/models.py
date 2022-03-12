@@ -106,6 +106,7 @@ class HousingResource(TimeStampedModel):
     verified = models.BooleanField(default=False)
     is_dropped = models.BooleanField(default=False)
     got_hot = models.DateTimeField(default=None, null=True, blank=True)
+    turtle = models.BooleanField(default=False, help_text=_("This host offers longer stay"), verbose_name=_("Turtle"))
     token = models.CharField(max_length=64, unique=True, default=generate_token)
 
     objects = HousingResourceManager()
@@ -213,6 +214,7 @@ class HousingResource(TimeStampedModel):
             extra=self.extra,
             status=self.status,
             cherry=self.cherry,
+            turtle=self.turtle,
             verified=self.verified,
             languages=self.languages,
             when_to_call=self.when_to_call,
