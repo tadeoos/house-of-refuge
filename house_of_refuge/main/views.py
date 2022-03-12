@@ -311,6 +311,7 @@ def day_iterator(start_date):
 
 @staff_member_required
 def activity_stats_view(request):
+    source = request.GET.get("source", None)
     labels = []
     subs_data = []
     success_data = []
@@ -322,10 +323,16 @@ def activity_stats_view(request):
 
     base_start = Submission.objects.earliest("created").created
     for start, end in day_iterator(base_start):
+        labels.append(str(start.date()))
+        hosts_added = HousingResource.objects.exclude_excels().filter(created__range=(start, end))
+
         subs_created = Submission.objects.filter(created__range=(start, end))
         successful = Submission.objects.filter(finished_at__range=(start, end), status="success")
-        hosts_added = HousingResource.objects.exclude_excels().filter(created__range=(start, end))
-        labels.append(str(start.date()))
+
+        if source:
+            subs_created = subs_created.filter(source=source)
+            successful = successful.filter(source=source)
+
         subs_data.append(subs_created.count())
         success_data.append(successful.count())
         hosts_data.append(hosts_added.count())
@@ -349,8 +356,11 @@ def activity_stats_view(request):
     # top_receivers = User.objects.all().annotate(mc=Count('received_subs')).order_by('-mc')[:TOP]
     # top_coords = User.objects.all().annotate(mc=Count('coord_subs')).order_by('-mc')[:TOP]
 
-    matches = ObjectChange.objects.filter(change__icontains="matched host").values_list("created", flat=True)
-    c = Counter(m.hour for m in matches)
+    matches = ObjectChange.objects.filter(change__icontains="matched host")
+    if source:
+        matches = matches.filter(submission__source=source)
+
+    c = Counter(m.hour for m in matches.values_list("created", flat=True))
     hour_labels = []
     matches_count = []
     for hour, count in sorted(c.items()):
@@ -359,6 +369,7 @@ def activity_stats_view(request):
 
     context = dict(
         labels=labels,
+        source=source,
         chart_data=subs_data,
         success_data=success_data,
         subs_people_data=subs_people_data,
