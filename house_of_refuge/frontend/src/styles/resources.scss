@@ -85,6 +85,20 @@ a {
     .col {
       cursor: pointer;
     }
+
+    .col-availability {
+      padding: 0;
+      border-bottom: 0;
+      overflow: hidden;
+
+      input {
+        min-height: 40px;
+        width: 100%;
+        border: 0;
+        border-radius: 0;
+        box-shadow: 0 1px 1px #696969;
+      }
+    }
   }
 
   .col-hot-sort {
