@@ -19,6 +19,9 @@ a {
 .column-headers {
   display: flex;
 
+  /* Hack to align with body columns when scrollbar is not overlayed but takes up space */
+  overflow-y: scroll;
+
   .col-head {
     text-align: center;
     border-bottom: 1px solid black;
