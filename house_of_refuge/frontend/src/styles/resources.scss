@@ -135,6 +135,7 @@ a {
 
 .row-verified {
   background-color: #f9dae6;
+  color: inherit;
 }
 
 .row-cherry {
@@ -144,22 +145,27 @@ a {
 
 .row-dropped {
   background-color: lightcyan;
+  color: inherit;
 }
 
 .row-ready {
   background-color: #b5ffe1 !important;
+  color: inherit;
 }
 
 .row-processing {
   background-color: #ff6d01;
+  color: inherit;
 }
 
 .row-success {
   background-color: $our-green;
+  color: inherit;
 }
 
 .row-ignore {
   background-color: $our-red;
+  color: inherit;
 }
 
 .submission-row {
