@@ -10,6 +10,23 @@ const getStatusDisplay = (status) => {
   return option.label;
 };
 
+const statusAsNumber = (value) => {
+  switch (value) {
+    case "new":
+      return 0;
+    case "searching":
+      return 1;
+    case "in_progress":
+      return 2;
+    case "cancelled":
+      return 3;
+    case "success":
+      return 4;
+    default:
+      return 10;
+  }
+};
+
 
 const updateSub = (sub, fields, onCorrect = null) => {
   console.log('sub update:', fields);
@@ -62,12 +79,12 @@ export function SubmissionRow({sub, activeHandler, user, isGroupCoordinator, isA
 
 
   const getActionBtn = () => {
-    if (readOnly || isActive) {
+    if (readOnly || isActive || statusAsNumber(localSub.status) > 2) {
       return "";
     }
     if (localSub.status === "in_progress") {
       if (localSub.coordinator) {
-        return isCoordinator ? "" : <Button size={"sm"} disabled>{localSub.coordinator.display}</Button>;
+        return "";
       } else {
         return <Button size={"sm"} onClick={setCoordinator}>Przypisz do siebie</Button>;
       }
@@ -76,7 +93,7 @@ export function SubmissionRow({sub, activeHandler, user, isGroupCoordinator, isA
     } else if (localSub.matcher && !isActive && !isOwner) {
       return <Button size={"sm"} disabled>{localSub.matcher.display}</Button>;
     } else if (localSub.status === "cancelled") {
-      return "NIEKATUALNE";
+      return "NIEAKTUALNE";
     } else {
       return <Button size={"sm"} onClick={btnHandler}>{isActive ? "Zwolnij" : "Szukaj Hosta"}</Button>;
     }
@@ -157,6 +174,7 @@ export function SubmissionRow({sub, activeHandler, user, isGroupCoordinator, isA
       <tr>
         <th>Od Kiedy?</th>
         <td>
+          {statusAsNumber(localSub.status) < 2 ?
           <input type="date" required min={new Date().toJSON().slice(0, 10)}
                  value={localSub.when}
                  onChange={(e) => {
@@ -166,10 +184,10 @@ export function SubmissionRow({sub, activeHandler, user, isGroupCoordinator, isA
                    if (e && localSub.when !== value) {
                      updateSub(localSub,
                          {"when": value},
-                         // () => setLocalSub((s) => ({...s, when: value}))
+                         () => setLocalSub((s) => ({...s, when: value}))
                      );
                    }
-                 }}/>
+                 }}/> : localSub.when}
         </td>
         <th>Opis:</th>
         <td>{localSub.description}</td>
@@ -216,12 +234,12 @@ export function SubmissionRow({sub, activeHandler, user, isGroupCoordinator, isA
           /> : getStatusDisplay(status)}
         </td>
       </tr>
-      {isCoordinator && !isGroupAdmin && <tr>
+      {isCoordinator && !isGroupAdmin && statusAsNumber(localSub.status) < 3 && <tr>
         <td className={"text-center"} colSpan={2}><Button variant={"secondary"} size={"sm"} onClick={() => updateStatus([{value: "cancelled"}])}>Nieaktualne</Button></td>
         <td colSpan={4}/>
         <td className={"text-center"} colSpan={2}><Button variant={"success"} size={"sm"} onClick={() => updateStatus([{value: "success"}])}>Sukces</Button></td>
       </tr>}
-      {isActive && !readOnly && <tr>
+      {isActive && !readOnly && statusAsNumber(localSub.status) < 3 && <tr>
         <td className={"text-center"} colSpan={2}><Button variant={"secondary"} size={"sm"}
                                                           onClick={() => activeHandler(sub, true, true)}>Nieaktualne</Button>
         </td>

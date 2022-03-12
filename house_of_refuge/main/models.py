@@ -329,6 +329,9 @@ class Submission(TimeStampedModel):
             self.priority = -1
         elif self.status == SubStatus.NEW:
             self.priority = 0
+            if self.resource:
+                self.clear_resource()
+                self.resource = None
         elif self.status == SubStatus.SEARCHING:
             self.priority = 1
         elif self.status == SubStatus.IN_PROGRESS:
@@ -354,6 +357,11 @@ class Submission(TimeStampedModel):
             return when > get_our_today_cutoff()
         return False
 
+    def clear_resource(self):
+        self.resource.owner = None
+        self.resource.availability = get_our_today_cutoff()
+        self.resource.save()
+
     def handle_gone(self):
         self.status = SubStatus.CANCELLED
         if self.resource:
@@ -363,9 +371,7 @@ class Submission(TimeStampedModel):
                 self.resource.note += f" \n{note_append}"
             except TypeError:
                 self.resource.note = note_append
-            self.resource.owner = None
-            self.resource.availability = get_our_today_cutoff()
-            self.resource.save()
+            self.clear_resource()
             self.resource = None
         try:
             self.note += f' \nDropped at {timezone.now().strftime("%Y-%m-%d %H:%M:%S")}'
