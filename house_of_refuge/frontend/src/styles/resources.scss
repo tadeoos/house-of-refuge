@@ -12,6 +12,12 @@ body {
   /* font-family: proxima-nova, sans-serif; */
 }
 
+#react {
+  display: flex;
+  flex-direction: column;
+  max-height: 100vh;
+}
+
 a {
   color: black;
 }
@@ -398,8 +404,8 @@ a {
 }
 
 .submission-list {
+  flex: 1;
   overflow: auto;
-  max-height: 500px;
 }
 
 .panel-header {
