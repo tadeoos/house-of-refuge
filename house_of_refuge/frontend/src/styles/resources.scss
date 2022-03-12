@@ -373,11 +373,9 @@ a {
 }
 
 .dropped-container {
-  /* background-color: $our-grey; */
-  position: sticky;
-  top: 40px;
   max-height: 40vh;
   overflow: auto;
+  min-height: 25vh;
 }
 
 .sub-id {
