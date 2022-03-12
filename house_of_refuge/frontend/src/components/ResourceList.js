@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from "react";
+import React, {useEffect, useMemo, useRef, useState} from "react";
 import {RESOURCE_MAP, ResourceRow, shortCols} from "./ResourceRow";
 import {Pagination} from "react-bootstrap";
 import {Search, SortDown, SortUp} from "react-bootstrap-icons";
@@ -48,7 +48,7 @@ export const ResourceList = ({initialResources, sub, subHandler, user, clearActi
   const [expandAll, setExpandAll] = useState(false);
   const [activeSub] = useState(sub);
   const [page, setPage] = useState(1);
-
+  const resourceList = useRef(null);
 
   const lastPage = useMemo(() => Math.ceil(visibleResources.length / SHOW_NUMBER), [visibleResources]);
 
@@ -56,6 +56,9 @@ export const ResourceList = ({initialResources, sub, subHandler, user, clearActi
     setResources(initialResources);
   }, [initialResources]);
 
+  useEffect(() => {
+    resourceList.current.scroll(0, 0);
+  }, [page]);
 
   const [columnsData] = useState({
     name: {fieldName: 'name', display: "👱 Imie", sort: "asc"},
@@ -204,7 +207,7 @@ export const ResourceList = ({initialResources, sub, subHandler, user, clearActi
                              filterData={filters[colData.fieldName]}
             />)}
           </div>
-          <div className="resource-rows">
+          <div className="resource-rows" ref={resourceList}>
             {isLoading ? <LoadingSpinner/> : visibleResources.slice(SHOW_NUMBER * (page - 1), SHOW_NUMBER * page).map(
                 r => <ResourceRow resource={r} isExpanded={expandAll}
                                   key={r.id} onMatch={matchFound} user={user}

@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from "react";
+import React, {useEffect, useMemo, useRef, useState} from "react";
 import {SUB_STATE_OPTIONS} from "../scripts/utils";
 import {ToastContainer} from "react-toastify";
 import Select from "react-dropdown-select";
@@ -50,6 +50,7 @@ export const SubmissionList = (
   const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = useState(1);
   const lastPage = useMemo(() => Math.ceil(visibleSubmissions.length / SHOW_NUMBER), [visibleSubmissions]);
+  const subsList = useRef(null);
 
   const subBelongsToUser = (s) => {
     if (s.receiver?.id === user.id) {
@@ -65,6 +66,11 @@ export const SubmissionList = (
   };
 
   useEffect(() => {
+    subsList.current.scroll(0,0);
+  }, [page]);
+
+
+  useEffect(() => {
     setVisibleSubmissions(orderBy(
         subs.filter(
             s => sourceFilter.length ? sourceFilter.map(o => o.value).includes(s.source) : true
@@ -77,6 +83,11 @@ export const SubmissionList = (
         ["priority", "id"], ["desc", "asc"])
     );
   }, [sourceFilter, todayFilterValue, peopleFilter, activeNow, statusFilter, subs, searchQuery, userFilterValue]);
+
+
+  useEffect(() => {
+    setPage(1);
+  }, [sourceFilter, todayFilterValue, activeNow, peopleFilter, statusFilter, userFilterValue, searchQuery]);
 
   // useEffect(() => {
   //   setVisibleResources(
@@ -195,7 +206,7 @@ export const SubmissionList = (
             <div className={"dropped-container"}>{droppedHosts.map(r => <DroppedHost resource={r}
                                                                                      isCoordinator={isCoordinator}
                                                                                      key={r.id}/>)}</div>}
-        <div className="submission-list">
+        <div className="submission-list" ref={subsList}>
           {isLoading ?
               <LoadingSpinner/> : visibleSubmissions.slice(SHOW_NUMBER * (page - 1), SHOW_NUMBER * page).map(s =>
                   <SubmissionRow user={user} sub={s} key={s.id}
