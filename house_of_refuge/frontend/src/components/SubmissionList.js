@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import {SUB_STATE_OPTIONS} from "../scripts/utils";
 import {ToastContainer} from "react-toastify";
 import Select from "react-dropdown-select";
@@ -9,6 +9,7 @@ import {SubmissionRow} from "./SubmissionRow";
 import {ResourceRow} from "./ResourceRow";
 import {orderBy} from "lodash";
 import {QuickFilter} from "./QuickFilter";
+import {Pagination} from "react-bootstrap";
 
 export const SOURCE_OPTIONS = [
   {label: "Strona", value: "webform"},
@@ -17,6 +18,7 @@ export const SOURCE_OPTIONS = [
   {label: "Inne", value: "other"}
 ];
 
+const SHOW_NUMBER = 20;
 
 const DroppedHost = ({resource, isCoordinator}) => {
   return <div className={`dropped-row pick-up-${resource.will_pick_up_now}`}>
@@ -46,6 +48,8 @@ export const SubmissionList = (
     }) => {
   const [visibleSubmissions, setVisibleSubmissions] = useState(subs);
   const [searchQuery, setSearchQuery] = useState("");
+  const [page, setPage] = useState(1);
+  const lastPage = useMemo(() => Math.ceil(visibleSubmissions.length / SHOW_NUMBER), [visibleSubmissions]);
 
   const subBelongsToUser = (s) => {
     if (s.receiver?.id === user.id) {
@@ -173,15 +177,30 @@ export const SubmissionList = (
             <input className="search-input" onChange={(e) => setSearchQuery(e.target.value.toLowerCase())}/>
           </QuickFilter>
         </div>
-        <div><p>{`${visibleSubmissions.length} zgłoszeń`}</p></div>
+        <div className={"d-flex justify-content-around"}>
+          <div>
+            <p>{`${visibleSubmissions.length} zgłoszeń`}</p>
+          </div>
+          <div className="mt-2">
+            <Pagination>
+              <Pagination.First disabled={page <= 1} onClick={() => setPage(1)}/>
+              <Pagination.Prev disabled={page <= 1} onClick={() => setPage(p => p - 1)}/>
+              <Pagination.Item active>{page}</Pagination.Item>
+              <Pagination.Next disabled={page >= lastPage} onClick={() => setPage(p => p + 1)}/>
+              <Pagination.Last disabled={page >= lastPage} onClick={() => setPage(lastPage)}/>
+            </Pagination>
+          </div>
+        </div>
         {droppedFilter && droppedHosts &&
             <div className={"dropped-container"}>{droppedHosts.map(r => <DroppedHost resource={r}
                                                                                      isCoordinator={isCoordinator}
                                                                                      key={r.id}/>)}</div>}
         <div className="submission-list">
-          {isLoading ? <LoadingSpinner/> : visibleSubmissions.map(s => <SubmissionRow user={user} sub={s} key={s.id}
-                                                                                      isGroupCoordinator={isCoordinator}
-                                                                                      activeHandler={btnHandler}/>)}
+          {isLoading ?
+              <LoadingSpinner/> : visibleSubmissions.slice(SHOW_NUMBER * (page - 1), SHOW_NUMBER * page).map(s =>
+                  <SubmissionRow user={user} sub={s} key={s.id}
+                                 isGroupCoordinator={isCoordinator}
+                                 activeHandler={btnHandler}/>)}
         </div>
       </>
 
