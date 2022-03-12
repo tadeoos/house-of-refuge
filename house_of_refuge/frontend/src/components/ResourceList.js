@@ -16,7 +16,12 @@ const SHOW_NUMBER = 50;
 const ColumnHeader = ({col, sortHandler, isSorting, sortDirection, filterData}) => {
   const iconClass = isSorting ? "sort-active" : "sort-muted";
 
-  return <div className={`col-head col ${shortCols.includes(col.fieldName) ? "col-short" : ""}`}>
+  const classes = ["col-head", "col", `col-${col.fieldName.replace(/_/g, '-')}`];
+  if (shortCols.includes(col.fieldName)) {
+    classes.push("col-short");
+  }
+
+  return <div className={classes.join(' ')}>
     <div className={'top'}>
       <span className="col-head-display-wrapper">
         {col.emoji && <span className="col-head-emoji">{col.emoji}</span>}

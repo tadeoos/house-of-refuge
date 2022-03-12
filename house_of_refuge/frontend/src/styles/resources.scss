@@ -51,6 +51,12 @@ a {
   text-align: center;
 }
 
+.col-hot-sort {
+  width: auto;
+  max-width: 160px;
+  overflow: hidden;
+}
+
 .resource-row {
   display: flex;
   flex-direction: column;
@@ -61,6 +67,31 @@ a {
 
     .col {
       cursor: pointer;
+    }
+  }
+
+  .col-hot-sort {
+    padding: 0;
+    background: #fff;
+
+    .btn-group {
+      border-radius: 0;
+      height: 100%;
+      width: 100%;
+
+      .btn {
+        border: 0;
+        border-right: 1px solid #bcbcbc;
+        border-radius: 0;
+
+        &:last-child {
+          border: 0;
+        }
+      }
+
+      .btn:focus {
+        box-shadow: none !important;
+      }
     }
   }
 
