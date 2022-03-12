@@ -212,6 +212,9 @@ def update_sub(request, sub_id):
 
         elif field == "status" and value in [SubStatus.GONE, SubStatus.CANCELLED]:
             sub.handle_gone()
+        elif field == "when":
+            date_value = datetime.datetime.strptime(value, "%Y-%m-%d")
+            sub.when = date_value
         else:
             setattr(sub, field, value)
     sub.save()

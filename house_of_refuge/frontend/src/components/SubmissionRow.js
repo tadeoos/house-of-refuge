@@ -142,7 +142,10 @@ export function SubmissionRow({sub, activeHandler, user, isGroupCoordinator, isA
         <th>Ile Osób?</th>
         <td>{localSub.people}</td>
         <th>Jak dlugo?</th>
-        <td>{localSub.how_long}</td>
+        <td>
+          <EditableField value={localSub.how_long} onRename={
+            (value) => updateSub(localSub, {"how_long": value}, () => setLocalSub((s) => ({...s, how_long: value})))}/>
+        </td>
         <th>Telefon</th>
         <td><EditableField
             value={localSub.phone_number}
@@ -153,7 +156,21 @@ export function SubmissionRow({sub, activeHandler, user, isGroupCoordinator, isA
       </tr>
       <tr>
         <th>Od Kiedy?</th>
-        <td>{localSub.when}</td>
+        <td>
+          <input type="date" required min={new Date().toJSON().slice(0, 10)}
+                 value={localSub.when}
+                 onChange={(e) => {
+                   const value = e.target.value;
+                   console.log("value: ", value);
+                   console.log("local sub: ", localSub.when);
+                   if (e && localSub.when !== value) {
+                     updateSub(localSub,
+                         {"when": value},
+                         // () => setLocalSub((s) => ({...s, when: value}))
+                     );
+                   }
+                 }}/>
+        </td>
         <th>Opis:</th>
         <td>{localSub.description}</td>
         <th>Języki</th>
@@ -169,7 +186,8 @@ export function SubmissionRow({sub, activeHandler, user, isGroupCoordinator, isA
         <th>Potrzebuje transportu?</th>
         <td>{localSub.transport_needed ? "tak" : "nie"}</td>
         <th>Notka</th>
-        <td><EditableField value={note} onRename={(note) => updateSub(localSub, {"note": note}, () => setNote(note))}/>
+        <td>
+          <EditableField value={note} onRename={(note) => updateSub(localSub, {"note": note}, () => setNote(note))}/>
         </td>
       </tr>
       {localSub.resource && <tr className="tr-host">
