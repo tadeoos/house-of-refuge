@@ -1,0 +1,15 @@
+Cześć!
+
+Otrzymujesz tego maila, ponieważ otrzymaliśmy prośbę o zmianę twojego zgłoszenia w Grupie Zasoby.
+
+Jeśli to nie ty zgłaszałeś taką potrzebę, możesz spokojnie zignorować tę wiadomość.
+
+Jeśli chcesz zmienić lub usunąć swoje zgłoszenie możesz to zrobić klikając w link podany poniżej.
+{% if multiple %}
+Uwaga - masz więcej niż jedno zgłoszenie. Dla każdego z nich jest osobny link. Uprzejmie prosimy o usunięcie tych niekatualnych.{% endif %}
+{% for reply in replies %}{% if multiple %}
+{{ forloop.counter }}. {{reply.get_edit_url}} (dodane {{reply.created|date:"d.m.Y"}} o {{reply.created|date:"G:i"}})
+{% else %}{{reply.get_edit_url}}{% endif %}{% endfor %}
+
+Dziękujemy, że pomagasz z nami!
+Zespół Grupy Zasoby

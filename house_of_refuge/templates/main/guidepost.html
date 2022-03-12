@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Grupa zasoby - JAZDA{% endblock title %}
+{% load render_bundle from webpack_loader %}
+{% block extrahead %}
+  {% render_bundle 'app' 'css' %}
+{% endblock extrahead %}
+{% block html_style %}{% endblock %}
+{% block body_style %}{% endblock %}
+{% block container_style %}{% endblock %}
+
+{% block content %}
+  <div class="row">
+    <div class="col-12 text-center">
+      <h2>Dziękujemy, że nam pomagasz!</h2>
+      <h4 class="my-4">Co będziesz dziś robić?</h4>
+      <div class="guidepost-buttons">
+        <a class="btn btn-lg btn-primary" href="{% url "main:home-stolik" %}" role="button">Przyjmować zgłoszenia na dworcu</a>
+        <a class="btn btn-lg btn-warning" href="{% url "main:jazda" %}?z=1&s=2&t=1" role="button">Pilnować, żeby osoby z dworca trafiły do znalezionych domów (łącznik)</a>
+        <a class="btn btn-lg btn-success" href="{% url "main:jazda" %}?z=1&s=0&s=1&d=1&t=1" role="button">Dzwonić do ludzi szukając noclegów</a>
+      </div>
+    </div>
+  </div>
+{% endblock content %}
+
+{% block inline_javascript %}
+
+{% endblock inline_javascript %}

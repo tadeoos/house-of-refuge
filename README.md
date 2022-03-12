@@ -1,15 +1,53 @@
 # House Of Refuge
 
-A simple app to manage housing related help for refugees
-
 [![Built with Cookiecutter Django](https://img.shields.io/badge/built%20with-Cookiecutter%20Django-ff69b4.svg?logo=cookiecutter)](https://github.com/cookiecutter/cookiecutter-django/)
 [![Black code style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
 
 License: MIT
 
+This app provides a system that helps with gathering and matching refugees and hosts willing to provide housing for them in time of need. It was first developed for Grupa Zasoby – a local grassroots initiative in Warsaw that started with a [facebook group](https://www.facebook.com/groups/zasobygrupa) on 24th of February 2022.
+
+This repository is currently running at https://grupazasoby.pl/
+
+
+> This project is actively developed and a lot is changing daily. We are open sourcing this repo in order to make it easier for other initiatives to fork, customize, and run their own instance. We're providing this code on "as is" basis. We're planning to add better documentation in the near future as time allows.
+
+## Contributing
+
+The default use case for an organization wanting to incorporate our process in their own work   is to find a technical person with knowledge of Python, Django and ReactJS who will then fork this repository and customize the code to better suit their needs.
+
+If you just want to help and contribute to this repository please fork it and create pull requests against the master branch. It's a good idea to browse open issues for a place to start.
+
+## Setting up local development
+
+1. Fork and clone this repository
+2. You need a local postgres server (either 13 or 14 version is fine), if you're on Mac we recommend using [Postgress.app](https://postgresapp.com/)
+   ```
+   $ createdb --username=postgres house_of_refuge
+   ```
+3. Create local python environment and install dependencies
+   ```
+   $ python -m venv venv
+   $ . ./venv/bin/activate
+   $ (venv) pip install -r requirements/local.txt
+   ```
+4. Build React frontend
+   ```
+   $ cd house_of_refuge/frontend
+   $ npm install
+   $ npm run start
+   ```
+5. Run migrations, create local data and start dev server
+   ```
+   $ (venv) ./manage.py migrate
+   $ (venv) ./manage.py generate_local_data
+   $ (venv) ./manage.py runserver_plus
+   ```
+
 ## Settings
 
 Moved to [settings](http://cookiecutter-django.readthedocs.io/en/latest/settings.html).
+
 
 ## Basic Commands
 
@@ -23,11 +61,12 @@ Moved to [settings](http://cookiecutter-django.readthedocs.io/en/latest/settings
 
 For convenience, you can keep your normal user logged in on Chrome and your superuser logged in on Firefox (or similar), so that you can see how the site behaves for both kinds of users.
 
-### Type checks
+### Creating local data
 
-Running type checks with mypy:
+There is a management command to populate your local db with data for ease of development:
 
-    $ mypy house_of_refuge
+    $ python manage.py generate_local_data --help
+
 
 ### Test coverage
 
@@ -41,13 +80,10 @@ To run the tests, check your test coverage, and generate an HTML coverage report
 
     $ pytest
 
-### Live reloading and Sass CSS compilation
-
-Moved to [Live reloading and SASS compilation](http://cookiecutter-django.readthedocs.io/en/latest/live-reloading-and-sass-compilation.html).
 
 ### Celery
 
-This app comes with Celery.
+This app comes with Celery but as of now we're not using it.
 
 To run a celery worker:
 
@@ -89,10 +125,11 @@ You must set the DSN url in production.
 
 ## Deployment
 
-The following details how to deploy this application.
-### Custom Bootstrap Compilation
+This app is configured to use [Render](https://render.com/) for a production server.
+The render blueprint is defined in `render.yaml` file in the repo root.
 
-The generated CSS is set up with automatic Bootstrap recompilation with variables of your choice.
-Bootstrap v5 is installed using npm and customised by tweaking your variables in `static/sass/custom_bootstrap_vars`.
+We also recommend using [New Relic](https://newrelic.com/) for app monitoring. 
 
-You can find a list of available variables [in the bootstrap source](https://github.com/twbs/bootstrap/blob/main/scss/_variables.scss), or get explanations on them in the [Bootstrap docs](https://getbootstrap.com/docs/5.1/customize/sass/).
+## Contact
+
+In case you need any help reach out to grupazasoby at gmail.com or tadekte at gmail.com

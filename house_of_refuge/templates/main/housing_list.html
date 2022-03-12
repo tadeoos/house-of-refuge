@@ -1,8 +1,13 @@
 {% extends "base.html" %}
+{% block title %}Grupa zasoby - JAZDA{% endblock title %}
 {% load render_bundle from webpack_loader %}
 {% block extrahead %}
   {% render_bundle 'app' 'css' %}
 {% endblock extrahead %}
+{% block html_style %}{% endblock %}
+{% block body_style %}{% endblock %}
+{% block container_style %}{% endblock %}
+
 {% block content %}
  <div id="react"></div>
 

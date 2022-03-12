@@ -1,20 +1,31 @@
 .body {
-  font-family: 'Lato', sans-serif;
+  /*font-family: 'Lato', sans-serif;*/
   font-weight: 400;
 }
 
 .row {
-  font-family: 'Lato', sans-serif;
+  font-family: proxima-nova, sans-serif;
   font-weight: 400;
 }
 
 p {
   max-width: 600px;
   margin: 10px auto;
-  text-align: justify;
+  text-align: center;
 }
 
 .resource-form {
   max-width: 600px;
   margin: 0 auto;
+}
+
+
+.guidepost-buttons {
+  display: flex;
+  flex-direction: column;
+}
+
+.guidepost-buttons > .btn {
+  margin: 40px auto;
+  width: 60vw;
 }

@@ -1,157 +1,256 @@
 import "../styles/resources.scss";
 import React, {useEffect, useState} from 'react'; // eslint-disable-line
 import ReactDOM from 'react-dom';
-import {Button, Table} from "react-bootstrap";
-import {SortUp, SortDown} from "react-bootstrap-icons";
-import BootstrapSwitchButton from 'bootstrap-switch-button-react';
-import {orderBy} from "lodash";
+import {
+  getCookie,
+  getHelped,
+  getLatestHostTimestamp,
+  getLatestSubId,
+  getRandomInt,
+  shouldShowHost,
+  strToBoolean,
+  SUB_STATE_OPTIONS
+} from "./utils";
+import {toast} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import {ResourceList} from "../components/ResourceList";
+import {SOURCE_OPTIONS, SubmissionList} from "../components/SubmissionList";
+import useInterval from "use-interval";
+import {BrowserRouter, Route, Routes, useSearchParams} from "react-router-dom";
 
 
-const ResourceRow = ({resource, isExpanded}) => {
-  const [expanded, setExpanded] = useState(isExpanded);
-  const attrs = ["name", "zip_code", "people_to_accommodate", "availability", "accommodation_length"];
-  return <div className="resource-row">
-    <div className={"base-content"}>
-      {attrs.map((a) => <div onClick={() => setExpanded(e => !e)} className={"col"}
-                             key={`${resource.id}-${a}`}>{resource[a]}</div>)}
+const CoordinatorsHeader = ({coordinators, helped}) => {
+  const [peopleHelped, setPeopleHelped] = useState(helped);
+
+  useInterval(async () => {
+    const newHelped = await getHelped();
+    setPeopleHelped(newHelped);
+  }, 120 * 1000);
+
+  return <div className="panel-header">
+    <div>
+      <img src="/static/images/logo.svg" alt="logo" style={{height: "76px", margin: "10px 0"}}/>
     </div>
-    {expanded && <div>
-      <Table bordered>
-        <tbody>
-        <tr>
-          <th>Coś o sobie</th>
-          <td>{resource.about_info}</td>
-          <th>Zasób</th>
-          <td>{resource.resource}</td>
-        </tr>
-        <tr>
-          <th>Miasto i kod</th>
-          <td>{resource.city_and_zip_code}</td>
-          <th>Adres</th>
-          <td>{resource.address}</td>
-        </tr>
-        <tr>
-          <th>Info o miejscu</th>
-          <td>{resource.details}</td>
-          <th>Transport</th>
-          <td>{resource.transport}</td>
-        </tr>
-        <tr>
-          <th>Telefon</th>
-          <td>{resource.phone_number}</td>
-          <th>Telefon awaryjny</th>
-          <td>{resource.backup_phone_number}</td>
-        </tr>
-        <tr>
-          <th>Email</th>
-          <td>{resource.email}</td>
-          <th>Dodatkowe uwagi</th>
-          <td>{resource.extra}</td>
-        </tr>
-        </tbody>
-      </Table>
-
-    </div>}
-  </div>;
-};
-
-
-const ColumnHeader = ({col, sortHandler, isSorting, sortDirection}) => {
-  const iconClass = isSorting ? "sort-active" : "sort-muted";
-  return <div className={"col-head col"}>
-    {col.display} {sortDirection === "asc" ?
-      <SortUp className={iconClass} onClick={() => sortHandler(col.fieldName)}/> : <SortDown
-          className={iconClass} onClick={() => sortHandler(col.fieldName)}/>}
-  </div>;
-};
-
-const ResourceList = ({resources}) => {
-  const [visibleResources, setVisibleResources] = useState(resources);
-  const [onlyWarsaw, setOnlyWarsaw] = useState(false);
-  const [onlyAvailable, setOnlyAvailable] = useState(false);
-  const [sortBy, setSortBy] = useState("name");
-  const [sortOrder, setSortOrder] = useState("asc");
-  const [expandAll, setExpandAll] = useState(false);
-
-  const [columnsData] = useState({
-    name: {fieldName: 'name', display: "Imie", sort: "asc"},
-    zip_code: {fieldName: 'zip_code', display: "Kod Pocztowy", sort: "asc"},
-    people_to_accommodate: {fieldName: 'people_to_accommodate', display: "Ilu ludzi przyjmie?", sort: "asc"},
-    availability: {fieldName: 'availability', display: "Kiedy?", sort: "asc"},
-    accommodation_length: {fieldName: 'accommodation_length', display: "Na jak długo?", sort: "asc"},
-
-  });
-
-  const handleSort = (column) => {
-    setSortBy(column);
-    setSortOrder(sortOrder === "asc" ? "desc" : "asc");
-  };
-
-  const isInWarsaw = (resource) => {
-    return ["00", "01", "02", "03", "04", "05"].includes(resource.zip_code.slice(0, 2));
-  };
-
-  const isAvailable = (resource) => {
-    return new Date(resource.availability) <= Date.now();
-  };
-
-  useEffect(() => {
-    setVisibleResources(
-        resources.filter(
-            r => onlyWarsaw ? isInWarsaw(r) : true
-        ).filter(r => onlyAvailable ? isAvailable(r) : true)
-    );
-  }, [onlyWarsaw, onlyAvailable]);
-  useEffect(() => {
-    setVisibleResources(
-        vr => orderBy(vr, [sortBy], [sortOrder])
-    );
-  }, [sortBy, sortOrder]);
-
-  return (
-      <>
-        <Table>
-          <tbody>
-          <tr>
-            <th>Szybkie filtry</th>
-            <td>Na terenie warszawy</td>
-            <td>
-              <BootstrapSwitchButton
-                  size={"sm"}
-                  checked={onlyWarsaw}
-                  onChange={(checked) => {
-                    setOnlyWarsaw(checked);
-                  }}
-              /></td>
-            <td>Przyjmują od dzisiaj</td>
-            <td>
-              <BootstrapSwitchButton
-                  size={"sm"}
-                  checked={onlyAvailable}
-                  onChange={(checked) => {
-                    setOnlyAvailable(checked);
-                  }}
-              /></td>
-          </tr>
-          </tbody>
-        </Table>
-
-        {/*<Button>Do odbioru dzisiaj</Button>*/}
-        {/*<Button>Na terenie warszawy</Button>*/}
-        <div className={"column-headers mt-3"}>
-          {Object.values(columnsData).map(colData => <
-              ColumnHeader col={colData} key={colData.fieldName} sortHandler={handleSort}
-                           sortDirection={sortOrder} isSorting={sortBy === colData.fieldName}
-          />)}
+    <div className="coordinators">
+      <div className="d-flex justify-content-around">
+        <div className={"mx-5 text-center"}>
+          <h5>Koordynatorzy Zachodni</h5>
+          <ol>{(coordinators.station || []).map(c => <li key={c.user.id}>{c.user.display}</li>)}</ol>
         </div>
-        {visibleResources.map(r => <ResourceRow resource={r} isExpanded={expandAll} key={r.id}/>)}
-      </>
+        <div className={"mx-5 text-center"}>
+          <h5>Koordynatorzy Zdalni</h5>
+          <ol>{(coordinators.remote || []).map(c => <li key={c.user.id}>{c.user.display}</li>)}</ol>
+        </div>
+      </div>
+      {peopleHelped ?
+          <div><h5 className="good-message">Pomogliśmy
+            dziś {peopleHelped} osobom {"🙏".repeat(Math.floor(peopleHelped / 10))}</h5>
+          </div> : <></>}
+    </div>
+    <div><a href="/accounts/logout">wyloguj się</a></div>
+  </div>;
+};
 
-  );
 
+const App = ({subs, userData, coordinators, helped}) => {
+  let [searchParams, setSearchParams] = useSearchParams();
+
+
+  const [activeSub, setActiveSub] = useState(null);
+  const [sourceFilter, setSourceFilter] = useState(searchParams.getAll("z").map((i) => SOURCE_OPTIONS[i]));
+  const [statusFilter, setStatusFilter] = useState(searchParams.getAll("s").map(i => SUB_STATE_OPTIONS[i]));
+  const [peopleFilter, setPeopleFilter] = useState(searchParams.getAll("p").map(v => ({value: v, label: v})));
+  const [droppedFilter, setDroppedFilter] = useState(strToBoolean(searchParams.get("d")));
+  const [onlyUsers, setOnlyUsers] = useState(strToBoolean(searchParams.get("u")));
+  const [onlyTodays, setOnlyTodays] = useState(strToBoolean(searchParams.get("t")));
+  const [activeNow, setActiveNow] = useState(strToBoolean(searchParams.get("a")));
+
+
+  const coordIds = Object.values(coordinators).map(g => g.map(c => c.user.id)).flat();
+  const isCoordinator = coordIds.includes(userData.id);
+  const [submissions, setSubmissions] = useState(subs);
+  const [droppedHosts, setDroppedHosts] = useState([]);
+  const [hosts, setHosts] = useState([]);
+
+
+  const [latestSubChange, setLatestSubChange] = useState(0);
+  const [latestHostChange, setLatestHostChange] = useState(0);
+
+  // useEffect(() => {
+  //   console.log("parsing");
+  //   parseQueryParams(searchParams);
+  // }, []);
+
+  useEffect(() => {
+    let z = [];
+    let s = [];
+    let p = [];
+    const checkParams = new URLSearchParams();
+    if (sourceFilter.length) {
+      SOURCE_OPTIONS.forEach((o, i) => {
+        if (sourceFilter.includes(o)) {
+          z.push(`${i}`);
+          checkParams.append("z", `${i}`);
+        }
+      });
+    }
+    if (statusFilter.length) {
+      SUB_STATE_OPTIONS.forEach((o, i) => {
+        if (statusFilter.includes(o)) {
+          s.push(`${i}`);
+          checkParams.append("s", `${i}`);
+        }
+      });
+    }
+    if (peopleFilter.length) {
+      peopleFilter.forEach((o) => {
+        p.push(`${o.value}`);
+        checkParams.append("p", `${o.value}`);
+      });
+    }
+    let params = {z: z, s: s, p: p};
+    if (droppedFilter) {
+      params.d = "1";
+      checkParams.append("d", "1");
+    }
+    if (onlyUsers) {
+      params.u = "1";
+      checkParams.append("u", "1");
+    }
+    if (onlyTodays) {
+      params.t = "1";
+      checkParams.append("t", "1");
+    }
+    if (activeNow) {
+      params.a = "1";
+      checkParams.append("a", "1");
+    }
+    if (checkParams.toString() !== searchParams.toString()) {
+      setSearchParams(params);
+    }
+  }, [sourceFilter, statusFilter, droppedFilter, peopleFilter, activeNow, onlyUsers, onlyTodays]);
+
+
+  // const {search} = useLocation();
+  // const latestChange = useRef(0);
+
+  console.log("query:", searchParams.toString(), peopleFilter);
+
+  useInterval(async () => {
+    if (activeSub) {
+      const latest = parseFloat(await getLatestHostTimestamp());
+      console.log("latest", latest, latestHostChange);
+      if (latest > latestHostChange) {
+        console.log("UPDATING HOSTS");
+        const response = await fetch(`/api/zasoby?since=${latestHostChange}`);
+        const result = await response.json();
+        console.log("got data", result.data);
+        const changedHosts = result.data;
+        const changedIds = changedHosts.map(s => s.id);
+        setHosts((currentHosts) => [
+          ...currentHosts.filter(s => !changedIds.includes(s.id)),
+          ...changedHosts.filter(h => shouldShowHost(h, userData.id))]
+        );
+        setLatestHostChange(latest);
+      } else {
+        console.log("nothing");
+      }
+    } else {
+      // update submissions
+      const latest = parseFloat(await getLatestSubId());
+      console.log("latest", latest, latestSubChange);
+      if (latest > latestSubChange) {
+        console.log("UPDATING SUBS");
+        const response = await fetch(`/api/zgloszenia?since=${latestSubChange}`);
+        const result = await response.json();
+        console.log("got data", result.data);
+        const newSubs = result.data.submissions;
+        const newSubsIds = newSubs.map(s => s.id);
+        console.log("new subs: ", newSubs);
+        console.log("new sub ids: ", newSubsIds);
+        setSubmissions((cS) => [...cS.filter(s => !newSubsIds.includes(s.id)), ...newSubs]);
+        // do latest for dropped
+        setDroppedHosts(result.data.dropped);
+        setLatestSubChange(latest);
+      } else {
+        console.log("nothing");
+      }
+    }
+
+  }, getRandomInt(1000, 1200));
+
+
+  console.log("IsCoordinator: ", isCoordinator, coordIds, userData);
+
+  const clearActiveSub = () => setActiveSub(null);
+
+  const subIsTaken = (sub, isActive = false) => {
+    console.log("sub taken");
+    let fields;
+    if (isActive) {
+      // no match found... we're clearing the status
+      fields = {"status": "new", "matcher_id": null};
+    } else {
+      fields = {"status": "searching", "matcher_id": userData.id};
+    }
+
+    fetch(`/api/sub/update/${sub.id}`, {
+      method: 'POST', // *GET, POST, PUT, DELETE, etc.
+      headers: {
+        'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken')
+      }, body: JSON.stringify({"fields": fields})
+    }).then(response => response.json()).then(data => {
+      console.log('Response: ', data);
+      toast(`${data.message}`, {type: data.status});
+      if (!isActive) {
+        setActiveSub(data.data);
+      } else {
+        setActiveSub(null);
+      }
+
+    }).catch((error) => {
+      console.error('Error:', error);
+    });
+  };
+
+
+  return <Routes>
+    <Route exact path="/jazda" element={
+      <>
+        {/*<div className="ribbon">*/}
+        {/*  Wszystkiego najlepszego dla naszych cudownych wolontariuszek ❤️*/}
+        {/*  <i/>*/}
+        {/*  <i/>*/}
+        {/*  <i/>*/}
+        {/*  <i/>*/}
+        {/*</div>*/}
+        <CoordinatorsHeader coordinators={coordinators} helped={helped}/>
+        {activeSub ? <ResourceList initialResources={hosts}
+                                   isLoading={latestHostChange === 0}
+                                   user={userData} sub={activeSub} subHandler={subIsTaken}
+                                   clearActiveSub={clearActiveSub}
+        /> : <SubmissionList user={userData} subs={submissions} btnHandler={subIsTaken}
+                             sourceFilter={sourceFilter} setSourceFilter={(v) => setSourceFilter(v)}
+                             statusFilter={statusFilter}
+                             isCoordinator={isCoordinator}
+                             setStatusFilter={(v) => setStatusFilter(v)}
+                             droppedHosts={droppedHosts}
+                             isLoading={latestSubChange === 0}
+                             userFilterValue={onlyUsers}
+                             todayFilterValue={onlyTodays}
+                             peopleFilter={peopleFilter}
+                             setPeopleFilter={(v) => setPeopleFilter(v)}
+                             setUserFilter={(v) => setOnlyUsers(v)}
+                             setTodayFilter={(v) => setOnlyTodays(v)}
+                             activeNow={activeNow} setActiveNow={(v) => setActiveNow(v)}
+                             droppedFilter={droppedFilter} setDropped={(v) => setDroppedFilter(v)}
+        />}
+      </>}/>
+  </Routes>;
 };
 
 ReactDOM.render(
-    React.createElement(ResourceList, window.props),    // gets the props that are passed in the template
+    <BrowserRouter><App {...props} /></BrowserRouter>,
+    // React.createElement(App, window.props),    // gets the props that are passed in the template
     window.react_mount,                                // a reference to the #react div that we render to
 );

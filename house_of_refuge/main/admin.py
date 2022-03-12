@@ -1,13 +1,39 @@
 import re
 
 from django.contrib import admin
+from django.contrib.admin import ModelAdmin
 from django.utils import timezone
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
 from import_export.fields import Field
 from import_export.widgets import DateTimeWidget, DateWidget, Widget
 
-from .models import HousingResource, HousingType, TransportRange
+from .models import HousingResource, HousingType, TransportRange, Submission, Coordinator, Status, ObjectChange
+
+
+class ChangeInline(admin.TabularInline):
+    model = ObjectChange
+    extra = 0
+    can_delete = False
+    readonly_fields = [
+        "user",
+        "submission",
+        "host",
+        "change",
+        "created"
+    ]
+
+
+@admin.register(ObjectChange)
+class HousingResourceAdmin(ModelAdmin):
+    search_fields = ("pk", "change", "user__name", "host__id", "submission__id")
+    list_display = ("id", "user", "change", "host", "submission", "created")
+    readonly_fields = [
+        "user",
+        "submission",
+        "host",
+        "change",
+    ]
 
 VALUE_MAP = {
     "Tak, na terenie Warszawy": TransportRange.WARSAW,
@@ -28,6 +54,31 @@ class ChoiceWidget(Widget):
 class PeopleWidget(Widget):
     def clean(self, value, row=None, *args, **kwargs):
         return max([int(i) for i in re.findall(r"\d+", value)] or [0])
+
+
+class StatusWidget(Widget):
+    def clean(self, value, row=None, *args, **kwargs):
+        if "zignoruj" in value.lower():
+            return Status.IGNORE
+        else:
+            return Status.NEW
+
+
+class CherryWidget(Widget):
+    def clean(self, value, row=None, *args, **kwargs):
+        if value.lower() in ["wiśnia", "wisnia"]:
+            return True
+        else:
+            return False
+
+
+class VerifiedWidget(Widget):
+    def clean(self, value, row=None, *args, **kwargs):
+
+        if value.lower() in ["wiśnia", "wisnia"] or "zwer" in value.lower():
+            return True
+        else:
+            return False
 
 
 class ExtractZipCodeWidget(Widget):
@@ -116,24 +167,87 @@ class HousingRow(resources.ModelResource):
         column_name="Timestamp",
         widget=CustomDateTimeWidget(format="%m/%d/%Y %H:%M:%S"),
     )
+    verified = Field(attribute="verified", column_name="Osoba zweryfikowana/niezweryfikowana/nie brać", widget=VerifiedWidget())
+    status = Field(attribute="status", column_name="Osoba zweryfikowana/niezweryfikowana/nie brać",
+                     widget=StatusWidget())
+    cherry = Field(attribute="cherry", column_name="Osoba zweryfikowana/niezweryfikowana/nie brać",
+                     widget=CherryWidget())
 
     def skip_row(self, instance, original):
-        # Add code here
+        if all([
+            instance.email == original.email,
+            instance.people_to_accommodate_raw == original.people_to_accommodate_raw,
+            instance.extra == original.extra,
+            instance.availability == original.availability,
+        ]):
+            return True
         return super().skip_row(instance, original)
 
     class Meta:
         model = HousingResource
         skip_unchanged = True
         report_skipped = False
-        # widgets = {
-        #     'created': {'format': '%m/%d/%Y %H:%M:%S'},
-        #     'availability': {'format': '%m/%d/%Y'},
-        # }
+        import_id_fields = ["created"]
+
+
+@admin.action(description='Oznacz jako do usunięcia')
+def mark_for_deletion(modeladmin, request, queryset):
+    queryset.update(status=Status.SHOULD_DELETE)
 
 
 @admin.register(HousingResource)
 class HousingResourceAdmin(ImportExportModelAdmin):
     resource_class = HousingRow
-    search_fields = ("about_info", "city_and_zip_code", "email", "details", "extra")
-    list_display = ("name", "email", "resource", "availability", "accommodation_length")
-    list_filter = ("availability", "people_to_accommodate")
+    search_fields = ("pk", "name", "about_info", "city_and_zip_code", "phone_number", "details", "extra", "address", "owner__name")
+    list_display = ("id", "name", "email", "resource", "status", "cherry", "verified")
+    list_filter = ("status", "cherry", "verified")
+    list_editable = ("status", "cherry", "verified",)
+    autocomplete_fields = ['owner']
+    inlines = [ChangeInline]
+    # exclude = ["token"]
+    readonly_fields = ["token"]
+    actions = [mark_for_deletion]
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        for field_name in ["owner"]:
+            field = form.base_fields[field_name]
+            field.widget.can_add_related = False
+            field.widget.can_change_related = False
+            field.widget.can_delete_related = False
+        return form
+
+
+@admin.register(Submission)
+class SubmissionAdmin(ImportExportModelAdmin):
+    # resource_class = HousingRow
+    search_fields = ("id", "name", "languages", "phone_number","receiver__name", "coordinator__name", "note", "contact_person", "matcher__name")
+    list_display = ("id", "name", "people","how_long",
+                    "contact_person", "description",
+                    "note", "source", "status",)
+    list_filter = ("status", "source", "should_be_deleted")
+    list_editable = ("status", "source", "note")
+    autocomplete_fields = ['resource', 'matcher', 'coordinator', 'receiver']
+    inlines = [ChangeInline]
+    ordering = ["-pk"]
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super(SubmissionAdmin, self).get_form(request, obj, **kwargs)
+        for field_name in ["receiver", "matcher", "coordinator", "resource"]:
+            field = form.base_fields[field_name]
+            field.widget.can_add_related = False
+            field.widget.can_change_related = False
+            field.widget.can_delete_related = False
+        return form
+
+
+@admin.register(Coordinator)
+class CoordinatorAdmin(ModelAdmin):
+    # resource_class = HousingRow
+    list_display = ("pk", "user", "group",)
+    list_editable = ("user", "group",)
+    autocomplete_fields = ['user']
+
+
+
+

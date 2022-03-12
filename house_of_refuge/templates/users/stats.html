@@ -1,0 +1,237 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+
+{% block title %}User stats{% endblock %}
+
+{% block content %}
+  <div class="row">
+    <div class="col col-6" style="margin-bottom: 1em">
+      <canvas id="myChart" width="400" height="200"></canvas>
+    </div>
+    <div class="col col-6" style="margin-bottom: 1em">
+      <canvas id="chartPeople" width="400" height="200"></canvas>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col col-12" style="margin-bottom: 1em">
+      <canvas id="eventHoursChart" width="400" height="100"></canvas>
+    </div>
+  </div>
+  <div class="row">
+    {#    <div class="col-3 table-responsive">#}
+    {#      <table class="table table-bordered">#}
+    {#        <tr>#}
+    {#          <th colspan="2">Top Przyjmujący</th>#}
+    {#        </tr>#}
+    {#        {% for user in top_receivers %}#}
+    {#          <tr>#}
+    {#            <td>{{ user.name }}</td>#}
+    {#            <td>{{ user.mc }}</td>#}
+    {#          </tr>#}
+    {#        {% endfor %}#}
+    {#      </table>#}
+    {#    </div>#}
+    {#    <div class="col-3 table-responsive">#}
+    {#      <table class="table table-bordered">#}
+    {#        <tr>#}
+    {#          <th colspan="2">Top Znajdujący</th>#}
+    {#        </tr>#}
+    {#        {% for user in top_matchers %}#}
+    {#          <tr>#}
+    {#            <td>{{ user.name }}</td>#}
+    {#            <td>{{ user.mc }}</td>#}
+    {#          </tr>#}
+    {#        {% endfor %}#}
+    {#      </table>#}
+    {#    </div>#}
+    {#    <div class="col-3 table-responsive">#}
+    {#      <table class="table table-bordered">#}
+    {#        <tr>#}
+    {#          <th colspan="2">Top Łącznicy</th>#}
+    {#        </tr>#}
+    {#        {% for user in top_coords %}#}
+    {#          <tr>#}
+    {#            <td>{{ user.name }}</td>#}
+    {#            <td>{{ user.mc }}</td>#}
+    {#          </tr>#}
+    {#        {% endfor %}#}
+    {#      </table>#}
+    {#    </div>#}
+    <div class="col-12 table-responsive">
+      <table class="table table-bordered table-striped table-sm">
+        <tr>
+          <td colspan="2">Liczba wszystkich hostów</td>
+          <td>{{ all_hosts }}</td>
+        </tr>
+        <tr>
+          <td colspan="2">Liczba wszystkich zgłoszeń</td>
+          <td> {{ all_subs }}</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td colspan="">W tym sukcesów</td>
+          <td> {{ all_success }} ({{ all_success_ratio }})</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>W tym anulowanych</td>
+          <td> {{ all_cancelled }} ({{ all_cancelled_ratio }})</td>
+        </tr>
+        <tr>
+          <td colspan="2">Liczba zgłoszeń na dworcu</td>
+          <td> {{ terrain_subs }} ({{ terrain_ratio }})</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>W tym sukcesów</td>
+          <td> {{ terrain_success }} ({{ terrain_success_ratio }})</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>W tym anulowanych</td>
+          <td> {{ terrain_cancelled }} ({{ terrain_cancelled_ratio }})</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+
+{% endblock content %}
+
+{% block inline_javascript %}
+  {{ block.super }}
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  {{ labels|json_script:"labels" }}
+  {{ chart_data|json_script:"chartData" }}
+  {{ success_data|json_script:"successData" }}
+  {{ hosts_data|json_script:"hostsData" }}
+
+  {{ subs_people_data|json_script:"subsPeopleData" }}
+  {{ hosts_people_data|json_script:"hostsPeopleData" }}
+  {{ success_people_data|json_script:"successPeopleData" }}
+
+  {{ hour_labels|json_script:"hourLabels" }}
+  {{ matches_count|json_script:"matchesCount" }}
+  {#  {{ users_data|json_script:"usersData" }}#}
+  {#  {{ events_times_chart|json_script:"eventsTimesChartData" }}#}
+  <script type="text/javascript">
+
+    //    const getCellValue = (tr, idx) => tr.children[idx].innerText || tr.children[idx].textContent;
+    //
+    //    const comparer = (idx, asc) => (a, b) => ((v1, v2) =>
+    //        v1 !== '' && v2 !== '' && !isNaN(v1) && !isNaN(v2) ? v1 - v2 : v1.toString().localeCompare(v2)
+    //    )(getCellValue(asc ? a : b, idx), getCellValue(asc ? b : a, idx));
+    //
+    //    // do the work...
+    //    document.querySelectorAll('th').forEach(th => th.addEventListener('click', (() => {
+    //      const table = th.closest('table');
+    //      Array.from(table.querySelectorAll('tr:nth-child(n+2)'))
+    //        .sort(comparer(Array.from(th.parentNode.children).indexOf(th), this.asc = !this.asc))
+    //        .forEach((tr, index) => {
+    //          tr.querySelector('td:first-child').innerHTML = index + 1;
+    //          table.appendChild(tr)
+    //        });
+    //    })));
+
+    const ctx = document.getElementById('myChart').getContext('2d');
+    const labels = JSON.parse(document.getElementById('labels').textContent);
+    const data = {
+      labels: labels,
+      datasets: [
+        {
+          label: 'Zgłoszenia',
+          backgroundColor: '#FFD200',
+          borderColor: '#FFD200',
+          data: JSON.parse(document.getElementById('chartData').textContent),
+        },
+        {
+          label: 'Noclegi',
+          backgroundColor: '#D33E43',
+          borderColor: '#D33E43',
+          data: JSON.parse(document.getElementById('hostsData').textContent),
+        },
+        {
+          label: 'Sukcesy',
+          backgroundColor: '#519872',
+          borderColor: '#519872',
+          data: JSON.parse(document.getElementById('successData').textContent),
+        },
+      ]
+    };
+    const config = {
+      type: 'line',
+      data: data,
+      options: {
+        plugins: {
+          title: {
+            display: true,
+            text: 'Dane wyrażone w liczbie rekordów'
+          }
+        }
+      }
+    };
+    const myChart = new Chart(ctx, config);
+
+
+    const peopleCtx = document.getElementById('chartPeople').getContext('2d');
+    const peopleData = {
+      labels: labels,
+      datasets: [
+        {
+          label: 'Potrzebujący ludzie',
+          backgroundColor: '#FFD200',
+          borderColor: '#FFD200',
+          data: JSON.parse(document.getElementById('subsPeopleData').textContent),
+        },
+        {
+          label: 'Miejsca noclegowe',
+          backgroundColor: '#D33E43',
+          borderColor: '#D33E43',
+          data: JSON.parse(document.getElementById('hostsPeopleData').textContent),
+        },
+        {
+          label: 'Zakwaterowani ludzie',
+          backgroundColor: '#519872',
+          borderColor: '#519872',
+          data: JSON.parse(document.getElementById('successPeopleData').textContent),
+        },
+      ]
+    };
+    const chartPeople = new Chart(peopleCtx, {
+      type: 'line',
+      data: peopleData,
+      options: {
+        plugins: {
+          title: {
+            display: true,
+            text: 'Dane wyrażone w liczbie ludzi'
+          }
+        }
+      }
+    });
+
+    const ctxEvents = document.getElementById('eventHoursChart').getContext('2d');
+
+    const labelsEvents = JSON.parse(document.getElementById('hourLabels').textContent);
+    const dataEvents = {
+      labels: labelsEvents,
+      datasets: [
+        {
+          label: 'Liczba znalezionych hostów w danej godzinie',
+          backgroundColor: '#005EAA',
+          borderColor: '#005EAA',
+          maxBarThickness: 30,
+          data: JSON.parse(document.getElementById('matchesCount').textContent),
+        },
+      ],
+    };
+    const eventsConfig = {
+      type: 'bar',
+      data: dataEvents,
+      options: {}
+    };
+    const eventsChart = new Chart(ctxEvents, eventsConfig);
+  </script>
+{% endblock %}

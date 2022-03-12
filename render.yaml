@@ -1,0 +1,48 @@
+databases:
+  - name: zasoby-db
+    databaseName: zasoby
+    user: zasoby
+    region: frankfurt
+
+services:
+  - type: pserv
+    name: zasoby-redis
+    env: docker
+    repo: https://github.com/render-examples/redis.git # optional
+    region: frankfurt
+    disk:
+      name: redis-data
+      mountPath: /var/lib/redis
+      sizeGB: 1 # optional
+  - type: web
+    name: zasoby
+    env: python
+    region: frankfurt
+    branch: production
+    healthCheckPath: /healthz
+    buildCommand: "./build.sh"
+#    startCommand: "NEW_RELIC_CONFIG_FILE=newrelic.ini newrelic-admin run-program gunicorn config.wsgi:application -k gevent --worker-connections=50 --config=gunicorn_config.py"
+    startCommand: "NEW_RELIC_CONFIG_FILE=newrelic.ini newrelic-admin run-program gunicorn config.wsgi:application"
+
+#    numInstances: 1 # optional (defaults to 1)
+    scaling:
+      minInstances: 1
+      maxInstances: 4
+      targetMemoryPercent: 90 # optional if targetCPUPercent is set (valid: 1-90)
+      targetCPUPercent: 90 # optional if targetMemory is set (valid: 1-90)
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: zasoby-db
+          property: connectionString
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: WEB_CONCURRENCY
+        value: 3
+      - key: DJANGO_SETTINGS_MODULE
+        value: "config.settings.production"
+      - key: REDIS_URL
+        fromService:
+          name: zasoby-redis
+          type: pserv
+          property: hostport
