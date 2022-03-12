@@ -240,7 +240,7 @@ a {
   position: sticky;
   top: 40px;
   max-height: 40vh;
-  overflow: scroll;
+  overflow: auto;
 }
 
 .sub-id {
@@ -251,7 +251,7 @@ a {
 
 .r-id-col {
   max-width: 60px;
-  overflow: scroll;
+  overflow: auto;
 }
 
 .col-short {
@@ -272,12 +272,12 @@ a {
 }
 
 .resource-rows {
-  overflow: scroll;
+  overflow: auto;
   max-height: 400px;
 }
 
 .submission-list {
-  overflow: scroll;
+  overflow: auto;
   max-height: 500px;
 }
 
