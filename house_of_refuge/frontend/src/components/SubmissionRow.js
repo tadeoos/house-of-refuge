@@ -188,7 +188,7 @@ export function SubmissionRow({sub, activeHandler, user, isGroupCoordinator, isA
         <th>Łącznik</th>
         <td>{localSub.coordinator?.display || (localSub.matcher ? getActionBtn() : "")}</td>
         <th>
-          status
+          Status
         </th>
         <td>
           {isGroupAdmin ? <Select
