@@ -175,46 +175,23 @@ export const ResourceRow = ({resource, isExpanded, onMatch, user, activeSub, com
       <div className={`col no-pointer`}>
         {compact ? resource.note :
             <ButtonGroup aria-label="Basic example">
-              <Button variant={resource.is_hot ? "success" : "outline-success"} size={"sm"} disabled={resource.is_hot}
-                      onClick={() => updateResource(resource, {got_hot: new Date().toISOString()})}>
-                🔥🔥
+              <Button variant={resource.is_hot ? "success" : "outline-success"} size={"sm"}
+                      onClick={() => updateResource(resource, {got_hot: resource.is_hot ? null : new Date().toISOString()})}>
+                🔥
               </Button>
-              <Button variant={resource.cherry ? "success" : "outline-success"} disabled={resource.cherry}
-                      onClick={() => updateResource(resource, {"cherry": true})}>
+              <Button variant={resource.cherry ? "success" : "outline-success"}
+                      onClick={() => updateResource(resource, {"cherry": !resource.cherry})}>
                 🍒
               </Button>
               <Button variant={resource.verified ? "success" : "outline-success"}
-                      disabled={resource.verified}
-                      onClick={() => updateResource(resource, {"verified": true})}
+                      onClick={() => updateResource(resource, {"verified": !resource.verified})}
               >👍
               </Button>
               <Button variant={resource.turtle ? "success" : "outline-success"}
-                      disabled={resource.turtle}
-                      onClick={() => updateResource(resource, {"turtle": true})}
+                      onClick={() => updateResource(resource, {"turtle": !resource.turtle})}
               >🐢
               </Button>
             </ButtonGroup>
-          // <Dropdown as={ButtonGroup}>
-          // <Button variant="info" size={"sm"} disabled={resource.is_hot}
-          // onClick={() => updateResource(resource, {got_hot: new Date().toISOString()})}>
-          // 🔥 HOT 🔥
-          // </Button>
-          //
-          // <Dropdown.Toggle split variant="info" id="dropdown-split-basic"/>
-          //
-          // <Dropdown.Menu>
-          // <Dropdown.Item
-          // disabled={resource.verified}
-          // onClick={() => updateResource(resource, {"verified": true})}>
-          // Zweryfikowany 👍
-          // </Dropdown.Item>
-          // <Dropdown.Item
-          // disabled={resource.cherry}
-          // onClick={() => updateResource(resource, {"cherry": true})}>
-          // Wisienka 🍒
-          // </Dropdown.Item>
-          // </Dropdown.Menu>
-          // </Dropdown>
         }
       </div>
       {compact && isCoordinator && <div className={`col col-short`}>
