@@ -1,8 +1,8 @@
-import {useState, useEffect} from 'react';
+import { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import {useFormik} from 'formik';
+import { useFormik } from 'formik';
 import axios from 'axios';
-import {getCookie} from "../scripts/utils";
+import { getCookie } from "../scripts/utils";
 
 const StyledForm = styled.form`
   display: flex;
@@ -43,7 +43,7 @@ const CustomIntRange = styled.span`
 `;
 
 
-const Input = styled.input.attrs(({type}) => ({
+const Input = styled.input.attrs(({ type }) => ({
   as: type === 'textarea' ? type : 'input'
 }))`
   height: ${p => p.type === 'checkbox' ? '22px' : '44px'};
@@ -115,7 +115,6 @@ const Field = styled.div`
 
 const Success = styled.div`
   font-size: 21px;
-  margin: 50px auto;
   text-align: center;
 `;
 
@@ -152,10 +151,11 @@ const Info = styled.div`
 `;
 
 
-const Form = ({fields, validationSchema, url, successInfo, user, primaryText, secondaryText}) => {
+const Form = ({ fields, validationSchema, url, successInfo, user, primaryText, secondaryText }) => {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
   const [whenToCall, setWhenToCall] = useState('9—22');
+
 
   useEffect(() => {
     formik.setFieldValue('when_to_call', whenToCall);
@@ -181,14 +181,14 @@ const Form = ({fields, validationSchema, url, successInfo, user, primaryText, se
   console.log('user: ', user);
   const formik = useFormik({
     initialValues: fields.filter(field => shouldRenderField(field)).reduce((acc, field) => (acc[field.name] =
-        field.type === 'checkbox' ? true :
-            field.type === 'select' ? field.options[0].value :
-                field.type === 'date' ? new Date().toISOString().split('T')[0] :
-                    field.name === 'receiver' && user ? user.id :
-                        '', acc), {}),
-    validationSchema: validationSchema({publicOnly: !user}),
-    onSubmit: async (values, {resetForm}) => {
-      const {city, ...rest} = values;
+      field.type === 'checkbox' ? true :
+        field.type === 'select' ? field.options[0].value :
+          field.type === 'date' ? new Date().toISOString().split('T')[0] :
+            field.name === 'receiver' && user ? user.id :
+              '', acc), {}),
+    validationSchema: validationSchema({ publicOnly: !user }),
+    onSubmit: async (values, { resetForm }) => {
+      const { city, ...rest } = values;
       const cityZipCodeValues = {
         ...rest,
         city_and_zip_code: `${values.city}, ${values.zip_code}`,
@@ -202,126 +202,122 @@ const Form = ({fields, validationSchema, url, successInfo, user, primaryText, se
           'X-CSRFToken': getCookie('csrftoken'),
         },
       })
-          .catch(error => {
-            console.log("TADEK ERROR: ", error);
-            error && setError(true);
-          })
-          .then(res => {
-            console.log("TADEK RESPONSE:", res);
-            if (res) {
+        .catch(error => {
+          console.log("TADEK ERROR: ", error);
+          error && setError(true);
+        })
+        .then(res => {
+          console.log("TADEK RESPONSE:", res);
+          if (res) {
+            setSuccess(true);
+            if (res.status === 201) {
               setSuccess(true);
-              if (res.status === 201) {
-                setSuccess(true);
-                resetForm();
-              } else {
-                setError(true);
-              }
+              resetForm();
+            } else {
+              setError(true);
             }
-          });
+          }
+        });
     }
   });
 
   return (
-      success ? <><Success>
-            {successInfo}</Success>
-            <div style={{maxWidth: "300px", margin: "auto"}}>
-              <Button onClick={() => setSuccess(false)}>Dodaj kolejne</Button>
-            </div>
-          </> :
-          <>
-            <Primary> {primaryText} </Primary>
-            <Secondary> {secondaryText} </Secondary>
-            {user && <Info marginTop={48}> <span> Zalogowany: {user.name} </span> </Info>}
-            {/*{error && <Info marginTop={3} > Błąd serwera. Spróbuj jeszcze raz. </Info>}*/}
+    success ? <div><Success> {successInfo}</Success>
+      <div style={{ maxWidth: "300px", margin: "auto" }}>
+        <Button onClick={() => setSuccess(false)}>Dodaj kolejne</Button>
+      </div>
+    </div> :
+      <div style={{ marginTop: 100 }}>
+        <Primary> {primaryText} </Primary>
+        <Secondary> {secondaryText} </Secondary>
+        {user && <Info marginTop={48}> <span> Zalogowany: {user.name} </span> </Info>}
+        {/*{error && <Info marginTop={3} > Błąd serwera. Spróbuj jeszcze raz. </Info>}*/}
 
-            <StyledForm onSubmit={formik.handleSubmit}>
-              {fields
-                  .filter(field => user ? field : !field.loggedUser)
-                  .filter(field => !user ? field : !field.publicOnly)
-                  .map(field => {
-                    return <Field key={field.name} alert={formik.errors[field.name] && formik.touched[field.name]}>
-                      {field.type === 'hidden' || field.type === 'checkbox' ? null :
-                          <>
-                            <Label htmlFor={field.name}>{field.label}</Label>
-                            {field.subHeading && <SubHeading> {field.subHeading}</SubHeading>}
-                          </>}
-                      {field.type === 'radio' ?
-                          <RadioField>
-                            {field.choice.map(choice => {
-                              return <RadioChoice key={choice.value}>
-                                <input
-                                    type={field.type}
-                                    name={field.name}
-                                    value={choice.value}
-                                    onChange={formik.handleChange}
-                                />
-                                <span>{choice.label}</span>
-                              </RadioChoice>;
-                            })}
-                          </RadioField>
-                          : field.type === 'select' ?
-                              <SelectField
-                                  name={field.name}
-                                  value={field.value}
-                                  onChange={formik.handleChange}
-                              >
-                                {field.options.map(option => <option key={option.value} value={option.value}>
-                                  {option.label}
-                                </option>)}
-                              </SelectField>
-                              : field.type === 'custom_int_range' && field.name === 'when_to_call' ?
-                                  <CustomIntRange>
-                                    <Input
-                                        id={field.name}
-                                        name={field.name}
-                                        type="number"
-                                        onChange={(e) => setWhenToCall(e.currentTarget.value + '—' + whenToCall.split('—')[1])}
-                                        value={whenToCall.split('—')[0]}
-                                        onWheel={(e) => e.target.blur()}
-                                        min={0}
-                                        max={24}
-                                    />
-                                    <Input
-                                        id={field.name}
-                                        name={field.name}
-                                        type="number"
-                                        onWheel={(e) => e.target.blur()}
-                                        onChange={(e) => setWhenToCall(whenToCall.split('—')[0] + '—' + e.currentTarget.value)}
-                                        value={whenToCall.split('—')[1]}
-                                        min={0}
-                                        max={24}
-                                    />
-                                  </CustomIntRange>
-                                  : <Input
-                                      id={field.name}
-                                      name={field.name}
-                                      type={field.type}
-                                      onChange={formik.handleChange}
-                                      onWheel={(e) => e.target.blur()}
-                                      value={formik.values[field.name]}
-                                      min={field.type === 'number' ? 1 : null}
-                                      max={field.type === 'number' ? 100 : null}
-                                  />
-                      }
-                      {field.type === 'checkbox' ? <>
-                        <Label type="checkbox" htmlFor={field.name}>{field.label}</Label>
-                        {field.subHeading && <SubHeading indent> {field.subHeading}</SubHeading>}
-                      </> : null}
-                      {formik.errors[field.name] && formik.touched[field.name] ? (
-                          <Alert role="alert"> {formik.errors[field.name]} </Alert>
-                      ) : null}
-                    </Field>;
-                  })}
+        <StyledForm onSubmit={formik.handleSubmit}>
+          {fields
+            .filter(field => user ? field : !field.loggedUser)
+            .filter(field => !user ? field : !field.publicOnly)
+            .map(field => {
+              return <Field key={field.name} alert={formik.errors[field.name] && formik.touched[field.name]}>
+                {field.type === 'hidden' || field.type === 'checkbox' ? null :
+                  <>
+                    <Label htmlFor={field.name}>{field.label}</Label>
+                    {field.subHeading && <SubHeading> {field.subHeading}</SubHeading>}
+                  </>}
+                {field.type === 'radio' ?
+                  <RadioField>
+                    {field.choice.map(choice => {
+                      return <RadioChoice key={choice.value}>
+                        <input
+                          type={field.type}
+                          name={field.name}
+                          value={choice.value}
+                          onChange={formik.handleChange}
+                        />
+                        <span>{choice.label}</span>
+                      </RadioChoice>;
+                    })}
+                  </RadioField>
+                  : field.type === 'select' ?
+                    <SelectField
+                      name={field.name}
+                      value={field.value}
+                      onChange={formik.handleChange}
+                    >
+                      {field.options.map(option => <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>)}
+                    </SelectField>
+                    : field.type === 'custom_int_range' && field.name === 'when_to_call' ?
+                      <CustomIntRange>
+                        <Input
+                          id={field.name}
+                          name={field.name}
+                          type="number"
+                          onChange={(e) => setWhenToCall(e.currentTarget.value + '—' + whenToCall.split('—')[1])}
+                          value={whenToCall.split('—')[0]}
+                          min={0}
+                          max={24}
+                        />
+                        <Input
+                          id={field.name}
+                          name={field.name}
+                          type="number"
+                          onChange={(e) => setWhenToCall(whenToCall.split('—')[0] + '—' + e.currentTarget.value)}
+                          value={whenToCall.split('—')[1]}
+                          min={0}
+                          max={24}
+                        />
+                      </CustomIntRange>
+                      : <Input
+                        id={field.name}
+                        name={field.name}
+                        type={field.type}
+                        onChange={formik.handleChange}
+                        value={formik.values[field.name]}
+                        min={field.type === 'number' ? 1 : null}
+                        max={field.type === 'number' ? 100 : null}
+                      />
+                }
+                {field.type === 'checkbox' ? <>
+                  <Label type="checkbox" htmlFor={field.name}>{field.label}</Label>
+                  {field.subHeading && <SubHeading indent> {field.subHeading}</SubHeading>}
+                </> : null}
+                {formik.errors[field.name] && formik.touched[field.name] ? (
+                  <Alert role="alert"> {formik.errors[field.name]} </Alert>
+                ) : null}
+              </Field>;
+            })}
 
-              <Button
-                  type="submit"
-                  disabled={formik.isSubmitting}
-              >
-                Wyślij
-              </Button>
+          <Button
+            type="submit"
+            disabled={formik.isSubmitting}
+          >
+            Wyślij
+          </Button>
 
-            </StyledForm>
-          </>
+        </StyledForm>
+      </div>
 
   );
 };

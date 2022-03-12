@@ -1,29 +1,45 @@
+import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Logo from './Logo.js';
 import Menu from './Menu.js';
 import { Link } from "react-router-dom";
 
 const StyledHeader = styled.div`
-  padding-top: 16px;
-  height: 100px;
+  padding-top: ${p => p.sticky ? '2px' : '16px'};
+  position: ${p => p.sticky ? 'fixed' : 'absolute'}; 
+  background-color: ${p => p.sticky ? '#F7F7F7' : 'transparent'}; 
+  padding-top: 6px;
+  padding-bottom: 7px;
+  top: 0;
+  width: 100%;
 
-  .Logo {
-      margin: auto;
-      width: 80px;
-      cursor: pointer;
+  > a {
+    display: block;
+    margin: auto; 
+    width:  ${p => p.sticky ? '105px' : '90px'};
   }
-
+ 
 `;
 
-
 const Header = () => {
+  const [scrollPosition, setScrollPosition] = useState(0);
+  const handleScroll = () => {
+    setScrollPosition(window.pageYOffset);
+  };
+
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   return (
-    <StyledHeader>
+    <StyledHeader sticky={scrollPosition > 90}>
       <Link to="/">
-        <Logo className="Logo" />
+        <Logo compact={scrollPosition > 90} />
       </Link>
-      <Menu className="Menu" />
+      <Menu   />
     </StyledHeader>
   );
 };

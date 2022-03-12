@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import Header from '../components/Header.js';
 import BigButton from '../components/BigButton.js';
 import Form from '../components/Form.js';
-import Footer from '../components/Footer.js';
 import Privacy from '../components/Privacy.js';
 import { fields1, fields2, validationSchema1, validationSchema2 } from './formSchema';
 import {
@@ -14,17 +13,18 @@ import {
   Link,
   useLocation
 } from "react-router-dom";
+import { colors } from '../theme';
+
 
 const StyledApp = styled.div`
   font-family: 'proxima-nova', sans-serif;
   max-width: 1400px;
   color: #212121;
   margin: auto;
-  display: ${p => p.homapage ? 'flex' : 'initial'};
-  flex-direction: ${p => p.homapage ? 'column' : 'initial'};
-  position: ${p => p.homapage ? 'relative' : 'initial'};
-  justify-content: ${p => p.homapage ? 'space-between' : 'initial'};
-  min-height: ${p => p.homapage ? '100%' : 'initial'};
+  display: flex;
+  min-height: 100%;
+  justify-content: center;
+  align-items: center;
 
   .Footer {
     justify-content: flex-end;
@@ -71,20 +71,19 @@ const App = ({ userData }) => {
               <BigButton
                 primaryText="Udostępniam nocleg"
                 secondaryText="Можу надати житло"
-                color="#fff"
-                backgroundColor="#000"
+                outlined
+                color={colors.veryDarkGrey}
               />
             </Link>
             <Link to="/find">
               <BigButton
                 primaryText="Потребує житло"
                 secondaryText="Szukam noclegu"
-                color="#000"
+                color={colors.veryDarkGrey}
                 backgroundColor="#FFD200"
               />
             </Link>
           </ButtonWrap>
-          <Footer className="Footer" />
         </>} />
         <Route path="/share" element={<>
           <Form
@@ -95,7 +94,6 @@ const App = ({ userData }) => {
             url='/api/stworz_zasob'
             successInfo='Dziękujemy za zgłoszenie.'
           />
-          <Footer className="Footer" />
         </>} />
         <Route path="/find" element={<>
           <Form
@@ -107,20 +105,18 @@ const App = ({ userData }) => {
             successInfo='Дякуємо за подання.'
             user={user}
           />
-          <Footer className="Footer" />
         </>} />
         <Route path="/jazda/stolik" element={<>
           <Form
-              primaryText="Потребує житло"
-              secondaryText="Szukam noclegu"
-              fields={fields2}
-              validationSchema={validationSchema2}
-              url='/api/zglos'
-              successInfo='Дякуємо за подання.'
-              user={user}
+            primaryText="Потребує житло"
+            secondaryText="Szukam noclegu"
+            fields={fields2}
+            validationSchema={validationSchema2}
+            url='/api/zglos'
+            successInfo='Дякуємо за подання.'
+            user={user}
           />
-          <Footer className="Footer"/>
-        </>}/>
+        </>} />
         <Route path="/privacy" element={<Privacy />} />
       </Routes>
 
