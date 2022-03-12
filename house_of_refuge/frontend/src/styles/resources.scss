@@ -81,6 +81,43 @@ a {
   overflow: hidden;
 }
 
+.tr-host {
+  td,
+  th {
+    border-color: black;
+    background-color: azure;
+  }
+}
+
+.table {
+  margin-bottom: 0;
+  border-radius: 8px;
+
+  td,
+  th {
+    padding: 1px;
+    vertical-align: middle;
+  }
+}
+
+.sub-table {
+  background-color: white;
+  font-size: 12px;
+  border-radius: 0;
+
+  th {
+    padding-left: 2px;
+  }
+
+  tr:last-child {
+    td,
+    th {
+      border: 0;
+      vertical-align: middle;
+    }
+  }
+}
+
 .resource-row {
   display: flex;
   flex-direction: column;
@@ -141,6 +178,11 @@ a {
 
   .row-expanded {
     margin-bottom: 10px;
+
+    th:nth-of-type(odd):not([colspan="3"]),
+    td:nth-of-type(odd):not([colspan="3"]) {
+      background-color: rgba(#000, 0.05);
+    }
   }
 
   &:first-child {
@@ -216,43 +258,6 @@ a {
 .row-ignore {
   background-color: $our-red;
   color: inherit;
-}
-
-.table {
-  margin-bottom: 0;
-  border-radius: 8px;
-
-  td,
-  th {
-    padding: 1px;
-    vertical-align: middle;
-  }
-}
-
-.tr-host {
-  td,
-  th {
-    border-color: black;
-    background-color: azure;
-  }
-}
-
-.sub-table {
-  background-color: white;
-  font-size: 12px;
-  border-radius: 0;
-
-  th {
-    padding-left: 2px;
-  }
-
-  tr:last-child {
-    td,
-    th {
-      border: 0;
-      vertical-align: middle;
-    }
-  }
 }
 
 .submission-row {
