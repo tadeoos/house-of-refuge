@@ -212,12 +212,80 @@ a {
   color: inherit;
 }
 
+.table {
+  margin-bottom: 0;
+  border-radius: 8px;
+
+  td,
+  th {
+    padding: 1px;
+    vertical-align: middle;
+  }
+}
+
+.tr-host {
+  td,
+  th {
+    border-color: black;
+    background-color: azure;
+  }
+}
+
+.sub-table {
+  background-color: white;
+  font-size: 12px;
+  border-radius: 0;
+
+  th {
+    padding-left: 2px;
+  }
+
+  tr:last-child {
+    td,
+    th {
+      border: 0;
+      vertical-align: middle;
+    }
+  }
+}
+
 .submission-row {
   border: 1px black solid;
   border-radius: 10px;
   margin: 20px 2px;
 
   /* padding: 10px; */
+
+  tr:not(.tr-host) {
+    &:not(:last-child) th:nth-of-type(odd),
+    &:not(:last-child) td:nth-of-type(odd),
+    &:last-child td:nth-of-type(odd):not(:empty),
+    &:last-child th:nth-of-type(odd):not(:empty) {
+      background-color: rgba(#000, 0.05) !important;
+    }
+  }
+
+  &.sub-searching {
+    tr:not(.tr-host) {
+      &:not(:last-child) th:nth-of-type(odd),
+      &:not(:last-child) td:nth-of-type(odd),
+      &:last-child td:nth-of-type(odd):not(:empty),
+      &:last-child th:nth-of-type(odd):not(:empty) {
+        background-color: rgba(#f9d200, 0.05) !important;
+      }
+    }
+  }
+
+  &.sub-in-progress-host-coming:not(.sub-searching) {
+    tr:not(.tr-host) {
+      &:not(:last-child) th:nth-of-type(odd),
+      &:not(:last-child) td:nth-of-type(odd),
+      &:last-child td:nth-of-type(odd):not(:empty),
+      &:last-child th:nth-of-type(odd):not(:empty) {
+        background-color: rgba(#d33e43, 0.05) !important;
+      }
+    }
+  }
 }
 
 .rename-input {
@@ -269,39 +337,6 @@ a {
 .sub-searching {
   background-color: $our-yellow !important;
   border-color: $our-yellow;
-}
-
-.tr-host {
-  td,
-  th {
-    border-color: black;
-    background-color: azure;
-  }
-}
-
-.table {
-  margin-bottom: 0;
-  border-radius: 8px;
-
-  td,
-  th {
-    padding: 1px;
-    vertical-align: middle;
-  }
-}
-
-.sub-table {
-  background-color: white;
-  font-size: 12px;
-  border-radius: 0;
-
-  tr:last-child {
-    td,
-    th {
-      border: 0;
-      vertical-align: middle;
-    }
-  }
 }
 
 .coordinators {
