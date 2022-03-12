@@ -59,8 +59,10 @@ export function SubmissionRow({sub, activeHandler, user, isGroupCoordinator, isA
     activeHandler(sub, isActive);
   };
 
+
+
   const getActionBtn = () => {
-    if (readOnly) {
+    if (readOnly || isActive) {
       return "";
     }
     if (localSub.status === "in_progress") {
@@ -200,6 +202,15 @@ export function SubmissionRow({sub, activeHandler, user, isGroupCoordinator, isA
         <td className={"text-center"} colSpan={2}><Button variant={"secondary"} size={"sm"} onClick={() => updateStatus([{value: "cancelled"}])}>Nieaktualne</Button></td>
         <td colSpan={4}/>
         <td className={"text-center"} colSpan={2}><Button variant={"success"} size={"sm"} onClick={() => updateStatus([{value: "success"}])}>Sukces</Button></td>
+      </tr>}
+      {isActive && !readOnly && <tr>
+        <td className={"text-center"} colSpan={2}><Button variant={"secondary"} size={"sm"}
+                                                          onClick={() => activeHandler(sub, true, true)}>Nieaktualne</Button>
+        </td>
+        <td colSpan={4}/>
+        <td className={"text-center"} colSpan={2}><Button variant={"primary"} size={"sm"}
+                                                          onClick={btnHandler}>Zwolnij</Button>
+        </td>
       </tr>}
       {isGroupAdmin && !isActive && !readOnly && <tr>
         <th>Akcje koordynatora</th>

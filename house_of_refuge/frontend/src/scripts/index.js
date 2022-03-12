@@ -184,12 +184,13 @@ const App = ({subs, userData, coordinators, helped}) => {
 
   const clearActiveSub = () => setActiveSub(null);
 
-  const subIsTaken = (sub, isActive = false) => {
+  const subIsTaken = (sub, isActive = false, discard = false) => {
     console.log("sub taken");
     let fields;
     if (isActive) {
       // no match found... we're clearing the status
-      fields = {"status": "new", "matcher_id": null};
+      const status = discard ? "cancelled" : "new";
+      fields = {"status": status, "matcher_id": null};
     } else {
       fields = {"status": "searching", "matcher_id": userData.id};
     }
