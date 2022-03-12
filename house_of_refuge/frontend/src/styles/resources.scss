@@ -12,16 +12,30 @@ body {
   /* font-family: proxima-nova, sans-serif; */
 }
 
+#react {
+  display: flex;
+  flex-direction: column;
+  max-height: 100vh;
+}
+
 a {
   color: black;
 }
 
+.r-id-col {
+  max-width: 60px;
+  overflow: auto;
+}
+
 .column-headers {
   display: flex;
+  border-bottom: 2px solid #696969;
+
+  /* Hack to align with body columns when scrollbar is not overlayed but takes up space */
+  overflow-y: scroll;
 
   .col-head {
     text-align: center;
-    border-bottom: 1px solid black;
     display: flex;
     flex-direction: column;
     font-weight: bold;
@@ -32,15 +46,76 @@ a {
       align-items: center;
     }
   }
+
+  .r-id-col {
+    font-weight: bold;
+  }
+}
+
+.col-head-display-wrapper,
+.col-head-emoji {
+  margin-right: 0.5em;
 }
 
 .col {
+  flex: 1 0 50px;
   padding: 2px;
   width: 250px;
-  border: 1px solid black;
-  border-bottom: 0;
+  border-top: 1px solid #696969;
+  border-right: 1px solid #696969;
   font-size: 12px;
   text-align: center;
+
+  &:first-child {
+    border-left: 1px solid #696969;
+  }
+
+  &:last-child {
+    border-right: 0;
+  }
+}
+
+.col-hot-sort {
+  width: auto;
+  max-width: 160px;
+  overflow: hidden;
+}
+
+.tr-host {
+  td,
+  th {
+    border-color: black;
+    background-color: azure;
+  }
+}
+
+.table {
+  margin-bottom: 0;
+  border-radius: 8px;
+
+  td,
+  th {
+    padding: 1px;
+    vertical-align: middle;
+  }
+}
+
+.sub-table {
+  background-color: white;
+  font-size: 12px;
+  border-radius: 0;
+
+  th {
+    padding-left: 2px;
+  }
+
+  tr:last-child {
+    td,
+    th {
+      border: 0;
+      vertical-align: middle;
+    }
+  }
 }
 
 .resource-row {
@@ -52,18 +127,74 @@ a {
     display: flex;
 
     .col {
+      display: flex;
+      align-items: center;
+      justify-content: center;
       cursor: pointer;
+    }
+
+    .col-availability {
+      padding: 0;
+      border-bottom: 0;
+      overflow: hidden;
+
+      input {
+        min-height: 40px;
+        padding: 2px;
+        width: 100%;
+        border: 0;
+        border-radius: 0;
+        background: transparent;
+        color: inherit;
+        box-shadow: 0 1px 1px #696969;
+      }
+    }
+  }
+
+  .col-hot-sort {
+    padding: 0;
+
+    .btn-group {
+      border-radius: 0;
+      height: 100%;
+      width: 100%;
+
+      .btn {
+        border: 0;
+        border-right: 1px solid #696969;
+        border-radius: 0;
+        margin: 0 !important;
+
+        &:last-child {
+          border: 0;
+        }
+      }
+
+      .btn:focus {
+        box-shadow: none !important;
+      }
     }
   }
 
   .row-expanded {
     margin-bottom: 10px;
+
+    th:nth-of-type(odd):not([colspan="3"]),
+    td:nth-of-type(odd):not([colspan="3"]) {
+      background-color: rgba(#000, 0.05);
+    }
+  }
+
+  &:first-child {
+    .col {
+      border-top: 0;
+    }
   }
 
   /* border: 1px solid black;
   border-bottom: 0; */
   &:last-child {
-    border-bottom: 1px solid black;
+    border-bottom: 1px solid #696969;
   }
 }
 
@@ -96,30 +227,37 @@ a {
 
 .row-verified {
   background-color: #f9dae6;
+  color: inherit;
 }
 
 .row-cherry {
   background-color: #b76780;
+  color: #fff;
 }
 
 .row-dropped {
   background-color: lightcyan;
+  color: inherit;
 }
 
 .row-ready {
   background-color: #b5ffe1 !important;
+  color: inherit;
 }
 
 .row-processing {
   background-color: #ff6d01;
+  color: inherit;
 }
 
 .row-success {
   background-color: $our-green;
+  color: inherit;
 }
 
 .row-ignore {
   background-color: $our-red;
+  color: inherit;
 }
 
 .submission-row {
@@ -128,6 +266,37 @@ a {
   margin: 20px 2px;
 
   /* padding: 10px; */
+
+  tr:not(.no-striping):not(.tr-host) {
+    &:not(:last-child) th:nth-of-type(odd),
+    &:not(:last-child) td:nth-of-type(odd),
+    &:last-child td:nth-of-type(odd):not(:empty),
+    &:last-child th:nth-of-type(odd):not(:empty) {
+      background-color: rgba(#000, 0.03) !important;
+    }
+  }
+
+  &.sub-searching {
+    tr:not(.no-striping):not(.tr-host) {
+      &:not(:last-child) th:nth-of-type(odd),
+      &:not(:last-child) td:nth-of-type(odd),
+      &:last-child td:nth-of-type(odd):not(:empty),
+      &:last-child th:nth-of-type(odd):not(:empty) {
+        background-color: rgba(#f9d200, 0.05) !important;
+      }
+    }
+  }
+
+  &.sub-in-progress-host-coming:not(.sub-searching) {
+    tr:not(.no-striping):not(.tr-host) {
+      &:not(:last-child) th:nth-of-type(odd),
+      &:not(:last-child) td:nth-of-type(odd),
+      &:last-child td:nth-of-type(odd):not(:empty),
+      &:last-child th:nth-of-type(odd):not(:empty) {
+        background-color: rgba(#d33e43, 0.05) !important;
+      }
+    }
+  }
 }
 
 .rename-input {
@@ -168,6 +337,7 @@ a {
 .sub-in-progress-host-coming {
   background-color: $our-red !important;
   border-color: $our-red;
+  color: #fff;
 }
 
 .sub-in-progress {
@@ -178,39 +348,6 @@ a {
 .sub-searching {
   background-color: $our-yellow !important;
   border-color: $our-yellow;
-}
-
-.tr-host {
-  td,
-  th {
-    border-color: black;
-    background-color: azure;
-  }
-}
-
-.table {
-  margin-bottom: 0;
-  border-radius: 8px;
-
-  td,
-  th {
-    padding: 1px;
-    vertical-align: middle;
-  }
-}
-
-.sub-table {
-  background-color: white;
-  font-size: 12px;
-  border-radius: 0;
-
-  tr:last-child {
-    td,
-    th {
-      border: 0;
-      vertical-align: middle;
-    }
-  }
 }
 
 .coordinators {
@@ -240,7 +377,7 @@ a {
   position: sticky;
   top: 40px;
   max-height: 40vh;
-  overflow: scroll;
+  overflow: auto;
 }
 
 .sub-id {
@@ -249,13 +386,8 @@ a {
   font-weight: bolder;
 }
 
-.r-id-col {
-  max-width: 60px;
-  overflow: scroll;
-}
-
 .col-short {
-  max-width: 100px;
+  max-width: 120px;
 }
 
 /* .sub-active {
@@ -272,13 +404,13 @@ a {
 }
 
 .resource-rows {
-  overflow: scroll;
+  overflow: auto;
   max-height: 400px;
 }
 
 .submission-list {
-  overflow: scroll;
-  max-height: 500px;
+  flex: 1;
+  overflow: auto;
 }
 
 .panel-header {
@@ -368,6 +500,12 @@ a {
   border: 30px solid #1d53c0;
   border-right-color: transparent;
   transform-origin: 0 0;
+}
+
+.switch.on,
+.switch-on {
+  background-color: green !important;
+  border-color: green !important;
 }
 
 /* animations */

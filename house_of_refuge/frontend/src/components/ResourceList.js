@@ -16,9 +16,18 @@ const SHOW_NUMBER = 50;
 const ColumnHeader = ({col, sortHandler, isSorting, sortDirection, filterData}) => {
   const iconClass = isSorting ? "sort-active" : "sort-muted";
 
-  return <div className={`col-head col ${shortCols.includes(col.fieldName) ? "col-short" : ""}`}>
+  const classes = ["col-head", "col", `col-${col.fieldName.replace(/_/g, '-')}`];
+  if (shortCols.includes(col.fieldName)) {
+    classes.push("col-short");
+  }
+
+  return <div className={classes.join(' ')}>
     <div className={'top'}>
-      {col.display} {sortDirection === "asc" ?
+      <span className="col-head-display-wrapper">
+        {col.emoji && <span className="col-head-emoji">{col.emoji}</span>}
+        {col.display}
+      </span>
+      {sortDirection === "asc" ?
         <SortUp className={iconClass} onClick={() => sortHandler(col.fieldName)}/> : <SortDown
             className={iconClass} onClick={() => sortHandler(col.fieldName)}/>}
     </div>
@@ -61,13 +70,13 @@ export const ResourceList = ({initialResources, sub, subHandler, user, clearActi
   }, [page]);
 
   const [columnsData] = useState({
-    name: {fieldName: 'name', display: "👱 Imie", sort: "asc"},
-    address: {fieldName: 'address', display: "🏘 Adres", sort: "asc"},
-    people_to_accommodate: {fieldName: 'people_to_accommodate', display: "👨‍👩‍👧‍👦 Ilu ludzi?", sort: "asc"},
-    accommodation_length: {fieldName: 'accommodation_length', display: "🕙 Na jak długo?", sort: "asc"},
-    resource: {fieldName: 'resource', display: "🛏 Zasób", sort: "asc"},
-    availability: {fieldName: 'availability', display: "📆 Od kiedy?", sort: "asc"},
-    status: {fieldName: 'hot_sort', display: "🌡 Gorącość", sort: "desc"},
+    name: {fieldName: 'name', display: "Imie", emoji: "👱", sort: "asc"},
+    address: {fieldName: 'address', display: "Adres", emoji: "🏘", sort: "asc"},
+    people_to_accommodate: {fieldName: 'people_to_accommodate', display: "Ilu ludzi?", emoji: "👨‍👩‍👧‍👦", sort: "asc"},
+    accommodation_length: {fieldName: 'accommodation_length', display: "Na jak długo?", emoji: "🕙", sort: "asc"},
+    resource: {fieldName: 'resource', display: "Zasób", emoji: "🛏", sort: "asc"},
+    availability: {fieldName: 'availability', display: "Od kiedy?", emoji: "📆", sort: "asc"},
+    status: {fieldName: 'hot_sort', display: "Gorącość", emoji: "🌡", sort: "desc"},
   });
 
   const matchFound = (resource, payload) => {

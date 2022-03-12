@@ -167,12 +167,12 @@ export const ResourceRow = ({resource, isExpanded, onMatch, user, activeSub, com
       {VISIBLE.map((a) => <div onClick={() => setExpanded(e => !e)}
                                className={`col ${shortCols.includes(a) ? "col-short" : ""}`}
                                key={`${resource.id}-${a}`}>{getResourceDisplay(resource[a])}</div>)}
-      <div className={"col"}>
+      <div className={"col col-availability"}>
         {compact ? getPickUpDisplay(resource.will_pick_up_now) :
             <input required type="date" min={new Date().toJSON().slice(0, 10)} value={availableFrom}
                    onChange={handleDateChange}/>}
       </div>
-      <div className={`col no-pointer`}>
+      <div className={`col no-pointer col-hot-sort`}>
         {compact ? resource.note :
             <ButtonGroup aria-label="Basic example">
               <Button variant={resource.is_hot ? "success" : "outline-success"} size={"sm"}
