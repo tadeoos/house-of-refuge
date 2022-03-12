@@ -1,22 +1,22 @@
-# House Of Refuge
+# House of Refuge
 
 [![Built with Cookiecutter Django](https://img.shields.io/badge/built%20with-Cookiecutter%20Django-ff69b4.svg?logo=cookiecutter)](https://github.com/cookiecutter/cookiecutter-django/)
 [![Black code style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
 
 License: MIT
 
-This app provides a system that helps with gathering and matching refugees and hosts willing to provide housing for them in time of need. It was first developed for Grupa Zasoby – a local grassroots initiative in Warsaw that started with a [facebook group](https://www.facebook.com/groups/zasobygrupa) on 24th of February 2022.
+This app provides a system that helps with matching refugees and hosts willing to provide housing in times of need. It was first developed for Grupa Zasoby – a local grassroots initiative in Warsaw that started with a [facebook group](https://www.facebook.com/groups/zasobygrupa) on 24th of February, 2022.
 
-This repository is currently running at https://grupazasoby.pl/
+Production instance of this repository is currently running at https://grupazasoby.pl/
 
 
 > This project is actively developed and a lot is changing daily. We are open sourcing this repo in order to make it easier for other initiatives to fork, customize, and run their own instance. We're providing this code on "as is" basis. We're planning to add better documentation in the near future as time allows.
 
 ## Contributing
 
-The default use case for an organization wanting to incorporate our process in their own work   is to find a technical person with knowledge of Python, Django and ReactJS who will then fork this repository and customize the code to better suit their needs.
+The default use case for an organization wanting to incorporate our process in their own work   is to find a technical person with knowledge of Python, Django and React who will then fork this repository, customize the code to better suit their needs, and then deploy and maintain a production instance of their own.
 
-If you just want to help and contribute to this repository please fork it and create pull requests against the master branch. It's a good idea to browse open issues for a place to start.
+If you just want to help and contribute to this repository, please fork it and create pull requests against the `master` branch. It's a good idea to browse open issues for a place to start.
 
 ## Setting up local development
 
