@@ -18,13 +18,13 @@ a {
 
 .column-headers {
   display: flex;
+  border-bottom: 2px solid black;
 
   /* Hack to align with body columns when scrollbar is not overlayed but takes up space */
   overflow-y: scroll;
 
   .col-head {
     text-align: center;
-    border-bottom: 1px solid black;
     display: flex;
     flex-direction: column;
     font-weight: bold;
@@ -45,10 +45,18 @@ a {
 .col {
   padding: 2px;
   width: 250px;
-  border: 1px solid black;
-  border-bottom: 0;
+  border-top: 1px solid black;
+  border-right: 1px solid black;
   font-size: 12px;
   text-align: center;
+
+  &:first-child {
+    border-left: 1px solid black;
+  }
+
+  &:last-child {
+    border-right: 0;
+  }
 }
 
 .col-hot-sort {
@@ -97,6 +105,12 @@ a {
 
   .row-expanded {
     margin-bottom: 10px;
+  }
+
+  &:first-child {
+    .col {
+      border-top: 0;
+    }
   }
 
   /* border: 1px solid black;
