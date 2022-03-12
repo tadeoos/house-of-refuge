@@ -52,6 +52,7 @@ a {
 }
 
 .col {
+  flex: 1 0 50px;
   padding: 2px;
   width: 250px;
   border-top: 1px solid #696969;
@@ -96,6 +97,7 @@ a {
 
       input {
         min-height: 40px;
+        padding: 2px;
         width: 100%;
         border: 0;
         border-radius: 0;
