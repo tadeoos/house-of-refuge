@@ -1,39 +1,16 @@
 {% extends "base.html" %}
 {% load static %}
-{% load i18n %}
-{% load crispy_forms_tags %}
+{% load render_bundle from webpack_loader %}
+{% block extrahead %}
+  {% render_bundle 'stats' 'css' %}
+{% endblock extrahead %}
 
-{% block title %}User stats{% endblock %}
+{% block title %}GZ - Statsy{% endblock %}
+
+
 
 {% block content %}
-  <div class="row">
-  <div class="col d-flex justify-content-end">
-    <div class="btn-group" role="group">
-      <button id="btnGroupDrop1" type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown"
-              aria-expanded="false">
-        Filtruj źródło zgłoszeń
-      </button>
-      <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-        <li><a class="dropdown-item {% if not source %}disabled{% endif %}" href="/statsy">Zewsząd</a></li>
-        <li><a class="dropdown-item {% if source == "terrain" %}disabled{% endif %}" href="/statsy?source=terrain">Dworzec</a></li>
-        <li><a class="dropdown-item {% if source == "webform" %}disabled{% endif %}" href="/statsy?source=webform">Strona</a></li>
-      </ul>
-    </div>
-  </div>
-  </div>
-  <div class="row">
-    <div class="col col-6" style="margin-bottom: 1em">
-      <canvas id="myChart" width="400" height="200"></canvas>
-    </div>
-    <div class="col col-6" style="margin-bottom: 1em">
-      <canvas id="chartPeople" width="400" height="200"></canvas>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col col-12" style="margin-bottom: 1em">
-      <canvas id="eventHoursChart" width="400" height="100"></canvas>
-    </div>
-  </div>
+  <div id="react"></div>
   <div class="row">
     {#    <div class="col-3 table-responsive">#}
     {#      <table class="table table-bordered">#}
@@ -117,136 +94,12 @@
 
 {% block inline_javascript %}
   {{ block.super }}
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  {{ labels|json_script:"labels" }}
-  {{ chart_data|json_script:"chartData" }}
-  {{ success_data|json_script:"successData" }}
-  {{ hosts_data|json_script:"hostsData" }}
 
-  {{ subs_people_data|json_script:"subsPeopleData" }}
-  {{ hosts_people_data|json_script:"hostsPeopleData" }}
-  {{ success_people_data|json_script:"successPeopleData" }}
-
-  {{ hour_labels|json_script:"hourLabels" }}
-  {{ matches_count|json_script:"matchesCount" }}
-  {#  {{ users_data|json_script:"usersData" }}#}
-  {#  {{ events_times_chart|json_script:"eventsTimesChartData" }}#}
-  <script type="text/javascript">
-
-    //    const getCellValue = (tr, idx) => tr.children[idx].innerText || tr.children[idx].textContent;
-    //
-    //    const comparer = (idx, asc) => (a, b) => ((v1, v2) =>
-    //        v1 !== '' && v2 !== '' && !isNaN(v1) && !isNaN(v2) ? v1 - v2 : v1.toString().localeCompare(v2)
-    //    )(getCellValue(asc ? a : b, idx), getCellValue(asc ? b : a, idx));
-    //
-    //    // do the work...
-    //    document.querySelectorAll('th').forEach(th => th.addEventListener('click', (() => {
-    //      const table = th.closest('table');
-    //      Array.from(table.querySelectorAll('tr:nth-child(n+2)'))
-    //        .sort(comparer(Array.from(th.parentNode.children).indexOf(th), this.asc = !this.asc))
-    //        .forEach((tr, index) => {
-    //          tr.querySelector('td:first-child').innerHTML = index + 1;
-    //          table.appendChild(tr)
-    //        });
-    //    })));
-
-    const ctx = document.getElementById('myChart').getContext('2d');
-    const labels = JSON.parse(document.getElementById('labels').textContent);
-    const data = {
-      labels: labels,
-      datasets: [
-        {
-          label: 'Zgłoszenia',
-          backgroundColor: '#FFD200',
-          borderColor: '#FFD200',
-          data: JSON.parse(document.getElementById('chartData').textContent),
-        },
-        {
-          label: 'Noclegi',
-          backgroundColor: '#D33E43',
-          borderColor: '#D33E43',
-          data: JSON.parse(document.getElementById('hostsData').textContent),
-        },
-        {
-          label: 'Sukcesy',
-          backgroundColor: '#519872',
-          borderColor: '#519872',
-          data: JSON.parse(document.getElementById('successData').textContent),
-        },
-      ]
-    };
-    const config = {
-      type: 'line',
-      data: data,
-      options: {
-        plugins: {
-          title: {
-            display: true,
-            text: 'Dane wyrażone w liczbie rekordów'
-          }
-        }
-      }
-    };
-    const myChart = new Chart(ctx, config);
-
-
-    const peopleCtx = document.getElementById('chartPeople').getContext('2d');
-    const peopleData = {
-      labels: labels,
-      datasets: [
-        {
-          label: 'Potrzebujący ludzie',
-          backgroundColor: '#FFD200',
-          borderColor: '#FFD200',
-          data: JSON.parse(document.getElementById('subsPeopleData').textContent),
-        },
-        {
-          label: 'Miejsca noclegowe',
-          backgroundColor: '#D33E43',
-          borderColor: '#D33E43',
-          data: JSON.parse(document.getElementById('hostsPeopleData').textContent),
-        },
-        {
-          label: 'Zakwaterowani ludzie',
-          backgroundColor: '#519872',
-          borderColor: '#519872',
-          data: JSON.parse(document.getElementById('successPeopleData').textContent),
-        },
-      ]
-    };
-    const chartPeople = new Chart(peopleCtx, {
-      type: 'line',
-      data: peopleData,
-      options: {
-        plugins: {
-          title: {
-            display: true,
-            text: 'Dane wyrażone w liczbie ludzi'
-          }
-        }
-      }
-    });
-
-    const ctxEvents = document.getElementById('eventHoursChart').getContext('2d');
-
-    const labelsEvents = JSON.parse(document.getElementById('hourLabels').textContent);
-    const dataEvents = {
-      labels: labelsEvents,
-      datasets: [
-        {
-          label: 'Liczba znalezionych hostów w danej godzinie',
-          backgroundColor: '#005EAA',
-          borderColor: '#005EAA',
-          maxBarThickness: 30,
-          data: JSON.parse(document.getElementById('matchesCount').textContent),
-        },
-      ],
-    };
-    const eventsConfig = {
-      type: 'bar',
-      data: dataEvents,
-      options: {}
-    };
-    const eventsChart = new Chart(ctxEvents, eventsConfig);
+  {{ props|json_script:"pageProps" }}
+  <script>
+    window.props = JSON.parse(document.getElementById('pageProps').textContent);
+    window.react_mount = document.getElementById('react');
   </script>
+  {% render_bundle 'stats' 'js' %}
+
 {% endblock %}

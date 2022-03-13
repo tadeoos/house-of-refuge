@@ -9,6 +9,7 @@ from django.db.models import Manager, Q, Count
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.crypto import get_random_string
+from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 from model_utils.models import TimeStampedModel
 
@@ -154,6 +155,14 @@ class HousingResource(TimeStampedModel):
     @property
     def compact_display(self):
         return f"{self.name} {self.get_resource_display()}, {self.full_address}\n{self.extra}"
+
+    def for_stats(self):
+        return dict(
+            created=self.created,
+            status=self.status,
+            people_count=self.people_to_accommodate,
+            day=get_our_today_cutoff(self.created),
+        )
 
     def for_edit(self):
         return dict(
@@ -362,6 +371,48 @@ class Submission(TimeStampedModel):
         self.resource.availability = get_our_today_cutoff()
         self.resource.save()
 
+    @cached_property
+    def first_searched_date(self):
+        try:
+            return self.changes.filter(
+                change__icontains="status': 'searching'"
+            ).earliest("created").created.astimezone(
+                timezone.get_default_timezone()
+            )
+        except ObjectChange.DoesNotExist:
+            return None
+
+    @cached_property
+    def first_matched_date(self):
+        try:
+            return self.changes.filter(
+                change__icontains="matched host"
+            ).earliest("created").created.astimezone(
+                timezone.get_default_timezone()
+            )
+        except ObjectChange.DoesNotExist:
+            return None
+
+    def for_stats(self):
+        first_searched = self.first_searched_date
+        first_match = self.first_matched_date
+        return dict(
+            id=self.id,
+            created=self.created,
+            created_day=self.created.date(),
+            created_hour=self.created.hour,
+            status=self.status,
+            finished_at=self.finished_at,
+            finished_day=get_our_today_cutoff(self.finished_at) if self.finished_at else None,
+            source=self.source,
+            people_count=self.people_as_int,
+            day=get_our_today_cutoff(self.created),
+            first_searched=first_searched,
+            first_searched_hour=first_searched.hour if first_searched else None,
+            first_match=first_match,
+            first_match_hour=first_match.hour if first_match else None
+        )
+
     def handle_gone(self):
         self.status = SubStatus.CANCELLED
         if self.resource:
@@ -432,9 +483,14 @@ class Coordinator(TimeStampedModel):
 
 class ObjectChange(TimeStampedModel):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    submission = models.ForeignKey(Submission, on_delete=models.SET_NULL, null=True)
-    host = models.ForeignKey(HousingResource, on_delete=models.SET_NULL, null=True)
+    submission = models.ForeignKey(Submission, on_delete=models.SET_NULL, null=True, related_name="changes")
+    host = models.ForeignKey(HousingResource, on_delete=models.SET_NULL, null=True, related_name="changes")
     change = models.CharField(max_length=2048)
+
+    def __str__(self):
+        return f"{self.user}: {self.change}" \
+               f" (sub={getattr(self.submission, 'id', None)})" \
+               f" (host={getattr(self.host, 'id', None)})"
 
     class Meta:
         verbose_name = "Zmiana Rekordu"

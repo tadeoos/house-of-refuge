@@ -309,37 +309,16 @@ def day_iterator(start_date):
         yield start_week, end_date
 
 
+@login_required
+def get_stats_data(request):
+    props_subs = [s.for_stats() for s in Submission.objects.prefetch_related("changes").all().order_by('created')]
+    props_hosts = [h.for_stats() for h in HousingResource.objects.exclude_excels()]
+    return JsonResponse({"data": dict(submissions=props_subs, hosts=props_hosts)})
+
+
 @staff_member_required
 def activity_stats_view(request):
-    source = request.GET.get("source", None)
-    labels = []
-    subs_data = []
-    success_data = []
-    hosts_data = []
-
-    subs_people_data = []
-    success_people_data = []
-    hosts_people_data = []
-
     base_start = Submission.objects.earliest("created").created
-    for start, end in day_iterator(base_start):
-        labels.append(str(start.date()))
-        hosts_added = HousingResource.objects.exclude_excels().filter(created__range=(start, end))
-
-        subs_created = Submission.objects.filter(created__range=(start, end))
-        successful = Submission.objects.filter(finished_at__range=(start, end), status="success")
-
-        if source:
-            subs_created = subs_created.filter(source=source)
-            successful = successful.filter(source=source)
-
-        subs_data.append(subs_created.count())
-        success_data.append(successful.count())
-        hosts_data.append(hosts_added.count())
-
-        subs_people_data.append(sum(s.people_as_int for s in subs_created))
-        success_people_data.append(sum(s.people_as_int for s in successful))
-        hosts_people_data.append(sum(h.people_to_accommodate for h in hosts_added))
 
     all_hosts = HousingResource.objects.all().count()
     all_subs = Submission.objects.all().count()
@@ -350,39 +329,11 @@ def activity_stats_view(request):
     terrain_success = Submission.objects.filter(source=SubSource.TERRAIN, status=SubStatus.SUCCESS).count()
     terrain_cancelled = Submission.objects.filter(source=SubSource.TERRAIN, status=SubStatus.CANCELLED).count()
 
-    TOP = 10
-
-    # top_matchers = User.objects.all().annotate(mc=Count('matched_subs')).order_by('-mc')[:TOP]
-    # top_receivers = User.objects.all().annotate(mc=Count('received_subs')).order_by('-mc')[:TOP]
-    # top_coords = User.objects.all().annotate(mc=Count('coord_subs')).order_by('-mc')[:TOP]
-
-    matches = ObjectChange.objects.filter(change__icontains="matched host")
-    if source:
-        matches = matches.filter(submission__source=source)
-
-    c = Counter(m.hour for m in matches.values_list("created", flat=True))
-    hour_labels = []
-    matches_count = []
-    for hour, count in sorted(c.items()):
-        hour_labels.append(f"{hour}")
-        matches_count.append(count)
-
     context = dict(
-        labels=labels,
-        source=source,
-        chart_data=subs_data,
-        success_data=success_data,
-        subs_people_data=subs_people_data,
-        success_people_data=success_people_data,
-        hosts_people_data=hosts_people_data,
+        no_nav=True,
+        props=dict(startDate=base_start),
         all_subs=all_subs,
         all_hosts=all_hosts,
-        hosts_data=hosts_data,
-        # top_matchers=top_matchers,
-        # top_receivers=top_receivers,
-        # top_coords=top_coords,
-        hour_labels=hour_labels,
-        matches_count=matches_count,
         all_success=all_success,
         all_cancelled=all_cancelled,
         terrain_subs=terrain_subs,
