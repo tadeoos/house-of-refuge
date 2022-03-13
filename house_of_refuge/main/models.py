@@ -398,8 +398,8 @@ class Submission(TimeStampedModel):
         first_match = self.first_matched_date
         return dict(
             id=self.id,
-            created=self.created,
-            created_day=self.created.date(),
+            created=self.created.astimezone(timezone.get_default_timezone()),
+            created_day=self.created.astimezone(timezone.get_default_timezone()).date(),
             created_hour=self.created.hour,
             status=self.status,
             finished_at=self.finished_at,

@@ -11,10 +11,10 @@ Provided functionality:
 
 1. Gathering data via two different forms:
    1. Host can fill in the "resource" form: the type, availability, duration, contact information etc.
-   2. A refugee (or someone acting on their behalf) can fill the "submission" form: number of people, duration etc.
+   2. A refugee (or someone acting on their behalf) can fill in the "submission" form: number of people, duration etc.
    
    These are open to the public and can be seen at https://grupazasoby.pl
-2. Submission processing via the volunteers' dashboard:
+2. Dashboard for processing submissions:
 
     The actual users of the system are the volunteers who are processing the data mentioned above. The main entrypoint for the volunteers is at `/jazda` url. There exists a dashboard view providing the list of all submissions which can be filtered by different attributes. Each submission has a status and a corresponding actions. Volunteer can start searching for a potential host by clicking on an appropriate button on the submission. This will render another view: a list of potential hosts which can also be filtered, searched etc. Volunteer then calls a potential host and if they agreed to take someone in the submission transitions into "host found" state for later processing. We plan to add a dedicated file explaining the details of this whole process in the near future.
 3. Stats view at the url `/statsy` which contains various graphs and data which can inform decisions about the best shift hours, team performance etc.  
