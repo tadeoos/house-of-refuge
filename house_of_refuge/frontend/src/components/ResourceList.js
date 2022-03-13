@@ -222,8 +222,8 @@ export const ResourceList = ({initialResources, sub, subHandler, user, clearActi
             <div className={"col dol-head r-id-col"}>ID</div>
             {Object.values(columnsData).map(colData => <
                 ColumnHeader col={colData} key={colData.fieldName} sortHandler={handleSort}
-                             sortDirection={sortOrder} isSorting={sortBy === colData.fieldName}
-                             filterData={filters[colData.fieldName]}
+                            sortDirection={sortOrder} isSorting={sortBy === colData.fieldName}
+                            filterData={filters[colData.fieldName]}
             />)}
           </div>
           <div className="resource-rows" ref={resourceList}>
@@ -233,7 +233,7 @@ export const ResourceList = ({initialResources, sub, subHandler, user, clearActi
                                   activeSub={activeSub}
                 />)}
           </div>
-        </div>
+      </div>
       </>
 
   );
