@@ -7,6 +7,8 @@ import Form from '../components/Form.js';
 import Privacy from '../components/Privacy.js';
 import Edit from '../components/Edit.js';
 import { fields2, validationSchema2 } from './formSchema';
+import { useTranslation } from 'react-i18next';
+import '../i18n/config';
 import {
   BrowserRouter,
   Routes,
@@ -61,6 +63,8 @@ const ButtonWrap = styled.div`
 
 const App = (props) => {
   const [user] = useState(props.userData);
+  const { t, i18n } = useTranslation(); // translation controlled through current state of lang selector
+  const uat = i18n.getFixedT('ua','common'); // translation fixed for UA lang (non-modifiable through selector)
 
   return (
     <StyledApp>
@@ -70,16 +74,16 @@ const App = (props) => {
           <ButtonWrap>
             <Link to="/share">
               <BigButton
-                primaryText="Udostępniam nocleg"
-                secondaryText="Можу надати житло"
+                primaryText={t("i_provide_accomodation")}
+                secondaryText={uat('i_provide_accomodation')}
                 outlined
                 color={colors.veryDarkGrey}
               />
             </Link>
             <Link to="/find">
               <BigButton
-                primaryText="Потребує житло"
-                secondaryText="Szukam noclegu"
+                primaryText={uat('im_looking_for_accomodation')}
+                secondaryText={t("im_looking_for_accomodation")}
                 color={colors.veryDarkGrey}
                 backgroundColor="#FFD200"
               />
@@ -90,8 +94,8 @@ const App = (props) => {
         <Route path="/find" element={<Find  user={user} />} />
         <Route path="/jazda/stolik" element={<>
           <Form
-            primaryText="Потребує житло"
-            secondaryText="Szukam noclegu"
+            primaryText={uat('im_looking_for_accomodation')}
+            secondaryText={t("im_looking_for_accomodation")}
             fields={fields2}
             validationSchema={validationSchema2}
             url='/api/zglos'

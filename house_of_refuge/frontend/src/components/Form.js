@@ -2,6 +2,7 @@ import {useState, useEffect} from 'react';
 import styled from 'styled-components';
 import {useFormik} from 'formik';
 import axios from 'axios';
+<<<<<<< HEAD
 import {getCookie} from "../scripts/utils";
 import {useSearchParams} from "react-router-dom";
 import {
@@ -19,6 +20,8 @@ import {
   Success
 } from '../components/FormComponents';
 import {Link} from "react-router-dom";
+import { useTranslation } from 'react-i18next';
+
 
 
 const Primary = styled.div`
@@ -102,6 +105,8 @@ const Form = ({
   const [whenToCall, setWhenToCall] = useState(formData?.when_to_call || '9—22');
   const [toDelete, setToDelete] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
+  const { t, i18n } = useTranslation(localeNamespace);
+  const tr = fixedLocale ? i18n.getFixedT(fixedLocale, localeNamespace) : t;
 
   const removeParams = () => {
     if (searchParams.has("t")) {
@@ -202,6 +207,7 @@ const Form = ({
   };
 
   return (
+<<<<<<< HEAD
       success ? <div><Success> {successInfo} </Success>
             {canAddMore &&
                 <div style={{maxWidth: "300px", margin: "12px auto"}}>
@@ -213,7 +219,7 @@ const Form = ({
           <div>
             <Primary> {primaryText} </Primary>
             <Secondary> {secondaryText} </Secondary>
-            {user && <Info marginTop={48}> <span> Zalogowany: {user.name} </span> </Info>}
+            {user && <Info marginTop={48}> <span> {t('common:logged_in_user')}: {user.name} </span> </Info>}
             {/*{error && <Info marginTop={3} > Błąd serwera. Spróbuj jeszcze raz. </Info>}*/}
             <StyledForm onSubmit={formik.handleSubmit}>
               {fields
@@ -223,8 +229,8 @@ const Form = ({
                     return <Field key={field.name} alert={formik.errors[field.name] && formik.touched[field.name]}>
                       {field.type === 'hidden' || field.type === 'checkbox' ? null :
                           <>
-                            <Label htmlFor={field.name}>{field.label}</Label>
-                            {field.subHeading && <SubHeading> {field.subHeading}</SubHeading>}
+                           <Label htmlFor={field.name}>{tr(field.name)}</Label>
+                           {(i18n.exists('forms:'+field.name + '_subHeading') || field.subHeading) && <SubHeading> {tr(field.name + '_subHeading', field.subHeading)}</SubHeading>}
                           </>}
                       {field.type === 'radio' ?
                           <RadioField>
@@ -237,7 +243,7 @@ const Form = ({
                                     value={choice.value}
                                     onChange={formik.handleChange}
                                 />
-                                <span>{choice.label}</span>
+                                <span>{tr(field.name + '_choice_' + choice.value)}</span>
                               </RadioChoice>;
                             })}
                           </RadioField>
@@ -248,7 +254,7 @@ const Form = ({
                                   onChange={formik.handleChange}
                               >
                                 {field.options.map(option => <option key={option.value} value={option.value}>
-                                  {option.label}
+                                  {tr(field.name + '_option_' + option.value)}
                                 </option>)}
                               </SelectField>
                               : field.type === 'custom_int_range' && field.name === 'when_to_call' ?
@@ -283,8 +289,8 @@ const Form = ({
                                   />
                       }
                       {field.type === 'checkbox' ? <>
-                        <Label type="checkbox" htmlFor={field.name}>{field.label}</Label>
-                        {field.subHeading && <SubHeading indent> {field.subHeading}</SubHeading>}
+                        <Label type="checkbox" htmlFor={field.name}>{tr(field.name)}</Label>
+                        {i18n.exists('forms:'+field.name + '_subHeading') && <SubHeading indent> {tr(field.name + '_subHeading', field.subHeading)}</SubHeading>}
                       </> : null}
                       {formik.errors[field.name] && formik.touched[field.name] ? (
                           <Alert role="alert"> {formik.errors[field.name]} </Alert>
@@ -299,25 +305,25 @@ const Form = ({
                   disabled={formik.isSubmitting}
                   onClick={() => !formik.isValid && window.scrollTo(0, 0)}
               >
-                {formData ? 'Zapisz' : 'Wyślij'}
+                {formData ? tr("common:save") : tr("common:submit")}
               </Button>
 
               <div style={{marginBottom: 14}}></div>
 
               {formData && <Button outlined type="button" onClick={() => setToDelete(true)}>
-                Usuń to zgłoszenie
+                {tr("delete_this_entry")}
               </Button>}
 
               <div style={{marginBottom: 14}}></div>
 
               {toDelete && <ConfirmationPopUp>
                 <InnerPopUp>
-                  <span>  Czy na pewno chcesz usunąć to zgłoszenie? </span>
+                  <span>{tr("delete_this_entry_confirm")}</span>
                   <Button type="button" onClick={() => handleDelete()}>
-                    Usuń
+                    {tr("common:delete")}
                   </Button>
                   <Button outlined type="button" onClick={() => setToDelete(false)}>
-                    Anuluj
+                    {tr("common:cancel")}
                   </Button>
                 </InnerPopUp>
               </ConfirmationPopUp>}

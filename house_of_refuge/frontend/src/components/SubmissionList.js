@@ -10,6 +10,7 @@ import { ResourceRow } from "./ResourceRow";
 import { orderBy } from "lodash";
 import { QuickFilter } from "./QuickFilter";
 import { Pagination } from "react-bootstrap";
+import { useTranslation } from 'react-i18next';
 
 export const SOURCE_OPTIONS = [
   { label: "Strona", value: "webform" },
@@ -51,6 +52,7 @@ export const SubmissionList = (
   const [page, setPage] = useState(1);
   const lastPage = useMemo(() => Math.ceil(visibleSubmissions.length / SHOW_NUMBER), [visibleSubmissions]);
   const subsList = useRef(null);
+  const { t } = useTranslation('backoffice');
 
   const subBelongsToUser = (s) => {
     if (s.receiver?.id === user.id) {
@@ -124,7 +126,7 @@ export const SubmissionList = (
     <div>
       <ToastContainer autoClose={2000} />
       <div className="quick-filters">
-        <QuickFilter label={"Źródło"}>
+        <QuickFilter label={t('source')}>
           <Select
             multi
             values={sourceFilter}
@@ -132,7 +134,7 @@ export const SubmissionList = (
             onChange={filterSource}
           />
         </QuickFilter>
-        <QuickFilter label={"Status"}>
+        <QuickFilter label={t('status')}>
           <Select
             multi
             values={statusFilter}
@@ -140,7 +142,7 @@ export const SubmissionList = (
             onChange={filterStatus}
           />
         </QuickFilter>
-        <QuickFilter label={"Liczba osób"}>
+        <QuickFilter label={t('people_count')}>
           <Select
             multi
             values={peopleFilter}
@@ -148,7 +150,7 @@ export const SubmissionList = (
             onChange={peopleStatusChange}
           />
         </QuickFilter>
-        <QuickFilter label={"Zniknięte"}>
+        <QuickFilter label={t('disappeared')}>
           <BootstrapSwitchButton
             size={"sm"}
             checked={droppedFilter}
@@ -157,7 +159,7 @@ export const SubmissionList = (
             }}
           />
         </QuickFilter>
-        <QuickFilter label={"Przyjęte dzisiaj"}>
+        <QuickFilter label={t('accepted_today')}>
           <BootstrapSwitchButton
             size={"sm"}
             checked={todayFilterValue}
@@ -166,7 +168,7 @@ export const SubmissionList = (
             }}
           />
         </QuickFilter>
-        <QuickFilter label={"Aktywne dzisiaj"}>
+        <QuickFilter label={t('active_today')}>
           <BootstrapSwitchButton
             size={"sm"}
             checked={activeNow}
@@ -175,7 +177,7 @@ export const SubmissionList = (
             }}
           />
         </QuickFilter>
-        <QuickFilter label={"Tylko moje"}>
+        <QuickFilter label={t('only_mine')}>
           <BootstrapSwitchButton
             size={"sm"}
             checked={userFilterValue}
@@ -191,7 +193,7 @@ export const SubmissionList = (
       </div>
       <div className={"d-flex justify-content-around"}>
         <div>
-          <p>{`${visibleSubmissions.length} zgłoszeń`}</p>
+          <p>{t('submissions_count', {submCount: visibleSubmissions.length})}</p>
         </div>
         <div className="mt-2">
           <Pagination>

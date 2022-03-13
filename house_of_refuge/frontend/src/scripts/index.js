@@ -17,11 +17,16 @@ import {ResourceList} from "../components/ResourceList";
 import {SOURCE_OPTIONS, SubmissionList} from "../components/SubmissionList";
 import useInterval from "use-interval";
 import {BrowserRouter, Route, Routes, useSearchParams} from "react-router-dom";
-
+import { useTranslation } from 'react-i18next';
+import '../i18n/config';
 
 const CoordinatorsHeader = ({coordinators, helped, hide}) => {
   const [peopleHelped, setPeopleHelped] = useState(helped);
-
+  const { t, i18n } = useTranslation('backoffice');
+  const lngs = {
+    en: { nativeName: 'English' },
+    pl: { nativeName: 'Polski' }
+  };
   useInterval(async () => {
     const newHelped = await getHelped();
     setPeopleHelped(newHelped);
@@ -34,27 +39,37 @@ const CoordinatorsHeader = ({coordinators, helped, hide}) => {
     <div className="coordinators">
       <div className="d-flex justify-content-around">
         <div className={"mx-5 text-center"}>
-          <h5>Koordynatorzy Zachodni</h5>
+          <h5>{t('western_coordinators')}</h5>
           <ol>{(coordinators.station || []).map(c => <li key={c.user.id}>{c.user.display}</li>)}</ol>
         </div>
         <div className={"mx-5 text-center"}>
-          <h5>Koordynatorzy Zdalni</h5>
+          <h5>{t('remote_coordinators')}</h5>
           <ol>{(coordinators.remote || []).map(c => <li key={c.user.id}>{c.user.display}</li>)}</ol>
         </div>
       </div>
       {peopleHelped ?
-          <div><h5 className="good-message">Pomogliśmy
-            dziś {peopleHelped} osobom {"🙏".repeat(Math.floor(peopleHelped / 10))}</h5>
+          <div><h5 className="good-message">
+            {t('today_we_helped_count', {pplHelpedCount: peopleHelped})} {"🙏".repeat(Math.floor(peopleHelped / 10))}</h5>
           </div> : <></>}
     </div>
-    <div><a href="/accounts/logout">wyloguj się</a></div>
+    <div>
+      {Object.keys(lngs).map((lng) => (
+          <button key={lng}
+                  style={{ fontWeight: i18n.resolvedLanguage === lng ? 'bold' : 'normal' }} 
+                  type="submit" 
+                  onClick={() => i18n.changeLanguage(lng)}>
+          {lngs[lng].nativeName}
+          </button>
+      ))}
+    </div>
+    <div><a href="/accounts/logout">{t('log_out')}</a></div>
   </div>;
 };
 
 
 const App = ({subs, userData, coordinators, helped}) => {
   let [searchParams, setSearchParams] = useSearchParams();
-
+  const { t, i18n } = useTranslation();
 
   const [activeSub, setActiveSub] = useState(null);
   const [sourceFilter, setSourceFilter] = useState(searchParams.getAll("z").map((i) => SOURCE_OPTIONS[i]));

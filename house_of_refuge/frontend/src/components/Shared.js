@@ -1,10 +1,13 @@
+import { t } from "i18next";
 import React, {useEffect, useRef, useState} from "react";
+import { useTranslation } from 'react-i18next';
 
 export const EditableField = ({value, classes = '', noEditClasses = '', onRename}) => {
 
   const [editable, setEditable] = useState(false);
   const [currentValue, setCurrentValue] = useState(value);
   const inputRef = useRef(null);
+  const { t } = useTranslation('backoffice');
 
   useEffect(() => {
     if (editable) {
@@ -24,10 +27,10 @@ export const EditableField = ({value, classes = '', noEditClasses = '', onRename
   return (editable ? <div className={classes} style={{display: editable ? "" : "none"}}
                           onBlur={() => setEditable(false)}>
             <textarea className="form-control" value={currentValue} ref={inputRef}
-                      placeholder="add note..."
+                      placeholder={t('add_note')}
                       onChange={(e) => setCurrentValue(e.target.value)}
                       onKeyDown={keyUpHandler}/></div> : <div className="rename-input" onClick={() => setEditable(true)}>
-    <span className={value ? "" : "text-muted"}>{value.trim() || "kliknij by dodać notatke..."}</span>
+    <span className={value ? "" : "text-muted"}>{value.trim() || t('click_to_add_note')}</span>
   </div>);
 
 };
@@ -35,7 +38,7 @@ export const EditableField = ({value, classes = '', noEditClasses = '', onRename
 export function LoadingSpinner() {
   return <div style={{margin: "0 auto", width: "fit-content"}}>
     <div className="spinner-border text-center mt-5" role="status">
-      <span className="visually-hidden">Loading...</span>
+      <span className="visually-hidden">{t('loading')}</span>
     </div>
   </div>;
 }

@@ -4,6 +4,7 @@ import MenuIcon from './MenuIcon.js';
 import { Link } from "react-router-dom";
 import TextMultiLang from '../components/TextMultiLang';
 import useComponentVisible from '../scripts/useComponentVisible';
+import { useTranslation } from 'react-i18next';
 
 const StyledLink = styled(Link)`
   text-decoration: none;
@@ -82,11 +83,26 @@ const MiniMenu = styled.div`
 
 const Menu = () => {
     const { menu, button, miniMenuOpened, setMiniMenuOpened } = useComponentVisible(true);
+    const { t, i18n } = useTranslation();
+    const lngs = {
+        en: { nativeName: 'English' },
+        pl: { nativeName: 'Polski' }
+    };
 
     return (
         <>
             <Button ref={button} > <MenuIcon /> </Button>
             {miniMenuOpened && <MiniMenu ref={menu}>
+                <div>
+                {Object.keys(lngs).map((lng) => (
+                    <button key={lng}
+                            style={{ fontWeight: i18n.resolvedLanguage === lng ? 'bold' : 'normal' }} 
+                            type="submit" 
+                            onClick={() => i18n.changeLanguage(lng)}>
+                    {lngs[lng].nativeName}
+                    </button>
+                ))}
+                </div>
                 <StyledLink to="/privacy" onClick={() => setMiniMenuOpened(!miniMenuOpened)}>
                     <TextMultiLang
                         primaryText="Polityka prywatności"
