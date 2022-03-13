@@ -8,7 +8,6 @@ const StyledHeader = styled.div`
   padding-top: ${p => p.sticky ? '2px' : '16px'};
   position: ${p => p.sticky ? 'fixed' : 'absolute'}; 
   background-color: ${p => p.sticky ? '#F7F7F7' : 'transparent'}; 
-  padding-top: 6px;
   padding-bottom: 7px;
   top: 0;
   width: 100%;

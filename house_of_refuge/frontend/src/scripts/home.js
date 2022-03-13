@@ -1,17 +1,17 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import ReactDOM from 'react-dom';
 import styled from 'styled-components';
 import Header from '../components/Header.js';
 import BigButton from '../components/BigButton.js';
 import Form from '../components/Form.js';
 import Privacy from '../components/Privacy.js';
+import Edit from '../components/Edit.js';
 import { fields1, fields2, validationSchema1, validationSchema2 } from './formSchema';
 import {
   BrowserRouter,
   Routes,
   Route,
   Link,
-  useLocation
 } from "react-router-dom";
 import { colors } from '../theme';
 
@@ -53,16 +53,11 @@ const ButtonWrap = styled.div`
 `;
 
 
-const App = ({ userData }) => {
-  const [user] = useState(userData);
-  const [isHomePage, setIsHomePage] = useState(false);
-  let location = useLocation();
-  useEffect(() => {
-    location.pathname === '/' ? setIsHomePage(true) : setIsHomePage(false);
-  }, [location]);
+const App = (props) => {
+  const [user] = useState(props.userData);
 
   return (
-    <StyledApp homapage={isHomePage}>
+    <StyledApp>
       <Header />
       <Routes>
         <Route index element={<>
@@ -118,6 +113,7 @@ const App = ({ userData }) => {
           />
         </>} />
         <Route path="/privacy" element={<Privacy />} />
+        <Route path="/edit" element={<Edit {...props} />} />
       </Routes>
 
     </StyledApp>

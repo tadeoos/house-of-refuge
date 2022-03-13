@@ -86,6 +86,12 @@ const Menu = () => {
                         secondaryText="політика конфіденційності"
                     />
                 </StyledLink>
+                <StyledLink to="/edit" onClick={() => setMiniMenuOpened(!miniMenuOpened)}>
+                    <TextMultiLang
+                        primaryText="Edycja danych"
+                        secondaryText="редагувати дані"
+                    />
+                </StyledLink>
             </MiniMenu>}
             <ExtrernalLink
                 target="_blank"

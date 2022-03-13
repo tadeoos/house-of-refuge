@@ -3,120 +3,11 @@ import styled from 'styled-components';
 import { useFormik } from 'formik';
 import axios from 'axios';
 import { getCookie } from "../scripts/utils";
-
-const StyledForm = styled.form`
-  display: flex;
-  flex-direction: column;
-  margin: auto;
-  width: 100%;
-  max-width: 400px;
-  margin-top: 32px;
-  margin-bottom: 32px;
-  padding: 6px;
-`;
-
-const Label = styled.label`
-  font-weight: 700;
-  font-size: 16.88px;
-  line-height: 19px;
-  margin-top: 28px;
-  margin-left: ${p => p.type === 'checkbox' ? '20px' : 'initial'};
-  position: ${p => p.type === 'checkbox' ? 'absolute' : 'initial'};
-  cursor: ${p => p.type === 'checkbox' ? 'pointer' : 'initial'};
-  `;
-
-const SubHeading = styled.span`
-  font-weight: 400;
-  font-size: 13.5px;
-  line-height: 16px;
-  margin-top: 3px;
-  margin-left: ${p => p.indent ? '20px' : 0};
-`;
-
-const CustomIntRange = styled.span`
-  justify-content: space-between;
-  display: flex;
-
-   > input {
-       width: calc(50% - 8px);
-   }
-`;
+import { useSearchParams } from "react-router-dom";
+import { StyledForm, Label, Input, SubHeading, CustomIntRange, RadioField, RadioChoice, SelectField, Button, Alert, Field, Success } from '../components/FormComponents';
 
 
-const Input = styled.input.attrs(({ type }) => ({
-  as: type === 'textarea' ? type : 'input'
-}))`
-  height: ${p => p.type === 'checkbox' ? '22px' : '44px'};
-  cursor: ${p => p.type === 'checkbox' ? 'pointer' : 'initial'};
-  padding: 0 8px;
-  box-sizing: border-box;
-  border-radius: 3px;
-  border: 1px solid #898F9C;
-  min-height: ${p => p.type === 'textarea' ? '70px' : 'initial'};
-  max-height: ${p => p.type === 'textarea' ? '140px' : 'initial'};
-  padding-top: ${p => p.type === 'textarea' ? '8px' : 'initial'};
-  margin-top: ${p => p.type === 'checkbox' ? '27px' : '10px'};
 
-`;
-
-const RadioField = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin-top: 8px;
-`;
-
-const RadioChoice = styled.label`
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  height: 28px;
-
-  span {
-      margin-left: 6px;
-      font-size: 14px;
-  }
-`;
-
-const SelectField = styled.select`
-  height: 44px;
-  cursor: pointer;
-  padding-left: 6px;
-  margin-top: 10px;
-`;
-
-
-const Button = styled.button`
-  margin-top: 36px;
-  padding: 0;
-  cursor: pointer;
-  width: 100%;
-  height: 40px;
-  border: none;
-  background-color: black;
-  border-radius: 150px;
-  color: #fff;
-  background-color: #000;
-`;
-
-const Alert = styled.div`
-  font-size: 13px;
-  margin-top: 6px;
-  color: #d93025;
-`;
-
-const Field = styled.div`
-  display: flex;
-  flex-direction: column;
-
-  * {
-    color:  ${p => p.alert ? '#D93025' : 'inherit'};
-  }
-`;
-
-const Success = styled.div`
-  font-size: 21px;
-  text-align: center;
-`;
 
 const Primary = styled.div`
    font-size: 34px;
@@ -151,10 +42,55 @@ const Info = styled.div`
 `;
 
 
-const Form = ({ fields, validationSchema, url, successInfo, user, primaryText, secondaryText }) => {
+const ConfirmationPopUp = styled.div`
+position: fixed;
+top: 0;
+right: 0;
+left: 0;
+bottom: 0;
+background-color: rgba(0,0,0,.65);
+`;
+
+const InnerPopUp = styled.div`
+  background-color: white;
+  border-radius: 22px;
+  padding: 8px;
+  position: fixed;
+  width: 400px;
+  height: 156px;
+  top: 50%;
+  left: 50%;
+  margin-left: -200px;  
+  margin-top: -90px;  
+  text-align: center ;
+
+  > span {
+    display: block;
+    padding: 10px 0 14px;
+  }
+
+  > button {
+    margin-bottom: 10px;
+  }
+`;
+
+
+const Form = ({ formData, fields, validationSchema, url, successInfo, user, primaryText, secondaryText }) => {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
   const [whenToCall, setWhenToCall] = useState('9—22');
+  const [toDelete, setToDelete] = useState(false);
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const removeParams = () => {
+    if (searchParams.has("t")) {
+      const token = searchParams.get("t");
+      if (token) {
+        searchParams.delete("t");
+        setSearchParams(searchParams);
+      }
+    }
+  };
 
 
   useEffect(() => {
@@ -178,14 +114,14 @@ const Form = ({ fields, validationSchema, url, successInfo, user, primaryText, s
     return true;
   };
 
-  console.log('user: ', user);
   const formik = useFormik({
-    initialValues: fields.filter(field => shouldRenderField(field)).reduce((acc, field) => (acc[field.name] =
+    initialValues: formData || fields.filter(field => shouldRenderField(field)).reduce((acc, field) => (acc[field.name] =
       field.type === 'checkbox' ? true :
         field.type === 'select' ? field.options[0].value :
           field.type === 'date' ? new Date().toISOString().split('T')[0] :
             field.name === 'receiver' && user ? user.id :
               '', acc), {}),
+
     validationSchema: validationSchema({ publicOnly: !user }),
     onSubmit: async (values, { resetForm }) => {
       const { city, ...rest } = values;
@@ -193,8 +129,9 @@ const Form = ({ fields, validationSchema, url, successInfo, user, primaryText, s
         ...rest,
         city_and_zip_code: `${values.city}, ${values.zip_code}`,
       };
+
       return axios({
-        method: 'post',
+        method: formData ? 'put' : 'post',
         url,
         data: values.city && values.zip_code ? cityZipCodeValues : values,
         headers: {
@@ -208,31 +145,53 @@ const Form = ({ fields, validationSchema, url, successInfo, user, primaryText, s
         })
         .then(res => {
           console.log("TADEK RESPONSE:", res);
-          if (res) {
+          if (res.status === 201 || res.status === 202) {
             setSuccess(true);
-            if (res.status === 201) {
-              setSuccess(true);
-              resetForm();
-            } else {
-              setError(true);
-            }
+            resetForm();
+          } else {
+            setError(true);
           }
         });
     }
   });
 
+  const handleDelete = async () => {
+    return await axios({
+      method: 'delete',
+      url,
+      data: {
+        token: formik.values.token
+      },
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': getCookie('csrftoken'),
+      },
+    })
+      .catch(error => {
+        error && setError(true);
+      })
+      .then(res => {
+        if (res.status === 204) {
+          setSuccess(true);
+          removeParams();
+        } else {
+          setError(true);
+        }
+      });
+  };
+
   return (
-    success ? <div><Success> {successInfo}</Success>
-      <div style={{ maxWidth: "300px", margin: "auto" }}>
+    success ? <div><Success> {successInfo} </Success>
+      <div style={{ maxWidth: "300px", margin: "12px auto" }}>
         <Button onClick={() => setSuccess(false)}>Dodaj kolejne</Button>
       </div>
     </div> :
       <div style={{ marginTop: 100 }}>
+
         <Primary> {primaryText} </Primary>
         <Secondary> {secondaryText} </Secondary>
         {user && <Info marginTop={48}> <span> Zalogowany: {user.name} </span> </Info>}
         {/*{error && <Info marginTop={3} > Błąd serwera. Spróbuj jeszcze raz. </Info>}*/}
-
         <StyledForm onSubmit={formik.handleSubmit}>
           {fields
             .filter(field => user ? field : !field.loggedUser)
@@ -249,6 +208,7 @@ const Form = ({ fields, validationSchema, url, successInfo, user, primaryText, s
                     {field.choice.map(choice => {
                       return <RadioChoice key={choice.value}>
                         <input
+                          checked={formik.values[field.name] === choice.value}
                           type={field.type}
                           name={field.name}
                           value={choice.value}
@@ -309,12 +269,34 @@ const Form = ({ fields, validationSchema, url, successInfo, user, primaryText, s
               </Field>;
             })}
 
+          <div style={{ marginBottom: 40 }} > </div>
+
           <Button
             type="submit"
             disabled={formik.isSubmitting}
           >
-            Wyślij
+            {formData ? 'Zapisz' : 'Wyślij'}
           </Button>
+
+          <div style={{ marginBottom: 14 }} > </div>
+
+          {formData && <Button outlined type="button" onClick={() => setToDelete(true)} >
+            Usuń to zgłoszenie
+          </Button>}
+
+          <div style={{ marginBottom: 14 }} > </div>
+
+          {toDelete && <ConfirmationPopUp>
+            <InnerPopUp>
+              <span>  Czy na pewno chcesz usunąć to zgłoszenie? </span>
+              <Button type="button" onClick={() => handleDelete()} >
+                Usuń
+              </Button>
+              <Button outlined type="button" onClick={() => setToDelete(false)} >
+                Anuluj
+              </Button>
+            </InnerPopUp>
+          </ConfirmationPopUp>}
 
         </StyledForm>
       </div>
