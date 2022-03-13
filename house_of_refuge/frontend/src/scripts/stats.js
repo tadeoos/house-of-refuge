@@ -22,12 +22,16 @@ const getSourceDisplay = (v) => {
   }
 };
 
-const BarHourChart = ({submissions}) => {
+const BarHourChart = ({submissions, defaultAverage = false}) => {
   const [foundByHour, setFoundByHour] = useState([]);
   const [createdByHour, setCreatedByHour] = useState([]);
   const [searchedByHour, setSearchedByHour] = useState([]);
 
-  const [submissionFilter, setSubmissionFilter] = useState([{label: "Wszystkie dni", value: "all"}]);
+  const [submissionFilter, setSubmissionFilter] = useState(defaultAverage ? [
+    {label: "Średnia dzienna", value: "average"}
+  ] : [
+      {label: "Wszystkie dni", value: "all"}
+  ]);
 
   const [labels, setLabels] = useState([]);
 
@@ -60,9 +64,9 @@ const BarHourChart = ({submissions}) => {
       const created = (createdGgrouped[hour] || []).length;
       const searched = (searchedGgrouped[hour] || []).length;
       const matched = (matchedGgrouped[hour] || []).length;
-      createdByHourData.push(filterValue === "average" ? Math.round(created / daysCount) : created);
-      searchedByHourData.push(filterValue === "average" ? Math.round(searched / daysCount) : searched);
-      foundByHourData.push(filterValue === "average" ? Math.round(matched / daysCount) : matched);
+      createdByHourData.push(filterValue === "average" ? Math.ceil(created / daysCount) : created);
+      searchedByHourData.push(filterValue === "average" ? Math.ceil(searched / daysCount) : searched);
+      foundByHourData.push(filterValue === "average" ? Math.ceil(matched / daysCount) : matched);
     });
     setCreatedByHour(createdByHourData);
     setSearchedByHour(searchedByHourData);
@@ -285,7 +289,7 @@ const App = ({startDate}) => {
         <BarHourChart submissions={baseSubs}/>
       </div>
       <div className={"col-6"}>
-        <BarHourChart submissions={baseSubs}/>
+        <BarHourChart submissions={baseSubs} defaultAverage={true}/>
       </div>
     </div>
   </>;
