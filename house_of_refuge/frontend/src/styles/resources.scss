@@ -31,14 +31,15 @@ a {
   display: flex;
   border-bottom: 2px solid #696969;
 
-  /* Hack to align with body columns when scrollbar is not overlayed but takes up space */
-  overflow-y: scroll;
-
   .col-head {
     text-align: center;
     display: flex;
     flex-direction: column;
     font-weight: bold;
+
+    &:last-child {
+      border-right: 1px solid #696969;
+    }
 
     .top {
       display: flex;
@@ -123,6 +124,12 @@ a {
   flex-direction: column;
   font-size: 12px;
 
+  &:first-child {
+    .col {
+      border-top: 0;
+    }
+  }
+
   .base-content {
     display: flex;
 
@@ -131,6 +138,10 @@ a {
       align-items: center;
       justify-content: center;
       cursor: pointer;
+
+      &:last-child {
+        border-right: 1px solid #696969;
+      }
     }
 
     .col-availability {
@@ -139,7 +150,7 @@ a {
       overflow: hidden;
 
       input {
-        min-height: 40px;
+        height: 100%;
         padding: 2px;
         width: 100%;
         border: 0;
@@ -182,12 +193,6 @@ a {
     th:nth-of-type(odd):not([colspan="3"]),
     td:nth-of-type(odd):not([colspan="3"]) {
       background-color: rgba(#000, 0.05);
-    }
-  }
-
-  &:first-child {
-    .col {
-      border-top: 0;
     }
   }
 
@@ -404,6 +409,28 @@ a {
 .resource-rows {
   overflow: auto;
   max-height: 400px;
+}
+
+@supports (position: sticky) {
+  .resource-list-table {
+    overflow: auto;
+    position: relative;
+    padding-right: 15px;
+  }
+
+  .column-headers {
+    overflow: unset;
+    position: sticky;
+    top: 0;
+    margin-top: 0 !important;
+    background: #fff;
+    z-index: 1;
+  }
+
+  .resource-rows {
+    max-height: none;
+    overflow: unset;
+  }
 }
 
 .submission-list {
