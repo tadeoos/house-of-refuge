@@ -33,7 +33,7 @@ const BarHourChart = ({submissions, defaultAverage = false}) => {
       {label: "Wszystkie dni", value: "all"}
   ]);
 
-  const [labels, setLabels] = useState([]);
+  const labels = [...Array(24).keys()];
 
   const allDays = [...new Set(submissions.map(s => s.created_day))];
   console.log("days: ", allDays);
@@ -51,16 +51,10 @@ const BarHourChart = ({submissions, defaultAverage = false}) => {
     const searchedGgrouped = groupBy(baseSubmissions.filter(s => s.first_searched), (v) => v["first_searched_hour"]);
     const matchedGgrouped = groupBy(baseSubmissions.filter(s => s.first_match), (v) => v["first_match_hour"]);
 
-    const innerLabels = [
-      ...new Set(Object.keys(createdGgrouped).concat(Object.keys(searchedGgrouped)).concat(Object.keys(matchedGgrouped)))
-    ].sort((a, b) => Number(a) - Number(b));
-
-    setLabels(innerLabels);
-
     const createdByHourData = [];
     const searchedByHourData = [];
     const foundByHourData = [];
-    innerLabels.forEach(hour => {
+    labels.forEach(hour => {
       const created = (createdGgrouped[hour] || []).length;
       const searched = (searchedGgrouped[hour] || []).length;
       const matched = (matchedGgrouped[hour] || []).length;

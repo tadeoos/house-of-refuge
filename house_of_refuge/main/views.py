@@ -312,7 +312,7 @@ def day_iterator(start_date):
 @login_required
 def get_stats_data(request):
     props_subs = [s.for_stats() for s in Submission.objects.prefetch_related("changes").all().order_by('created')]
-    props_hosts = [h.for_stats() for h in HousingResource.objects.exclude_excels()]
+    props_hosts = [h.for_stats() for h in HousingResource.objects.exclude_excels().order_by('created')]
     return JsonResponse({"data": dict(submissions=props_subs, hosts=props_hosts)})
 
 

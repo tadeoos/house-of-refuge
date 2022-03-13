@@ -21,9 +21,9 @@ services:
     branch: production
     healthCheckPath: /healthz
     buildCommand: "./build.sh"
-#    startCommand: "NEW_RELIC_CONFIG_FILE=newrelic.ini newrelic-admin run-program gunicorn config.wsgi:application -k gevent --worker-connections=50 --config=gunicorn_config.py"
-    startCommand: "NEW_RELIC_CONFIG_FILE=newrelic.ini newrelic-admin run-program gunicorn config.wsgi:application"
+    startCommand: "NEW_RELIC_CONFIG_FILE=newrelic.ini newrelic-admin run-program gunicorn config.wsgi:application -t 60"
 
+#    startCommand: "NEW_RELIC_CONFIG_FILE=newrelic.ini newrelic-admin run-program gunicorn config.wsgi:application -k gevent --worker-connections=50 --config=gunicorn_config.py"
 #    numInstances: 1 # optional (defaults to 1)
     scaling:
       minInstances: 1
