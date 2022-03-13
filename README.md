@@ -7,7 +7,17 @@ License: MIT
 
 This app provides a system that helps with matching refugees and hosts willing to provide housing in times of need. It was first developed for Grupa Zasoby – a local grassroots initiative in Warsaw that started with a [facebook group](https://www.facebook.com/groups/zasobygrupa) on 24th of February, 2022.
 
-Production instance of this repository is currently running at https://grupazasoby.pl/
+Provided functionality:
+
+1. Gathering data via two different forms:
+   1. Host can fill in the "resource" form: the type, availability, duration, contact information etc.
+   2. A refugee (or someone acting on their behalf) can fill the "submission" form: number of people, duration etc.
+   
+   These are open to the public and can be seen at https://grupazasoby.pl
+2. Submission processing via the volunteers' dashboard:
+
+    The actual users of the system are the volunteers who are processing the data mentioned above. The main entrypoint for the volunteers is at `/jazda` url. There exists a dashboard view providing the list of all submissions which can be filtered by different attributes. Each submission has a status and a corresponding actions. Volunteer can start searching for a potential host by clicking on an appropriate button on the submission. This will render another view: a list of potential hosts which can also be filtered, searched etc. Volunteer then calls a potential host and if they agreed to take someone in the submission transitions into "host found" state for later processing. We plan to add a dedicated file explaining the details of this whole process in the near future.
+3. Stats view at the url `/statsy` which contains various graphs and data which can inform decisions about the best shift hours, team performance etc.  
 
 > This project is actively developed and a lot is changing daily. We are open sourcing this repo in order to make it easier for other initiatives to fork, customize, and run their own instance. We're providing this code on "as is" basis. We're planning to add better documentation in the near future as time allows.
 
