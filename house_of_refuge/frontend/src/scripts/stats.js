@@ -188,7 +188,7 @@ const App = ({startDate}) => {
         allSubs.push(alls.map(s => s.people_count).reduce((partialSum, a) => partialSum + a, 0));
         successSubs.push(suc.map(s => s.people_count).reduce((partialSum, a) => partialSum + a, 0));
         allHosts.push(baseHosts.map(s => s.people_count).reduce((partialSum, a) => partialSum + a, 0));
-        allHosts.push(cancelled.map(s => s.people_count).reduce((partialSum, a) => partialSum + a, 0));
+        cancelledSubs.push(cancelled.map(s => s.people_count).reduce((partialSum, a) => partialSum + a, 0));
       } else {
         allSubs.push(alls.length);
         successSubs.push(suc.length);
