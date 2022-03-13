@@ -9,6 +9,7 @@ module.exports = {
   entry: {
     app: Path.resolve(__dirname, '../src/scripts/index.js'),
     home: Path.resolve(__dirname, '../src/scripts/home.js'),
+    stats: Path.resolve(__dirname, '../src/scripts/stats.js'),
   },
   output: {
     path: Path.join(__dirname, '../build'),

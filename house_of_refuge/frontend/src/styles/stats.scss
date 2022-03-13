@@ -1,0 +1,28 @@
+.stats-line-chart {
+  margin-top: 20px;
+
+  .filters {
+    display: flex;
+
+    button {
+      margin: 0 20px;
+    }
+  }
+}
+
+.bar-chart-container {
+  margin: 80px 0;
+
+  .react-dropdown-select {
+    max-width: 300px;
+    margin-left: 40px;
+  }
+}
+
+.quick-filter {
+  margin: 0 4px;
+
+  label {
+    margin-right: 6px;
+  }
+}
