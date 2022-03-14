@@ -19,7 +19,7 @@ import useInterval from "use-interval";
 import {BrowserRouter, Route, Routes, useSearchParams} from "react-router-dom";
 
 
-const CoordinatorsHeader = ({coordinators, helped}) => {
+const CoordinatorsHeader = ({coordinators, helped, hide}) => {
   const [peopleHelped, setPeopleHelped] = useState(helped);
 
   useInterval(async () => {
@@ -27,7 +27,7 @@ const CoordinatorsHeader = ({coordinators, helped}) => {
     setPeopleHelped(newHelped);
   }, 120 * 1000);
 
-  return <div className="panel-header">
+  return <div className="panel-header" style={hide ? {display: "none"} : {}}>
     <div>
       <img src="/static/images/logo.svg" alt="logo" style={{height: "76px", margin: "10px 0"}}/>
     </div>
@@ -225,7 +225,7 @@ const App = ({subs, userData, coordinators, helped}) => {
         {/*  <i/>*/}
         {/*  <i/>*/}
         {/*</div>*/}
-        <CoordinatorsHeader coordinators={coordinators} helped={helped}/>
+        <CoordinatorsHeader coordinators={coordinators} helped={helped} hide={Boolean(activeSub)}/>
         {activeSub ? <ResourceList initialResources={hosts}
                                    isLoading={latestHostChange === 0}
                                    user={userData} sub={activeSub} subHandler={subIsTaken}
