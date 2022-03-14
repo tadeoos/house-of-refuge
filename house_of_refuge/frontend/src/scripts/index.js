@@ -39,7 +39,7 @@ const CoordinatorsHeader = ({coordinators, helped, hide}) => {
     <div className="coordinators">
       <div className="d-flex justify-content-around">
         <div className={"mx-5 text-center"}>
-          <h5>{t('western_coordinators')}</h5>
+          <h5>{t('terrain_coordinators')}</h5>
           <ol>{(coordinators.station || []).map(c => <li key={c.user.id}>{c.user.display}</li>)}</ol>
         </div>
         <div className={"mx-5 text-center"}>

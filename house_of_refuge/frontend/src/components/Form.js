@@ -2,7 +2,6 @@ import {useState, useEffect} from 'react';
 import styled from 'styled-components';
 import {useFormik} from 'formik';
 import axios from 'axios';
-<<<<<<< HEAD
 import {getCookie} from "../scripts/utils";
 import {useSearchParams} from "react-router-dom";
 import {
@@ -207,7 +206,6 @@ const Form = ({
   };
 
   return (
-<<<<<<< HEAD
       success ? <div><Success> {successInfo} </Success>
             {canAddMore &&
                 <div style={{maxWidth: "300px", margin: "12px auto"}}>

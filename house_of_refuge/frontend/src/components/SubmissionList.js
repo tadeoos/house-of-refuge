@@ -193,7 +193,7 @@ export const SubmissionList = (
       </div>
       <div className={"d-flex justify-content-around"}>
         <div>
-          <p>{t('submissions_count', {submCount: visibleSubmissions.length})}</p>
+          <p>{t('entries_count', {submCount: visibleSubmissions.length})}</p>
         </div>
         <div className="mt-2">
           <Pagination>

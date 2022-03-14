@@ -84,6 +84,7 @@ const MiniMenu = styled.div`
 const Menu = () => {
     const { menu, button, miniMenuOpened, setMiniMenuOpened } = useComponentVisible(true);
     const { t, i18n } = useTranslation();
+    const uat = i18n.getFixedT('ua','common');
     const lngs = {
         en: { nativeName: 'English' },
         pl: { nativeName: 'Polski' }
@@ -93,26 +94,24 @@ const Menu = () => {
         <>
             <Button ref={button} > <MenuIcon /> </Button>
             {miniMenuOpened && <MiniMenu ref={menu}>
-                <div>
-                {Object.keys(lngs).map((lng) => (
-                    <button key={lng}
-                            style={{ fontWeight: i18n.resolvedLanguage === lng ? 'bold' : 'normal' }} 
-                            type="submit" 
-                            onClick={() => i18n.changeLanguage(lng)}>
-                    {lngs[lng].nativeName}
-                    </button>
-                ))}
-                </div>
+            {Object.keys(lngs).map((lng) => (
+                        <Button key={lng}
+                                style={{ fontWeight: i18n.resolvedLanguage === lng ? 'bold' : 'normal' }} 
+                                type="submit" 
+                                onClick={() => i18n.changeLanguage(lng)}>
+                        {lngs[lng].nativeName}
+                        </Button>
+                    ))}
                 <StyledLink to="/privacy" onClick={() => setMiniMenuOpened(!miniMenuOpened)}>
                     <TextMultiLang
-                        primaryText="Polityka prywatności"
-                        secondaryText="політика конфіденційності"
+                        primaryText={t('privacy_policy_title')}
+                        secondaryText={uat('privacy_policy_title')}
                     />
                 </StyledLink>
                 <StyledLink to="/edit" onClick={() => setMiniMenuOpened(!miniMenuOpened)}>
                     <TextMultiLang
-                        primaryText="Edycja danych"
-                        secondaryText="редагувати дані"
+                        primaryText={t('edit_data')}
+                        secondaryText={uat('edit_data')}
                     />
                 </StyledLink>
             </MiniMenu>}

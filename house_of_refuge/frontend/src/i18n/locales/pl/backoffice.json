@@ -1,5 +1,5 @@
 {
-  "western_coordinators": "Koordynatorzy Zachodni",
+  "terrain_coordinators": "Koordynatorzy Zachodni",
   "remote_coordinators": "Koordynatorzy Zdalni",
   "log_out": "Wyloguj się",
   "today_we_helped_count": "Pomogliśmy dziś {pplHelpedCount} osobom",
@@ -10,7 +10,7 @@
   "accepted_today": "Przyjęte dzisiaj",
   "active_today": "Aktywne dzisiaj",
   "only_mine": "Tylko moje",
-  "submissions_count": "{{submCount}} zgłoszeń",
+  "entries_count": "{{submCount}} zgłoszeń",
   "description": "Opis",
   "languages": "Języki",
   "nationality": "Narodowość",
@@ -44,5 +44,7 @@
   "set_free": "Zwolnij",
   "search_for_host": "Szukaj Hosta",
   "out_of_date": "NIEAKTUALNE",
-  "connection": "Łącznik"
+  "connection": "Łącznik",
+  "delete_this_entry": "Usuń to zgłoszenie",
+  "delete_this_entry_confirm": "Czy na pewno chcesz usunąć to zgłoszenie?"
 }

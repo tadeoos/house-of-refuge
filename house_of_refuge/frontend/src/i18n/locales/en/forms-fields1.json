@@ -14,6 +14,7 @@
   "people_to_accommodate": "How many people are you able to host in reasonable conditions?",
   "age": "Your age:",
   "languages": "What languages do you speak?",
+  "languages_subHeading": "Foreign languages of your cohabitants also count",
   "when_to_call": "At what hours can we get in touch with you?",
   "when_to_call_subHeading": "Quite a lot of people arrive after midnight. Can we call you late at night? (Choose 0-24 if we can call around the clock)",
   "costs": "Costs of accomodation (rent, charges, or is it free)",
@@ -30,5 +31,7 @@
   "backup_phone_number": "Backup telephone number",
   "backup_phone_number_subHeading": "Backup contact person",
   "email": "Your email",
-  "extra": "Any additional comments?"
+  "extra": "Any additional comments?",
+  "can_take_person_with_pets": "Can you accomodate someone with a pet(s)?",
+  "living_with_pets": "Do you keep pets?"
 }

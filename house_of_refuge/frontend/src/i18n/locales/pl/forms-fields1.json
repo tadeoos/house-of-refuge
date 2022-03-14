@@ -14,6 +14,7 @@
   "people_to_accommodate": "Ile osób jesteś w stanie wesprzeć tak, by miały godne warunki pobytu?",
   "age": "Ile masz lat?",
   "languages": "Języki jakie znasz",
+  "languages_subHeading": "Języki obce lokatorów i lokatorek",
   "when_to_call": "W jakich godzinach możemy do Ciebie dzwonić?",
   "when_to_call_subHeading": "Sporo ludzi przybywa po północy. Czy możemy do Ciebie zadzownic pózno w nocy? (Wybierz 0—24 jeżeli możemy dzwonić cały czas)",
   "costs": "Koszty pobytu (czynsz, opłaty, koszty najmu lub darmowy pobyt)",
@@ -30,5 +31,7 @@
   "backup_phone_number": "Awaryjny numer telefonu",
   "backup_phone_number_subHeading": "Dodatkowa osoba kontaktowa",
   "email": "Twój mail",
-  "extra": "Dodatkowe uwagi"
+  "extra": "Dodatkowe uwagi",
+  "can_take_person_with_pets": "Czy możesz przyjąć osobę ze zwierzętami?",
+  "living_with_pets": "Czy mieszkasz ze zwierzętami?"
 }
