@@ -255,15 +255,16 @@ class SubStatus(models.TextChoices):
     CANCELLED = "cancelled", _("Nieaktualne")
 
 
-END_OF_DAY = 7
+END_OF_DAY = 5
 
 
 def get_our_today_cutoff(date=None):
     now = date or timezone.now()
-    if now.hour > END_OF_DAY:
-        cut_off = now.date()
+    base_time = now.astimezone(timezone.get_default_timezone())
+    if base_time.hour > END_OF_DAY:
+        cut_off = base_time.date()
     else:
-        cut_off = (now - datetime.timedelta(days=1)).date()
+        cut_off = (base_time - datetime.timedelta(days=1)).date()
     return cut_off
 
 
@@ -399,14 +400,13 @@ class Submission(TimeStampedModel):
         return dict(
             id=self.id,
             created=self.created.astimezone(timezone.get_default_timezone()),
-            created_day=get_our_today_cutoff(self.created),
             created_hour=self.created.astimezone(timezone.get_default_timezone()).hour,
             status=self.status,
             finished_at=self.finished_at,
             finished_day=get_our_today_cutoff(self.finished_at) if self.finished_at else None,
             source=self.source,
             people_count=self.people_as_int,
-            day=get_our_today_cutoff(self.created),
+            day=get_our_today_cutoff(self.created.astimezone(timezone.get_default_timezone())),
             first_searched=first_searched,
             first_searched_hour=first_searched.hour if first_searched else None,
             first_match=first_match,

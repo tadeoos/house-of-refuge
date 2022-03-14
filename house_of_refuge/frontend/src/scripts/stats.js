@@ -35,7 +35,7 @@ const BarHourChart = ({submissions, defaultAverage = false}) => {
 
   const labels = [...Array(24).keys()];
 
-  const allDays = [...new Set(submissions.map(s => s.created_day))];
+  const allDays = [...new Set(submissions.map(s => s.day))];
   console.log("days: ", allDays);
 
   useEffect(() => {
@@ -44,7 +44,7 @@ const BarHourChart = ({submissions, defaultAverage = false}) => {
     const filterValue = submissionFilter[0].value;
     const daysCount = allDays.length;
     if (!["all", "average"].includes(filterValue)) {
-      baseSubmissions = submissions.filter(s => s.created_day === filterValue);
+      baseSubmissions = submissions.filter(s => s.day === filterValue);
     }
 
     const createdGgrouped = groupBy(baseSubmissions, (v) => v["created_hour"]);
