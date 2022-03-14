@@ -31,7 +31,7 @@
   "looking_for_host": "Looking for a host",
   "host_found_by": "Host found by",
   "received_at": "Received at {{timestamp}}",
-  "source_option_terrain": "Western St.",
+  "source_option_terrain": "On the ground",
   "source_option_webform": "Website",
   "source_option_mail": "Email",
   "source_option_other": "Other",
