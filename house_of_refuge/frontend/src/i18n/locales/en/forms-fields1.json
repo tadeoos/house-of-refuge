@@ -12,7 +12,7 @@
   "zip_code": "Zip code",
   "address": "Adress (street, number)",
   "people_to_accommodate": "How many people are you able to host in reasonable conditions?",
-  "age": "How old are you?",
+  "age": "Your age:",
   "languages": "What languages do you speak",
   "when_to_call": "At what hours can we get in touch with you?",
   "when_to_call_subHeading": "Quite a lot of people arrive after midnight. Can we call you late at night? (Choose 0-24 if we can call around the clock)",
