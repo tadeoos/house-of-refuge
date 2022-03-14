@@ -28,7 +28,7 @@
   "coordinators_actions": "Coordinator's actions",
   "submitting_person": "Submitting person",
   "change_source": "Change source",
-  "looking_for_host": "Looking for host",
+  "looking_for_host": "Looking for a host",
   "host_found_by": "Host found by",
   "received_at": "Received at {{timestamp}}",
   "source_option_terrain": "Western St.",
