@@ -5,8 +5,7 @@ import axios from 'axios';
 import { getCookie } from "../scripts/utils";
 import { useSearchParams } from "react-router-dom";
 import { StyledForm, Label, Input, SubHeading, CustomIntRange, RadioField, RadioChoice, SelectField, Button, Alert, Field, Success } from '../components/FormComponents';
-
-
+import { Link } from "react-router-dom";
 
 
 const Primary = styled.div`
@@ -92,7 +91,6 @@ const Form = ({ formData, fields, validationSchema, url, successInfo, user, prim
     }
   };
 
-
   useEffect(() => {
     formik.setFieldValue('when_to_call', whenToCall);
   }, [whenToCall]);
@@ -105,6 +103,7 @@ const Form = ({ formData, fields, validationSchema, url, successInfo, user, prim
     window.scrollTo(0, 0);
   }, [error]);
 
+
   const shouldRenderField = (field) => {
     if (field.publicOnly) {
       return !user;
@@ -114,6 +113,7 @@ const Form = ({ formData, fields, validationSchema, url, successInfo, user, prim
     return true;
   };
 
+
   const formik = useFormik({
     initialValues: formData || fields.filter(field => shouldRenderField(field)).reduce((acc, field) => (acc[field.name] =
       field.type === 'checkbox' ? true :
@@ -121,7 +121,6 @@ const Form = ({ formData, fields, validationSchema, url, successInfo, user, prim
           field.type === 'date' ? new Date().toISOString().split('T')[0] :
             field.name === 'receiver' && user ? user.id :
               '', acc), {}),
-
     validationSchema: validationSchema({ publicOnly: !user }),
     onSubmit: async (values, { resetForm }) => {
       const { city, ...rest } = values;
@@ -172,8 +171,10 @@ const Form = ({ formData, fields, validationSchema, url, successInfo, user, prim
       })
       .then(res => {
         if (res.status === 204) {
+          formik.resetForm();
           setSuccess(true);
           removeParams();
+          setToDelete(false);
         } else {
           setError(true);
         }
@@ -183,7 +184,9 @@ const Form = ({ formData, fields, validationSchema, url, successInfo, user, prim
   return (
     success ? <div><Success> {successInfo} </Success>
       <div style={{ maxWidth: "300px", margin: "12px auto" }}>
-        <Button onClick={() => setSuccess(false)}>Dodaj kolejne</Button>
+        <Link to={url === '/api/zglos' ? '/find' : '/share'}>
+          <Button onClick={() => setSuccess(false)} >Dodaj kolejne</Button>
+        </Link>
       </div>
     </div> :
       <div style={{ marginTop: 100 }}>
@@ -274,6 +277,7 @@ const Form = ({ formData, fields, validationSchema, url, successInfo, user, prim
           <Button
             type="submit"
             disabled={formik.isSubmitting}
+            onClick={() => !formik.isValid && window.scrollTo(0, 0)}
           >
             {formData ? 'Zapisz' : 'Wyślij'}
           </Button>
@@ -299,6 +303,7 @@ const Form = ({ formData, fields, validationSchema, url, successInfo, user, prim
           </ConfirmationPopUp>}
 
         </StyledForm>
+
       </div>
 
   );

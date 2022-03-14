@@ -34,7 +34,7 @@ const Button = styled.button`
     padding: 0;
     margin: 0;
     background-color: transparent;
-    margin-right: 16px;
+    margin-right: 10px;
     transition: all 0.3s;
 
     :hover {

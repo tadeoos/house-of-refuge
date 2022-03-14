@@ -55,14 +55,23 @@ def home(request):
     return render(request, "main/home.html", {"props": dict(userData=user), "no_nav": True})
 
 
-@ensure_csrf_cookie
 def edit(request):
-    token = request.GET.get("t")
+    return render(request, "main/home.html", {"no_nav": True})
+
+
+@require_http_methods(["POST"])
+@ensure_csrf_cookie
+def form_data(request):
+    data = json.loads(request.body)
+    token = data['token']
+    print(token)
     form_data = None
     if token:
         host = get_object_or_404(HousingResource, token=token)
         form_data = host.for_edit()
-    return render(request, "main/home.html", {"props": dict(formData=form_data), "no_nav": True})
+    return JsonResponse({
+        "formData": form_data}
+    )
 
 
 @require_http_methods(["POST"])

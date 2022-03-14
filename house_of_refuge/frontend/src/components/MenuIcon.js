@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { colors } from '../theme';
 
 const StyledMenuIcon = styled.div`
-   width: 22px;
+   width: 48px;
     .st0 {
         fill: ${colors.veryDarkGrey};
     }
@@ -12,15 +12,27 @@ const MenuIcon = ({ className }) => {
 
     return (
         <StyledMenuIcon className={className}>
-            <svg  viewBox="0 0 22 22"  >
-                <g id="XMLID_314_">
-                    <path id="XMLID_320_" d="M11,1.2c5.4,0,9.8,4.4,9.8,9.8s-4.4,9.8-9.8,9.8S1.2,16.4,1.2,11S5.6,1.2,11,1.2 M11,0C4.9,0,0,4.9,0,11
-		s4.9,11,11,11S22,17,22,11S17.1,0,11,0L11,0z"/>
-                    <g id="XMLID_713_">
-                        <path id="XMLID_714_" d="M10.3,14.9V9.4H9V7.9h3v7h1.3v1.5H9v-1.5H10.3z M10,5c0-0.3,0.1-0.5,0.3-0.7S10.8,4,11.1,4
-			c0.3,0,0.5,0.1,0.7,0.3s0.3,0.4,0.3,0.7S12,5.5,11.8,5.7S11.3,6,11.1,6c-0.3,0-0.5-0.1-0.7-0.3C10.1,5.5,10,5.3,10,5z"/>
+            <svg viewBox="0 0 48 22" >
+                    <g id="XMLID_315_">
+                        <path id="XMLID_330_" d="M36.7,22H11.3c-6.1,0-11-4.9-11-11s4.9-11,11-11h25.5c6.1,0,11,4.9,11,11S42.8,22,36.7,22z M11.3,1
+			c-5.5,0-10,4.5-10,10s4.5,10,10,10h25.5c5.5,0,10-4.5,10-10s-4.5-10-10-10H11.3z"/>
                     </g>
-                </g>
+                    <g id="XMLID_166_">
+                        <g id="XMLID_316_">
+                            <path id="XMLID_732_" d="M14.6,14.1V9.7l-1.9,4.4h-0.6l-1.9-4.4v4.4H9V7.8h1.7l1.8,4.1l1.8-4.1h1.7v6.3H14.6z" />
+                        </g>
+                        <g id="XMLID_318_">
+                            <path id="XMLID_729_" d="M18.3,14.1V7.8h4.6v1.1h-3.3v1.5h3.3v1.1h-3.3V13h3.3v1.1H18.3z" />
+                        </g>
+                        <g id="XMLID_324_">
+                            <path id="XMLID_726_" d="M29.6,14.1l-3.3-4.4v4.4h-1.3V7.8h1.3l3.2,4.2V7.8h1.2v6.3H29.6z" />
+                        </g>
+                        <g id="XMLID_326_">
+                            <path id="XMLID_723_" d="M33.3,11.6V7.8h1.3v3.7c0,1,0.6,1.6,1.6,1.6c1,0,1.6-0.6,1.6-1.6V7.8H39v3.8c0,1.6-1,2.6-2.9,2.6
+				C34.2,14.2,33.3,13.2,33.3,11.6z"/>
+                        </g>
+                    </g>
+
             </svg>
 
 
