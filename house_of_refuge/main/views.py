@@ -3,7 +3,6 @@ import json
 import logging
 from collections import defaultdict
 from datetime import timedelta
-from anymail.message import AnymailMessage
 
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
@@ -18,12 +17,11 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
-from house_of_refuge.main.utils import send_mail
 
+from house_of_refuge.main.utils import send_mail
 # Create your views here.
 from .models import HousingResource, Submission, SubStatus, Coordinator, ObjectChange, END_OF_DAY, SubSource
 from .serializers import SubmissionSerializer, HousingResourceSerializer
-
 
 logger = logging.getLogger(__name__)
 
