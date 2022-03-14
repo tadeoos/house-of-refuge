@@ -399,7 +399,7 @@ class Submission(TimeStampedModel):
         return dict(
             id=self.id,
             created=self.created.astimezone(timezone.get_default_timezone()),
-            created_day=self.created.astimezone(timezone.get_default_timezone()).date(),
+            created_day=get_our_today_cutoff(self.created),
             created_hour=self.created.astimezone(timezone.get_default_timezone()).hour,
             status=self.status,
             finished_at=self.finished_at,
