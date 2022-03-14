@@ -9,7 +9,7 @@ export const fields1 = [
     {
         name: 'about_info',
         label: 'Powiedz coś o sobie?',
-        subHeading: 'Ile masz lat? Z kim mieszkasz (jeśli przyjmujesz kogoś u siebie)?',
+        subHeading: 'Z kim mieszkasz (jeśli przyjmujesz kogoś u siebie)?',
         type: 'textarea'
     },
     {
@@ -67,6 +67,7 @@ export const fields1 = [
     {
         name: 'languages',
         label: 'Języki jakie znasz',
+        subHeading: 'Języki obce lokatorów i lokatorek',
         type: 'text'
     },
     {
@@ -93,7 +94,7 @@ export const fields1 = [
     {
         name: 'details',
         label: 'Garść informacji o miejscu',
-        subHeading: 'Języki obce lokatorów i lokatorek, dostępna pościel i ręczniki, inne',
+        subHeading: 'Np. dostępna pościel i ręczniki, inne',
         type: 'text'
     },
     {
