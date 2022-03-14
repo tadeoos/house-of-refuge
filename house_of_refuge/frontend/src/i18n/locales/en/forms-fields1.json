@@ -11,7 +11,7 @@
   "city": "City",
   "zip_code": "Zip code",
   "address": "Adress (street, number)",
-  "people_to_accommodate": "How many people can you support, providing them decent conditions",
+  "people_to_accommodate": "How many people are you able to host in reasonable conditions?",
   "age": "How old are you?",
   "languages": "What languages do you speak",
   "when_to_call": "At what hours can we get in touch with you?",
