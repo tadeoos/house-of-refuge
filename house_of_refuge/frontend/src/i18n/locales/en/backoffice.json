@@ -12,7 +12,7 @@
   "only_mine": "Only mine",
   "submissions_count": "{{submCount}} submission",
   "description": "Description",
-  "languages": "Languages",
+  "languages": "Languages:",
   "nationality": "Nationality",
   "name": "Name",
   "phone": "Phone no.",
