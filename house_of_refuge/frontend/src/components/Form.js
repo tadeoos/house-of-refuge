@@ -93,7 +93,7 @@ const Form = ({ formData, fields, validationSchema, url, successInfo, user, prim
 
   useEffect(() => {
     formik.setFieldValue('when_to_call', whenToCall);
-  }, [whenToCall]);
+  }, [whenToCall, success]);
 
   useEffect(() => {
     !user && formik.setFieldValue('source', 'webform');
