@@ -1,7 +1,7 @@
 {
   "name": "First name and last name",
   "about_info": "Basic info",
-  "about_info_subHeading": "How old are you? With whom do you live (if you are inviting)?",
+  "about_info_subHeading": "Do you normally work from home? Who do you live with? etc.",
   "resource": "Resource",
   "resource_choice_home": "Family house",
   "resource_choice_flat": "Apartment",
