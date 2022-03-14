@@ -12,7 +12,7 @@ const StyledHeader = styled.div`
   top: 0;
   width: 100%;
 
-  > a {
+  .logo {
     display: block;
     margin: auto; 
     width:  ${p => p.sticky ? '105px' : '90px'};
@@ -35,10 +35,10 @@ const Header = () => {
 
   return (
     <StyledHeader sticky={scrollPosition > 90}>
-      <Link to="/">
+      <Link className='logo' to="/">
         <Logo compact={scrollPosition > 90} />
       </Link>
-      <Menu   />
+      <Menu />
     </StyledHeader>
   );
 };

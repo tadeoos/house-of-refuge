@@ -21,15 +21,10 @@ const StyledLink = styled(Link)`
   
 `;
 
-const MainMenu = styled.div`
-  position: fixed;
-  top: 6px;
-  right: 6px;
-  display: flex;
-  justify-content: right;
-`;
-
 const Button = styled.button`
+    position: fixed;
+    top: 4px;
+    right: 36px;
     border: none;
     padding: 0;
     margin: 0;
@@ -40,18 +35,28 @@ const Button = styled.button`
     :hover {
         opacity: 0.7;
     }
+
+    @media (max-width: 600px) {
+     left: 12px;
+    }
 `;
 
 const ExtrernalLink = styled.a`
+    position: fixed;
+    top: 4px;
+    right: 16px;
     border: none;
     padding: 0;
     margin: 0;
     background-color: transparent;
-    margin-right: 10px;
     transition: all 0.3s;
 
     :hover {
         opacity: 0.7;
+    }
+
+    @media (max-width: 600px) {
+        right: 12px;
     }
 `;
 
@@ -61,12 +66,16 @@ const MiniMenu = styled.div`
    min-width: 220px;
    background-color: white;
    top: 42px;
-   margin-right: 14px;
+   right: 14px;
    border-radius: 22px;
    padding: 8px;
    -webkit-box-shadow: 0px 5px 28px 0px rgba(0, 0, 0, 0.14);
     -moz-box-shadow: 0px 5px 28px 0px rgba(0, 0, 0, 0.14);
     box-shadow: 0px 5px 28px 0px rgba(0, 0, 0, 0.14);
+
+    @media (max-width: 600px) {
+        left: 14px;
+    }
 
 `;
 
@@ -75,7 +84,7 @@ const Menu = () => {
     const { ref, miniMenuOpened, setMiniMenuOpened } = useComponentVisible(true);
 
     return (
-        <MainMenu>
+        <>
             <Button onClick={() => setMiniMenuOpened(!miniMenuOpened)}>
                 <MenuIcon />
             </Button>
@@ -100,7 +109,7 @@ const Menu = () => {
             >
                 <LogoFB />
             </ExtrernalLink>
-        </MainMenu>
+        </>
     );
 };
 
