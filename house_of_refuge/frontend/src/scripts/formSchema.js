@@ -93,7 +93,17 @@ export const fields1 = [
     {
         name: 'details',
         label: 'Garść informacji o miejscu',
-        subHeading: 'Obecność zwierząt, języki obce lokatorów i lokatorek, dostępna pościel i ręczniki, inne',
+        subHeading: 'Języki obce lokatorów i lokatorek, dostępna pościel i ręczniki, inne',
+        type: 'text'
+    },
+    {
+        name: 'living_with_pets',
+        label: 'Czy mieszkasz ze zwierzętami?',
+        type: 'text'
+    },
+    {
+        name: 'can_take_person_with_pets',
+        label: 'Czy możesz przyjąć osobę ze zwierzętami?',
         type: 'text'
     },
     {
@@ -155,6 +165,8 @@ export const validationSchema1 = () => yup.object({
     availability: yup.date().required('Pole wymagane'),
     accommodation_length: yup.number().required('Pole wymagane'),
     details: yup.string().required('Pole wymagane'),
+    living_with_pets: yup.string().required('Pole wymagane'),
+    can_take_person_with_pets: yup.string().required('Pole wymagane'),
     transport: yup.string().required('Pole wymagane'),
     phone_number: yup
         .string()
