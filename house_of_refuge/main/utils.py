@@ -9,6 +9,10 @@ def ago(**kwargs):
     return timezone.now() - timedelta(**kwargs)
 
 
+def extract_number_from_string(str, default=0):
+    return max([int(i) for i in re.findall(r"\d+", str)] or [default])
+
+
 def get_phone_number_display(phone_str):
     def switch_phone(matchobj):
         phone = matchobj.group(0).strip()

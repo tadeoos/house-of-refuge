@@ -14,7 +14,7 @@ from django.utils.translation import gettext_lazy as _
 from model_utils.models import TimeStampedModel
 
 # Create your models here.
-from house_of_refuge.main.utils import ago, get_phone_number_display
+from house_of_refuge.main.utils import ago, get_phone_number_display, extract_number_from_string
 
 User = get_user_model()
 
@@ -181,7 +181,8 @@ class HousingResource(TimeStampedModel):
             when_to_call=self.when_to_call,
             costs=self.costs,
             availability=self.availability,
-            accommodation_length=self.accommodation_length,
+            accommodation_length=extract_number_from_string(
+                self.accommodation_length, default=0) or self.accommodation_length,
             details=self.details,
             transport=self.transport,
             living_with_pets=self.living_with_pets or "",
@@ -189,7 +190,7 @@ class HousingResource(TimeStampedModel):
             phone_number=get_phone_number_display(self.phone_number),
             backup_phone_number=get_phone_number_display(self.backup_phone_number),
             email=self.email,
-            extra=self.extra,
+            extra=self.extra or "",
         )
 
     def sub_representation(self):
@@ -360,7 +361,7 @@ class Submission(TimeStampedModel):
 
     @property
     def people_as_int(self):
-        return max([int(i) for i in re.findall(r"\d+", self.people)] or [1])
+        return extract_number_from_string(self.people, default=1)
 
     @property
     def accomodation_in_the_future(self):
