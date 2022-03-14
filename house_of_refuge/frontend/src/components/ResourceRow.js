@@ -123,7 +123,11 @@ export const ResourceRow = ({resource, isExpanded, onMatch, user, activeSub, com
   const [note, setNote] = useState(resource.note);
   const [hide, setHide] = useState(false);
 
-  console.log("user: ", user);
+  useEffect(() => {
+    setNote(resource.note);
+    setAvailableFrom(resource.availability);
+  }, [resource]);
+
 
   useEffect(() => {
     return () => {
@@ -237,7 +241,7 @@ export const ResourceRow = ({resource, isExpanded, onMatch, user, activeSub, com
         </tr>
         <tr>
           <th>Notatka</th>
-          {compact ? <td>{note}</td> : <>
+          {compact ? <td><EditableField value={note} onRename={updateNote}/></td> : <>
             <td><EditableField value={note} onRename={updateNote}/></td>
             <td className={"text-center"}>{getReadyDisplay(resource)}</td>
             <td className={"text-center"} colSpan="3">

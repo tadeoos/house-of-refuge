@@ -370,7 +370,12 @@ a {
 .dropped-row {
   border: 4px $logo-blue solid;
   margin: 10px 0;
-  background-color: white;
+  background-color: $our-white;
+
+  &:empty {
+    border: 0;
+    margin: 0;
+  }
 }
 
 .pick-up-true {
