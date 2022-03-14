@@ -99,6 +99,7 @@ const App = (props) => {
             url='/api/zglos'
             successInfo='Дякуємо за подання.'
             user={user}
+            canAddMore={true}
           />
         </>} />
         <Route path="/jazda/stolik" element={<>

@@ -229,7 +229,7 @@ const App = ({startDate}) => {
             </Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>
-        <QuickFilter label={"Kumultywnie"}>
+        <QuickFilter label={"Kumulatywnie"}>
           <BootstrapSwitchButton
               size={"sm"}
               checked={cumulative}

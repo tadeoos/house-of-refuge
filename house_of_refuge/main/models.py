@@ -184,6 +184,8 @@ class HousingResource(TimeStampedModel):
             accommodation_length=self.accommodation_length,
             details=self.details,
             transport=self.transport,
+            living_with_pets=self.living_with_pets or "",
+            can_take_person_with_pets=self.can_take_person_with_pets or "",
             phone_number=get_phone_number_display(self.phone_number),
             backup_phone_number=get_phone_number_display(self.backup_phone_number),
             email=self.email,

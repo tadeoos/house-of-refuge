@@ -1,28 +1,31 @@
 import datetime
 import json
-import random
-from collections import defaultdict, Counter
+import logging
+from collections import defaultdict
 from datetime import timedelta
+from anymail.message import AnymailMessage
 
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
-from django.core.mail import send_mail
 from django.db import transaction
-from django.db.models import Count
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render
 from django.template.loader import get_template
 from django.utils import timezone
-from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
+from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.http import require_http_methods
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
+from house_of_refuge.main.utils import send_mail
 
 # Create your views here.
-from .models import HousingResource, Submission, SubStatus, Coordinator, ObjectChange, User, END_OF_DAY, SubSource
+from .models import HousingResource, Submission, SubStatus, Coordinator, ObjectChange, END_OF_DAY, SubSource
 from .serializers import SubmissionSerializer, HousingResourceSerializer
+
+
+logger = logging.getLogger(__name__)
 
 
 @login_required
@@ -78,7 +81,6 @@ def get_form_data(request):
 @transaction.atomic
 def resource_match_found(request):
     data = json.loads(request.body)
-    print(f"Host znaleziony: {data}")
     resource_id = data["resource"]
     sub_id = data["sub"]
     resource = HousingResource.objects.select_for_update().get(id=resource_id)
@@ -148,9 +150,13 @@ def send_email_with_edit_token(request):
         email_text_content = get_template("emails/host_edit.txt").render(
             dict(replies=replies, multiple=len(replies) > 1)
         )
-        # html_content = get_template("emails/ping_email.html").render({"user": user})
-        from_email = "Grupa Zasoby <grupazasoby@gmail.com>"
-        send_mail(subject, email_text_content, from_email, [email])
+        send_mail(
+            subject=subject,
+            message=email_text_content,
+            from_email="Grupa Zasoby <powiadomienia@grupazasoby.pl>",
+            recipient_list=[email],
+            reply_to=["grupazasoby@gmail.com"]
+        )
     return Response({}, status=status.HTTP_204_NO_CONTENT)
 
 
@@ -168,7 +174,20 @@ def create_resource(request):
     if request.method == "POST":
         serializer = HousingResourceSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
+            obj = serializer.save()
+            email_text_content = get_template("emails/host_confirmation.txt").render(
+                dict(edit_link=obj.get_edit_url())
+            )
+            try:
+                send_mail(
+                    subject="Zgłoszenie przyjęte!",
+                    message=email_text_content,
+                    from_email="Grupa Zasoby <powiadomienia@grupazasoby.pl>",
+                    recipient_list=[obj.email],
+                    reply_to=["grupazasoby@gmail.com"]
+                )
+            except Exception as e:
+                logger.error(f"Mail sending error for id={obj.id}", exc_info=e)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
