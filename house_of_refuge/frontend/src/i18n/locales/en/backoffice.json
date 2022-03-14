@@ -35,7 +35,7 @@
   "source_option_webform": "Website",
   "source_option_mail": "Email",
   "source_option_other": "Other",
-  "submission_id": "SUBMISSION ID",
+  "submission_id": "ENTRY ID",
   "set_submission_free": "Release this entry",
   "set_connection_free": "Set connection free",
   "add_note": "Additional info",
