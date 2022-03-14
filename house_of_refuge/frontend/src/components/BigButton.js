@@ -2,18 +2,23 @@ import styled from 'styled-components';
 
 const StyledBigButton = styled.div`
    cursor: pointer;
-   color:  ${p => p.color};
-   background-color:  ${p => p.backgroundColor};
+   color: ${p => p.color};
+   background-color: ${p => p.backgroundColor};
    margin: auto;
-   padding: 14px 44px;
-   border-radius: 150px;
-
-
+   padding: 14px 60px 15px;
+   border: ${p => p.outlined ? `4px solid ${p.color}` : 'initial'};
+   border-radius: 70px;
+   transition:  border-radius 0.3s;
+   
+   :hover {
+       border-radius: 30px;
+   }
 
 `;
 
 const Primary = styled.span`
    font-size: 54px;
+   font-size: 42.5px;
    font-weight: 700;
 
    @media (max-width: 600px) {
@@ -24,8 +29,9 @@ const Primary = styled.span`
 
 const Secondary = styled.div`
    font-size: 21px;
+   font-size: 30px;
    text-align: center;
-   margin-top: -8px;
+   margin-top: -10px;
    
    @media (max-width: 600px) {
     margin-top: -2px;
@@ -34,12 +40,13 @@ const Secondary = styled.div`
 `;
 
 
-const BigButton = ({ primaryText, secondaryText, backgroundColor, color, onClick }) => {
+const BigButton = ({ primaryText, secondaryText, backgroundColor, color, outlined, onClick }) => {
 
     return (
         <StyledBigButton
             color={color}
             backgroundColor={backgroundColor}
+            outlined={outlined}
             onClick={onClick}
         >
             <Primary> {primaryText} </Primary>

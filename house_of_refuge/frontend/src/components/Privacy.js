@@ -5,7 +5,7 @@ const StyledPrivacy = styled.div`
   font-size: 15px;
   max-width: 650px;
   margin: auto;
-  margin-top: 72px;
+  margin-top: 172px;
 
   h3 {
       margin-bottom: 36px;
