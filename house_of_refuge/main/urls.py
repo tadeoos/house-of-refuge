@@ -18,7 +18,7 @@ urlpatterns = [
     path("jazda/stolik/", login_required(views.home), name="home-stolik"),
 
     # API
-    path("api/edit", views.form_data, name="form_data"),
+    path("api/edit", views.get_form_data, name="form_data"),
     path("api/zasoby", views.get_resources, name="zasoby_get"),
     path("api/zgloszenia", views.get_submissions, name="zgloszenia_get"),
 
