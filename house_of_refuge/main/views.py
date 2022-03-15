@@ -278,6 +278,12 @@ def latest_resource(request):
 
 
 @require_http_methods(["GET"])
+def check_submission_limit(request):
+    active = Submission.objects.filter(status__in=[SubStatus.NEW, SubStatus.SEARCHING]).count()
+    return JsonResponse({"can_add": active < 30})
+
+
+@require_http_methods(["GET"])
 @login_required
 def get_resources(request):
     since = request.GET.get("since", "0")
