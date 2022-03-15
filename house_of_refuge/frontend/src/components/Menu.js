@@ -23,13 +23,12 @@ const StyledLink = styled(Link)`
 
 const Button = styled.button`
     position: fixed;
-    top: 4px;
-    right: 36px;
+    top: 5px;
+    right: 52px;
     border: none;
     padding: 0;
     margin: 0;
     background-color: transparent;
-    margin-right: 10px;
     transition: all 0.3s;
 
     :hover {
@@ -37,13 +36,13 @@ const Button = styled.button`
     }
 
     @media (max-width: 600px) {
-     left: 12px;
+     left: 10px;
     }
 `;
 
 const ExtrernalLink = styled.a`
     position: fixed;
-    top: 4px;
+    top: 5px;
     right: 16px;
     border: none;
     padding: 0;
@@ -63,7 +62,7 @@ const ExtrernalLink = styled.a`
 
 const MiniMenu = styled.div`
    position: fixed;
-   min-width: 220px;
+   max-width: 220px;
    background-color: white;
    top: 42px;
    right: 14px;
@@ -81,14 +80,12 @@ const MiniMenu = styled.div`
 
 
 const Menu = () => {
-    const { ref, miniMenuOpened, setMiniMenuOpened } = useComponentVisible(true);
+    const { menu, button, miniMenuOpened, setMiniMenuOpened } = useComponentVisible(true);
 
     return (
         <>
-            <Button onClick={() => setMiniMenuOpened(!miniMenuOpened)}>
-                <MenuIcon />
-            </Button>
-            {miniMenuOpened && <MiniMenu ref={ref}>
+            <Button ref={button} > <MenuIcon /> </Button>
+            {miniMenuOpened && <MiniMenu ref={menu}>
                 <StyledLink to="/privacy" onClick={() => setMiniMenuOpened(!miniMenuOpened)}>
                     <TextMultiLang
                         primaryText="Polityka prywatności"
