@@ -31,7 +31,7 @@ const Privacy = ({ className }) => {
                     Hej. Jesteś tu, bo chcesz pomóc Ukraińcom i Ukrainkom, którzy znaleźli się w trudnej sytuacji materialnej w Polsce. Jedną z podstawowych potrzeb każdego z nas jest miejsce schronienia - dom, choćby tymczasowy, choćby prowizoryczny. Tworzymy oddolną, prywatną bazę danych dotyczącą takich miejsc, udostępnianych przez bliskich i znajomych na terenie Warszawy, mającą w pierwszej kolejności wspierać osoby zgłaszające się do Fundacji Ocalenie, w drugiej indywidualnie.
                 </p>
                 <p>
-                    Do bazy ma dostęp jedynie Zofia Jaworowska i Katarzyna Kunda.
+                    Do bazy ma dostęp jedynie Zofia Jaworowska.
                 </p>
                 <p>
                     W przypadku zgłoszenia zapotrzebowania przez Fundację, będziemy łączyć osoby potrzebujące z Wami – osobami zgłaszającymi chęć pomocy (czyli jeśli do Fundacji zgłosi się trzyosobowa rodzina, spróbujemy spośród zgromadzonych ofert wsparcia znaleźć taką przestrzeń, która tę rodzinę pomieści na jak najdłużej). Zakładamy też, że zapotrzebowanie może pojawić się z innych źródeł – od osób prywatnych działających w sprawie.
