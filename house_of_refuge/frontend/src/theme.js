@@ -1,3 +1,4 @@
 export const colors = {
-    veryDarkGrey: '#212121'
+    veryDarkGrey: '#212121',
+    grey: '#4F4F4F'
 };

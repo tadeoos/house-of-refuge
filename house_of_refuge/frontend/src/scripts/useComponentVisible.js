@@ -2,7 +2,8 @@ import { useState, useEffect, useRef } from 'react';
 
 export default function useComponentVisible() {
     const [miniMenuOpened, setMiniMenuOpened] = useState(false);
-    const ref = useRef(null);
+    const menu = useRef(null);
+    const button = useRef(null);
 
     const handleHideDropdown = (event) => {
       if (event.key === "Escape") {
@@ -10,20 +11,22 @@ export default function useComponentVisible() {
       }
     };
 
-    const handleClickOutside = event => {
-        if (ref.current && !ref.current.contains(event.target)) {
+    const handleClick = event => {
+        if (menu.current && !menu.current.contains(event.target)) {
             setMiniMenuOpened(false);
+        } else if (button.current && button.current.contains(event.target) ){
+            setMiniMenuOpened(!miniMenuOpened);
         }
     };
 
     useEffect(() => {
         document.addEventListener("keydown", handleHideDropdown, true);
-        document.addEventListener("click", handleClickOutside, true);
+        document.addEventListener("click", handleClick, true);
         return () => {
             document.removeEventListener("keydown", handleHideDropdown, true);
-            document.removeEventListener("click", handleClickOutside, true);
+            document.removeEventListener("click", handleClick, true);
         };
     });
 
-    return { ref, miniMenuOpened, setMiniMenuOpened };
+    return { menu, button, miniMenuOpened, setMiniMenuOpened };
 }

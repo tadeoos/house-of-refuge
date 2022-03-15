@@ -4,17 +4,17 @@ import Logo from './Logo.js';
 import Menu from './Menu.js';
 import { Link } from "react-router-dom";
 
-const StyledHeader = styled.div`
-  padding-top: ${p => p.sticky ? '2px' : '16px'};
+const LogoWrapper = styled.div`
   position: ${p => p.sticky ? 'fixed' : 'absolute'}; 
   background-color: ${p => p.sticky ? '#F7F7F7' : 'transparent'}; 
-  padding-bottom: 7px;
   top: 0;
   width: 100%;
+  height: 38px;
 
-  .logo {
+  > a {
     display: block;
     margin: auto; 
+    margin-top: ${p => p.sticky ? '5px' : '16px'}; 
     width:  ${p => p.sticky ? '105px' : '90px'};
   }
  
@@ -34,12 +34,14 @@ const Header = () => {
   }, []);
 
   return (
-    <StyledHeader sticky={scrollPosition > 90}>
-      <Link className='logo' to="/">
-        <Logo compact={scrollPosition > 90} />
-      </Link>
+    <>
+      <LogoWrapper sticky={scrollPosition > 90}>
+        <Link to="/">
+          <Logo compact={scrollPosition > 90} />
+        </Link>
+      </LogoWrapper>
       <Menu />
-    </StyledHeader>
+    </>
   );
 };
 
