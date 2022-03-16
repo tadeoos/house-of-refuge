@@ -3,6 +3,7 @@ import { colors } from '../theme';
 
 const StyledLogoFB = styled.div`
    width: 22px;
+   opacity: 0.9;
     .st0 {
         fill: ${colors.grey};
     }
