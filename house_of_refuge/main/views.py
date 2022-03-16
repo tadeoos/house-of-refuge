@@ -145,7 +145,7 @@ def update_resource_note(request, resource_id, **kwargs):
 @api_view(['POST'])
 def send_email_with_edit_token(request):
     email = request.data["email"]
-    replies = HousingResource.objects.filter(email=email).order_by('id')
+    replies = HousingResource.objects.filter(email__iexact=email).order_by('id')
     if replies:
         subject = "Link do edycji zgłoszenia"
         email_text_content = get_template("emails/host_edit.txt").render(

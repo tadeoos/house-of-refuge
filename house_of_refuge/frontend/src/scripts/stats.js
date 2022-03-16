@@ -258,6 +258,11 @@ const App = ({startDate}) => {
               datasetIdKey="id"
               height={100}
               width={400}
+              options={{
+                scales: {
+                  y: {beginAtZero: true}
+                },
+              }}
               data={{
                 labels: daysLabels,
                 datasets: [
