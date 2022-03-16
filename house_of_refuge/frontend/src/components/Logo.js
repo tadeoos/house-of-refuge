@@ -12,7 +12,7 @@ const StyledLogo = styled.div`
 const Logo = ({ compact }) => {
 
     return (
-        <StyledLogo compact={compact} >
+        <StyledLogo  >
             {compact ?
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 7">
                     <path d="M0,3.4c0-1.8,1.3-3,3.1-3h0c1.5,0,2.7,0.8,3,2.1h-2C4,2.3,3.6,2.1,3.2,2.1h0

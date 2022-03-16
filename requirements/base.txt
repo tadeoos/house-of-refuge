@@ -7,6 +7,7 @@ redis==4.1.4  # https://github.com/redis/redis-py
 hiredis==2.0.0  # https://github.com/redis/hiredis-py
 celery==5.2.3  # pyup: < 6.0  # https://github.com/celery/celery
 django-celery-beat==2.2.1  # https://github.com/celery/django-celery-beat
+tqdm==4.63.0
 
 # Django
 # ------------------------------------------------------------------------------
@@ -22,4 +23,5 @@ django-import-export==2.7.1
 django-webpack-loader==1.4.1
 djangorestframework==3.13.1
 django-extensions==3.1.5  # https://github.com/django-extensions/django-extensions
-tqdm==4.63.0
+django-solo==2.0.0
+

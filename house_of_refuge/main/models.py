@@ -14,6 +14,8 @@ from django.utils.translation import gettext_lazy as _
 from model_utils.models import TimeStampedModel
 
 # Create your models here.
+from solo.models import SingletonModel
+
 from house_of_refuge.main.utils import ago, get_phone_number_display, extract_number_from_string
 
 User = get_user_model()
@@ -315,7 +317,8 @@ class Submission(TimeStampedModel):
                                     related_name="coord_subs", help_text="Łącznik")
     matcher = models.ForeignKey(User, on_delete=models.SET_NULL, default=None, blank=True, null=True,
                                 related_name="matched_subs", help_text="Kto znalazł hosta")
-    resource = models.ForeignKey(HousingResource, on_delete=models.SET_NULL, default=None, blank=True, null=True, help_text="Zasób (Host)")
+    resource = models.ForeignKey(HousingResource, on_delete=models.SET_NULL, default=None, blank=True, null=True,
+                                 help_text="Zasób (Host)")
     priority = models.IntegerField(default=1)
     source = models.CharField(choices=SubSource.choices, default=SubSource.WEBFORM, max_length=64)
     should_be_deleted = models.BooleanField(default=False)
@@ -498,3 +501,20 @@ class ObjectChange(TimeStampedModel):
     class Meta:
         verbose_name = "Zmiana Rekordu"
         verbose_name_plural = "Zmiany Rekordów"
+
+
+class SiteConfiguration(SingletonModel):
+    submission_throttling = models.IntegerField(
+        default=30, verbose_name=_("submission throttling"),
+        help_text=_("Max number of open/searching submissions. Set to 0 to disable throttling.")
+    )
+    throttle_created_after = models.DateTimeField(
+        default=timezone.now, verbose_name=_("submission throttling active since"),
+        help_text=_("Only submissions created after this date will be "
+                    "counted in calculating throttling limit"))
+
+    def __str__(self):
+        return "Site Configuration"
+
+    class Meta:
+        verbose_name = _("Site Configuration")

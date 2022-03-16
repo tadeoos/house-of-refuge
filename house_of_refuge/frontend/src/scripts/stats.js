@@ -22,7 +22,7 @@ const getSourceDisplay = (v) => {
   }
 };
 
-const BarHourChart = ({submissions, defaultAverage = false}) => {
+const BarHourChart = ({submissions, yAxisMax, maxValueCallback, uniqueId, defaultAverage = false}) => {
   const [foundByHour, setFoundByHour] = useState([]);
   const [createdByHour, setCreatedByHour] = useState([]);
   const [searchedByHour, setSearchedByHour] = useState([]);
@@ -30,7 +30,7 @@ const BarHourChart = ({submissions, defaultAverage = false}) => {
   const [submissionFilter, setSubmissionFilter] = useState(defaultAverage ? [
     {label: "Średnia dzienna", value: "average"}
   ] : [
-      {label: "Wszystkie dni", value: "all"}
+    {label: "Wszystkie dni", value: "all"}
   ]);
 
   const labels = [...Array(24).keys()];
@@ -65,6 +65,7 @@ const BarHourChart = ({submissions, defaultAverage = false}) => {
     setCreatedByHour(createdByHourData);
     setSearchedByHour(searchedByHourData);
     setFoundByHour(foundByHourData);
+    maxValueCallback(Math.max(...createdByHourData), uniqueId);
   }, [submissions, submissionFilter]);
 
 
@@ -72,6 +73,11 @@ const BarHourChart = ({submissions, defaultAverage = false}) => {
     <Bar
         height={150}
         width={400}
+        options={{
+          scales: {
+            y: {suggestedMax: yAxisMax}
+          },
+        }}
         data={{
           labels: labels,
           datasets: [
@@ -127,6 +133,9 @@ const App = ({startDate}) => {
   const [submissionSource, setSubmissionSource] = useState(null);
   const [cumulative, setCumulative] = useState(false);
 
+  const [perChartMax, setPerChartMax] = useState({});
+  const [barChartYMax, setBarChartYMax] = useState(20);
+
   const daysLabels = [...new Set(submissions.map(s => s.day))];
 
   useEffect(async () => {
@@ -147,6 +156,12 @@ const App = ({startDate}) => {
   }, [submissionSource]);
 
 
+  const barChartNewMax = (maxValue, chartId) => setPerChartMax((pcm) => ({...pcm, [chartId]: maxValue}));
+
+  useEffect(() => {
+    setBarChartYMax(Math.max(...Object.values(perChartMax)));
+  }, [perChartMax]);
+  
   const subFilter = useCallback(
       (day, sub, attr) => {
         let baseCheck;
@@ -198,95 +213,96 @@ const App = ({startDate}) => {
 
 
   return isLoading ? <LoadingSpinner/> :
-  <>
-    <div className={"stats-line-chart"}>
-      <div className={"filters"}>
-        <Dropdown>
-          <Dropdown.Toggle variant="outline-secondary" size={"sm"}>
-            {showDataInPeople ? "Liczba ludzi" : "Liczba rekordów"}
-          </Dropdown.Toggle>
+      <>
+        <div className={"stats-line-chart"}>
+          <div className={"filters"}>
+            <Dropdown>
+              <Dropdown.Toggle variant="outline-secondary" size={"sm"}>
+                {showDataInPeople ? "Liczba ludzi" : "Liczba rekordów"}
+              </Dropdown.Toggle>
 
-          <Dropdown.Menu>
-            <Dropdown.Item onClick={() => setShowDataInPeople(pd => !pd)}>
-              {showDataInPeople ? "Pokaż w liczbie rekordów" : "Pokaż jako liczbę ludzi"}
-            </Dropdown.Item>
-          </Dropdown.Menu>
-        </Dropdown>
-        <Dropdown>
-          <Dropdown.Toggle variant="outline-secondary" size={"sm"}>
-            {`Źródło: ${getSourceDisplay(submissionSource)}`}
-          </Dropdown.Toggle>
+              <Dropdown.Menu>
+                <Dropdown.Item onClick={() => setShowDataInPeople(pd => !pd)}>
+                  {showDataInPeople ? "Pokaż w liczbie rekordów" : "Pokaż jako liczbę ludzi"}
+                </Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
+            <Dropdown>
+              <Dropdown.Toggle variant="outline-secondary" size={"sm"}>
+                {`Źródło: ${getSourceDisplay(submissionSource)}`}
+              </Dropdown.Toggle>
 
-          <Dropdown.Menu>
-            <Dropdown.Item onClick={() => setSubmissionSource(null)}>
-              Zewsząd
-            </Dropdown.Item>
-            <Dropdown.Item onClick={() => setSubmissionSource("terrain")}>
-              Teren
-            </Dropdown.Item>
-            <Dropdown.Item onClick={() => setSubmissionSource("webform")}>
-              Strona
-            </Dropdown.Item>
-          </Dropdown.Menu>
-        </Dropdown>
-        <QuickFilter label={"Kumulatywnie"}>
-          <BootstrapSwitchButton
-              size={"sm"}
-              checked={cumulative}
-              onChange={(checked) => {
-                setCumulative(checked);
+              <Dropdown.Menu>
+                <Dropdown.Item onClick={() => setSubmissionSource(null)}>
+                  Zewsząd
+                </Dropdown.Item>
+                <Dropdown.Item onClick={() => setSubmissionSource("terrain")}>
+                  Teren
+                </Dropdown.Item>
+                <Dropdown.Item onClick={() => setSubmissionSource("webform")}>
+                  Strona
+                </Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
+            <QuickFilter label={"Kumulatywnie"}>
+              <BootstrapSwitchButton
+                  size={"sm"}
+                  checked={cumulative}
+                  onChange={(checked) => {
+                    setCumulative(checked);
+                  }}
+              />
+            </QuickFilter>
+          </div>
+          <Line
+              datasetIdKey="id"
+              height={100}
+              width={400}
+              data={{
+                labels: daysLabels,
+                datasets: [
+                  {
+                    id: 1,
+                    label: 'Zgłoszenia',
+                    backgroundColor: '#FFD200',
+                    borderColor: '#FFD200',
+                    data: allSubsData,
+                  },
+                  {
+                    id: 2,
+                    label: 'Sukcesy',
+                    backgroundColor: '#519872',
+                    borderColor: '#519872',
+                    data: successSubsData,
+                  },
+                  {
+                    id: 3,
+                    label: 'Anulowane',
+                    backgroundColor: '#696969',
+                    borderColor: '#696969',
+                    data: cancelledSubsData,
+                  },
+                  {
+                    id: 4,
+                    label: 'Nowi hości',
+                    backgroundColor: '#005EAA',
+                    borderColor: '#005EAA',
+                    data: hostsData,
+                  },
+                ],
               }}
           />
-        </QuickFilter>
-      </div>
-      <Line
-          datasetIdKey="id"
-          height={100}
-          width={400}
-          data={{
-            labels: daysLabels,
-            datasets: [
-              {
-                id: 1,
-                label: 'Zgłoszenia',
-                backgroundColor: '#FFD200',
-                borderColor: '#FFD200',
-                data: allSubsData,
-              },
-              {
-                id: 2,
-                label: 'Sukcesy',
-                backgroundColor: '#519872',
-                borderColor: '#519872',
-                data: successSubsData,
-              },
-              {
-                id: 3,
-                label: 'Anulowane',
-                backgroundColor: '#696969',
-                borderColor: '#696969',
-                data: cancelledSubsData,
-              },
-              {
-                id: 4,
-                label: 'Nowi hości',
-                backgroundColor: '#005eaa',
-                borderColor: '#005eaa',
-                data: hostsData,
-              },
-            ],
-          }}
-      />
-    </div>
-    <div className={"row"}>
-      <div className={"col-6"}>
-        <BarHourChart submissions={baseSubs}/>
-      </div>
-      <div className={"col-6"}>
-        <BarHourChart submissions={baseSubs} defaultAverage={true}/>
-      </div>
-    </div>
-  </>;
+        </div>
+        <div className={"row"}>
+          <div className={"col-6"}>
+            <BarHourChart submissions={baseSubs} yAxisMax={barChartYMax} maxValueCallback={barChartNewMax} uniqueId={"bar-1"}/>
+          </div>
+          <div className={"col-6"}>
+            <BarHourChart submissions={baseSubs} yAxisMax={barChartYMax} maxValueCallback={barChartNewMax} uniqueId={"bar-2"}
+                          defaultAverage={true}/>
+          </div>
+        </div>
+      </>;
 };
 
 ReactDOM.render(

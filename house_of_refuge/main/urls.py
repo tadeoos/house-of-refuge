@@ -32,22 +32,9 @@ urlpatterns = [
 
     path("api/match_found", views.resource_match_found, name="match_found"),
     path("api/sub/update/<int:sub_id>", views.update_sub, name="sub_update"),
-
-
-
-
-
-
+    path("api/check_limit", views.check_submission_limit, name="check_limit"),
 
     path("api/resource/update/<int:resource_id>", views.update_resource, name="resource_update"),
-
-
-
-
-
-
-
-
 
     path("api/send_email_token", views.send_email_with_edit_token, name="send_email_token"),
 

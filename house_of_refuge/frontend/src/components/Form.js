@@ -24,7 +24,6 @@ import {Link} from "react-router-dom";
 const Primary = styled.div`
    font-size: 34px;
    font-weight: 700;
-   margin-top: 80px;
    text-align: center;
 
    @media (max-width: 600px) {
@@ -211,8 +210,7 @@ const Form = ({
                   </Link>
                 </div>}
           </div> :
-          <div style={{marginTop: 100}}>
-
+          <div>
             <Primary> {primaryText} </Primary>
             <Secondary> {secondaryText} </Secondary>
             {user && <Info marginTop={48}> <span> Zalogowany: {user.name} </span> </Info>}

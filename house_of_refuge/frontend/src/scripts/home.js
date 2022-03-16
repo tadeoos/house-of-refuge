@@ -6,7 +6,7 @@ import BigButton from '../components/BigButton.js';
 import Form from '../components/Form.js';
 import Privacy from '../components/Privacy.js';
 import Edit from '../components/Edit.js';
-import { fields1, fields2, validationSchema1, validationSchema2 } from './formSchema';
+import { fields2, validationSchema2 } from './formSchema';
 import {
   BrowserRouter,
   Routes,
@@ -14,7 +14,8 @@ import {
   Link,
 } from "react-router-dom";
 import { colors } from '../theme';
-
+import Share from '../pages/Share';
+import Find from '../pages/Find';
 
 const StyledApp = styled.div`
   font-family: 'proxima-nova', sans-serif;
@@ -24,17 +25,21 @@ const StyledApp = styled.div`
   display: flex;
   min-height: 100%;
   justify-content: center;
-  align-items: center;
-
+  padding-top: 180px;
+  
   .Footer {
     justify-content: flex-end;
   }
-`;
+  `;
 
 const ButtonWrap = styled.div`
+  margin-top: -180px;
   display: flex;
   flex-direction: column;
-
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
   > a {
     color: inherit;
     text-decoration: none;
@@ -51,6 +56,7 @@ const ButtonWrap = styled.div`
       }
   }
 `;
+
 
 
 const App = (props) => {
@@ -80,28 +86,8 @@ const App = (props) => {
             </Link>
           </ButtonWrap>
         </>} />
-        <Route path="/share" element={<>
-          <Form
-            primaryText="Udostępniam nocleg"
-            secondaryText="Можу надати житло"
-            fields={fields1}
-            validationSchema={validationSchema1}
-            url='/api/stworz_zasob'
-            successInfo='Dziękujemy za zgłoszenie.'
-          />
-        </>} />
-        <Route path="/find" element={<>
-          <Form
-            primaryText="Потребує житло"
-            secondaryText="Szukam noclegu"
-            fields={fields2}
-            validationSchema={validationSchema2}
-            url='/api/zglos'
-            successInfo='Дякуємо за подання.'
-            user={user}
-            canAddMore={true}
-          />
-        </>} />
+        <Route path="/share" element={<Share />} />
+        <Route path="/find" element={<Find  user={user} />} />
         <Route path="/jazda/stolik" element={<>
           <Form
             primaryText="Потребує житло"
