@@ -10,7 +10,7 @@ import H4 from '../typography/H4';
 import H5 from '../typography/H5';
 
 
-const Share = ({ user }) => {
+const Find = ({ user }) => {
     const [loading, setLoading] = useState(true);
     const [canAddMore, setCanAddMore] = useState(false);
 
@@ -73,6 +73,6 @@ const Share = ({ user }) => {
     );
 };
 
-export default Share;
+export default Find;
 
 
