@@ -10,6 +10,7 @@ const StyledMenuIcon = styled.div`
     }
 
     .logo-mobile {
+        margin-top: 4px;
         width: 22px;
         .st0 {
             fill: ${colors.grey};
@@ -51,20 +52,15 @@ const MenuIcon = () => {
 				C34.2,14.2,33.3,13.2,33.3,11.6z"/>
                     </g>
                 </g>
-
             </svg>
 
-
-            <svg viewBox="0 0 22 22" className='logo-mobile'  >
+            <svg viewBox="0 0 22 22" className='logo-mobile' >
                 <g id="XMLID_129_">
                     <rect id="XMLID_128_" x="3" y="4" className="st0" width="16" height="2" />
                     <rect id="XMLID_137_" x="3" y="10" className="st0" width="16" height="2" />
                     <rect id="XMLID_133_" x="3" y="16" className="st0" width="8" height="2" />
                 </g>
-
             </svg>
-
-
         </StyledMenuIcon>
     );
 };

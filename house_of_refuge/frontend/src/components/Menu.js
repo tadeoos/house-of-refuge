@@ -37,6 +37,7 @@ const Button = styled.button`
 
     @media (max-width: 600px) {
      left: 10px;
+     right: initial;
     }
 `;
 
