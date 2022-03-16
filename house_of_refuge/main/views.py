@@ -20,7 +20,10 @@ from rest_framework.response import Response
 
 from house_of_refuge.main.utils import send_mail
 # Create your views here.
-from .models import HousingResource, Submission, SubStatus, Coordinator, ObjectChange, END_OF_DAY, SubSource
+from .models import (
+    HousingResource, Submission, SubStatus, Coordinator, ObjectChange, END_OF_DAY, SubSource,
+    SiteConfiguration,
+)
 from .serializers import SubmissionSerializer, HousingResourceSerializer
 
 logger = logging.getLogger(__name__)
@@ -279,8 +282,15 @@ def latest_resource(request):
 
 @require_http_methods(["GET"])
 def check_submission_limit(request):
-    active = Submission.objects.filter(status__in=[SubStatus.NEW, SubStatus.SEARCHING]).count()
-    return JsonResponse({"can_add": active < 30})
+    config = SiteConfiguration.get_solo()
+    active = -1
+    if config.submission_throttling:
+        active = Submission.objects.filter(
+            source=SubSource.WEBFORM,
+            status__in=[SubStatus.NEW, SubStatus.SEARCHING],
+            created__gt=config.throttle_created_after,
+        ).count()
+    return JsonResponse({"can_add": active < config.submission_throttling})
 
 
 @require_http_methods(["GET"])

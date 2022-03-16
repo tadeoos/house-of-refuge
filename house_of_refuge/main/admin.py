@@ -7,8 +7,12 @@ from import_export import resources
 from import_export.admin import ImportExportModelAdmin
 from import_export.fields import Field
 from import_export.widgets import DateTimeWidget, DateWidget, Widget
+from solo.admin import SingletonModelAdmin
 
-from .models import HousingResource, HousingType, TransportRange, Submission, Coordinator, Status, ObjectChange
+from .models import (
+    HousingResource, HousingType, TransportRange, Submission, Coordinator, Status, ObjectChange,
+    SiteConfiguration,
+)
 
 
 class ChangeInline(admin.TabularInline):
@@ -249,5 +253,4 @@ class CoordinatorAdmin(ModelAdmin):
     autocomplete_fields = ['user']
 
 
-
-
+admin.site.register(SiteConfiguration, SingletonModelAdmin)

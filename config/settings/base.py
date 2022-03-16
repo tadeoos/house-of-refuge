@@ -82,6 +82,7 @@ THIRD_PARTY_APPS = [
     # "django_celery_beat",
     "django_extensions",
     "import_export",
+    "solo",
 ]
 
 LOCAL_APPS = [
