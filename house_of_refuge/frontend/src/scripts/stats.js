@@ -161,7 +161,7 @@ const App = ({startDate}) => {
   useEffect(() => {
     setBarChartYMax(Math.max(...Object.values(perChartMax)));
   }, [perChartMax]);
-  
+
   const subFilter = useCallback(
       (day, sub, attr) => {
         let baseCheck;
