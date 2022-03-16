@@ -128,7 +128,7 @@ const Find = ({ user }) => {
                                     <h5>Ночівлі в інших воєвудствах: <ExternalLink text='Grupa Granica' link='https://ukraina.grupagranica.pl/noclegi' /> </h5>
                                 </li>
                                 <li>
-                                    <h5>Додатки online: <ExternalLink text='sosua.org' link='http://sosua.org' />, <ExternalLink text='dopomoha.pl' link='https://dopomoha.pl' /> </h5>
+                                    <h5>Додатки online: <ExternalLink text='uasos.org' link='https://uasos.org' />, <ExternalLink text='dopomoha.pl' link='https://dopomoha.pl' /> </h5>
                                 </li>
                                 <li>
                                     <h5>Допомога особам з неповносправностями: <ExternalLink text='Mudita dla Ukrainy' link='https://stowarzyszeniemudita.pl/2022/03/08/mudita-dla-ukrainy/' /> </h5>
