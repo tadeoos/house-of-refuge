@@ -25,7 +25,7 @@ const StyledApp = styled.div`
   display: flex;
   min-height: 100%;
   justify-content: center;
-  padding-top: 180px;
+  padding-top: 240px;
   
   .Footer {
     justify-content: flex-end;
@@ -33,7 +33,7 @@ const StyledApp = styled.div`
   `;
 
 const ButtonWrap = styled.div`
-  margin-top: -180px;
+  margin-top: -240px;
   display: flex;
   flex-direction: column;
   display: flex;
