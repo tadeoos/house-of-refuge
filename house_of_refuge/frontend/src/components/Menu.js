@@ -42,6 +42,14 @@ const Button = styled.button`
     }
 `;
 
+const LangOption = styled.button`
+    border: none;
+    padding: 5px;
+    top: 0px;
+    margin: 3px;
+    background: transparent;
+`;
+
 const ExtrernalLink = styled.a`
     position: fixed;
     top: 5px;
@@ -80,6 +88,14 @@ const MiniMenu = styled.div`
 
 `;
 
+const LangMenu = styled.div`
+   position: fixed;
+   max-width: 220px;
+   background-color: white;
+   top: 0;
+   left: 14px;
+`;
+
 
 const Menu = () => {
     const { menu, button, miniMenuOpened, setMiniMenuOpened } = useComponentVisible(true);
@@ -92,16 +108,17 @@ const Menu = () => {
 
     return (
         <>
-            <Button ref={button} > <MenuIcon /> </Button>
-            {miniMenuOpened && <MiniMenu ref={menu}>
+            <LangMenu>
             {Object.keys(lngs).map((lng) => (
-                        <Button key={lng}
+                        <LangOption key={lng}
                                 style={{ fontWeight: i18n.resolvedLanguage === lng ? 'bold' : 'normal' }} 
-                                type="submit" 
                                 onClick={() => i18n.changeLanguage(lng)}>
                         {lngs[lng].nativeName}
-                        </Button>
+                        </LangOption>
                     ))}
+            </LangMenu>
+            <Button ref={button} > <MenuIcon /> </Button>
+            {miniMenuOpened && <MiniMenu ref={menu}>
                 <StyledLink to="/privacy" onClick={() => setMiniMenuOpened(!miniMenuOpened)}>
                     <TextMultiLang
                         primaryText={t('privacy_policy_title')}
@@ -121,6 +138,7 @@ const Menu = () => {
                 href='https://www.facebook.com/groups/zasobygrupa'
             >
                 <LogoFB />
+
             </ExtrernalLink>
         </>
     );

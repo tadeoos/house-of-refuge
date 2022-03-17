@@ -97,6 +97,8 @@ const Form = ({
                 user,
                 primaryText,
                 secondaryText,
+                localeNamespace,
+                fixedLocale,
                 canAddMore = false
               }) => {
   const [success, setSuccess] = useState(false);
@@ -204,7 +206,8 @@ const Form = ({
           }
         });
   };
-
+  console.log('localeNamespace', localeNamespace);
+  console.log('fixedLocale', fixedLocale);
   return (
       success ? <div><Success> {successInfo} </Success>
             {canAddMore &&

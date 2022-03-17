@@ -8,6 +8,7 @@ import H2 from '../typography/H2';
 import H4 from '../typography/H4';
 import ExternalLink from '../components/ExternalLink';
 import styled from 'styled-components';
+import { useTranslation } from 'react-i18next';
 
 const UseFulLinks = styled.div`
    h4 {
@@ -35,6 +36,8 @@ const UseFulLinks = styled.div`
 const Find = ({ user }) => {
     const [loading, setLoading] = useState(true);
     const [canAddMore, setCanAddMore] = useState(false);
+    const { t, i18n } = useTranslation(); // translation controlled through current state of lang selector
+    const uat = i18n.getFixedT('ua','common'); // translation fixed for UA lang (non-modifiable through selector)
 
     useEffect(async () => {
         return await axios({
@@ -62,7 +65,7 @@ const Find = ({ user }) => {
                         fields={fields2}
                         validationSchema={validationSchema2}
                         url='/api/zglos'
-                        successInfo='Дякуємо за подання.'
+                        successInfo={uat('thank_you_for_submission')}
                         user={user}
                         canAddMore={true}
                     /> :

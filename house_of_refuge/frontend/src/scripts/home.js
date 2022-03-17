@@ -65,7 +65,7 @@ const App = (props) => {
   const [user] = useState(props.userData);
   const { t, i18n } = useTranslation(); // translation controlled through current state of lang selector
   const uat = i18n.getFixedT('ua','common'); // translation fixed for UA lang (non-modifiable through selector)
-
+ 
   return (
     <StyledApp>
       <Header />
@@ -97,9 +97,11 @@ const App = (props) => {
             primaryText={uat('im_looking_for_accomodation')}
             secondaryText={t("im_looking_for_accomodation")}
             fields={fields2}
+            localeNamespace='fields2'
+            fixedLocale='ua'
             validationSchema={validationSchema2}
             url='/api/zglos'
-            successInfo='Дякуємо за подання.'
+            successInfo={uat('thank_you_for_submission')}
             user={user}
           />
         </>} />

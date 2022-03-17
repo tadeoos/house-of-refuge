@@ -69,7 +69,6 @@ const CoordinatorsHeader = ({coordinators, helped, hide}) => {
 
 const App = ({subs, userData, coordinators, helped}) => {
   let [searchParams, setSearchParams] = useSearchParams();
-  const { t, i18n } = useTranslation();
 
   const [activeSub, setActiveSub] = useState(null);
   const [sourceFilter, setSourceFilter] = useState(searchParams.getAll("z").map((i) => SOURCE_OPTIONS[i]));
