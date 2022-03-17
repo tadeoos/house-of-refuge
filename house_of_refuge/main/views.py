@@ -22,7 +22,7 @@ from house_of_refuge.main.utils import send_mail
 # Create your views here.
 from .models import (
     HousingResource, Submission, SubStatus, Coordinator, ObjectChange, END_OF_DAY, SubSource,
-    SiteConfiguration,
+    SiteConfiguration, Status,
 )
 from .serializers import SubmissionSerializer, HousingResourceSerializer
 
@@ -362,6 +362,12 @@ def activity_stats_view(request):
     base_start = Submission.objects.earliest("created").created
 
     all_hosts = HousingResource.objects.all().count()
+    cancelled_hosts = HousingResource.objects.filter(status=Status.IGNORE).count()
+    active_hosts = HousingResource.objects.filter(status=Status.NEW, availability__lte=timezone.now()).count()
+    turtle_hosts = HousingResource.objects.exclude(status=Status.IGNORE).filter(turtle=True).count()
+    active_turtle_hosts = HousingResource.objects.exclude(status=Status.IGNORE).filter(
+        turtle=True,
+        availability__lte=timezone.now()).count()
     all_subs = Submission.objects.all().count()
     all_success = Submission.objects.filter(status=SubStatus.SUCCESS).count()
     all_cancelled = Submission.objects.filter(status=SubStatus.CANCELLED).count()
@@ -375,6 +381,10 @@ def activity_stats_view(request):
         props=dict(startDate=base_start),
         all_subs=all_subs,
         all_hosts=all_hosts,
+        turtle_hosts=turtle_hosts,
+        active_turtle_hosts=active_turtle_hosts,
+        cancelled_hosts=cancelled_hosts,
+        active_hosts=active_hosts,
         all_success=all_success,
         all_cancelled=all_cancelled,
         terrain_subs=terrain_subs,
