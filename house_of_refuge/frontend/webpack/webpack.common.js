@@ -8,8 +8,8 @@ const {ProvidePlugin} = require("webpack");
 module.exports = {
   entry: {
     app: Path.resolve(__dirname, '../src/scripts/index.tsx'),
-    home: Path.resolve(__dirname, '../src/scripts/home.js'),
-    stats: Path.resolve(__dirname, '../src/scripts/stats.js'),
+    home: Path.resolve(__dirname, '../src/scripts/home.tsx'),
+    stats: Path.resolve(__dirname, '../src/scripts/stats.tsx'),
   },
   output: {
     path: Path.join(__dirname, '../build'),

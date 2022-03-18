@@ -14,9 +14,9 @@ import {
 import {toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import {ResourceList} from "../components/ResourceList";
-import {SOURCE_OPTIONS, SubmissionList} from "../components/SubmissionList";
 import useInterval from "use-interval";
 import {BrowserRouter, Route, Routes, useSearchParams} from "react-router-dom";
+import {SOURCE_OPTIONS, SubmissionList} from "../components/SubmissionList";
 
 
 const CoordinatorsHeader = ({coordinators, helped, hide}) => {
@@ -53,7 +53,7 @@ const CoordinatorsHeader = ({coordinators, helped, hide}) => {
 
 
 const App = ({subs, userData, coordinators, helped}) => {
-  let [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
 
 
   const [activeSub, setActiveSub] = useState(null);
@@ -66,11 +66,11 @@ const App = ({subs, userData, coordinators, helped}) => {
   const [activeNow, setActiveNow] = useState(strToBoolean(searchParams.get("a")));
 
 
-  const coordIds = Object.values(coordinators).map(g => g.map(c => c.user.id)).flat();
+  const coordIds = Object.values(coordinators).map((g: any) => g.map(c => c.user.id)).flat();
   const isCoordinator = coordIds.includes(userData.id);
   const [submissions, setSubmissions] = useState(subs);
   const [droppedHosts, setDroppedHosts] = useState([]);
-  const [hosts, setHosts] = useState([]);
+  const [hosts, setHosts] = useState([] as Array<any>);
 
 
   const [latestSubChange, setLatestSubChange] = useState(0);
@@ -82,9 +82,9 @@ const App = ({subs, userData, coordinators, helped}) => {
   // }, []);
 
   useEffect(() => {
-    let z = [];
-    let s = [];
-    let p = [];
+    const z: Array<string> = [];
+    const s: Array<string> = [];
+    const p: Array<string> = [];
     const checkParams = new URLSearchParams();
     if (sourceFilter.length) {
       SOURCE_OPTIONS.forEach((o, i) => {
@@ -108,7 +108,7 @@ const App = ({subs, userData, coordinators, helped}) => {
         checkParams.append("p", `${o.value}`);
       });
     }
-    let params = {z: z, s: s, p: p};
+    const params = {z: z, s: s, p: p} as any;
     if (droppedFilter) {
       params.d = "1";
       checkParams.append("d", "1");
@@ -149,7 +149,7 @@ const App = ({subs, userData, coordinators, helped}) => {
         const changedIds = changedHosts.map(s => s.id);
         setHosts((currentHosts) => [
           ...currentHosts.filter(s => !changedIds.includes(s.id)),
-          ...changedHosts.filter(h => shouldShowHost(h, userData.id))]
+          ...changedHosts.filter(h => shouldShowHost(h))]
         );
         setLatestHostChange(latest);
       } else {
@@ -216,7 +216,7 @@ const App = ({subs, userData, coordinators, helped}) => {
 
 
   return <Routes>
-    <Route exact path="/jazda" element={
+    <Route path="/jazda" element={
       <>
         {/*<div className="ribbon">*/}
         {/*  Wszystkiego najlepszego dla naszych cudownych wolontariuszek ❤️*/}
@@ -251,7 +251,11 @@ const App = ({subs, userData, coordinators, helped}) => {
 };
 
 ReactDOM.render(
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     <BrowserRouter><App {...props} /></BrowserRouter>,
     // React.createElement(App, window.props),    // gets the props that are passed in the template
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     window.react_mount,                                // a reference to the #react div that we render to
 );
