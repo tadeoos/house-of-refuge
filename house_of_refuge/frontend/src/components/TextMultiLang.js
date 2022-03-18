@@ -10,7 +10,7 @@ const Primary = styled.span`
 const Secondary = styled.div`
    font-size: 13.5px;
    margin-top: -4px;
-   
+
 `;
 
 
