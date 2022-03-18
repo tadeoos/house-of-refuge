@@ -7,9 +7,9 @@ const {ProvidePlugin} = require("webpack");
 
 module.exports = {
   entry: {
-    app: Path.resolve(__dirname, '../src/scripts/index.js'),
-    home: Path.resolve(__dirname, '../src/scripts/home.js'),
-    stats: Path.resolve(__dirname, '../src/scripts/stats.js'),
+    app: Path.resolve(__dirname, '../src/scripts/index.tsx'),
+    home: Path.resolve(__dirname, '../src/scripts/home.tsx'),
+    stats: Path.resolve(__dirname, '../src/scripts/stats.tsx'),
   },
   output: {
     path: Path.join(__dirname, '../build'),
@@ -36,6 +36,7 @@ module.exports = {
     new BundleTracker({filename: './webpack-stats.json'}),
   ],
   resolve: {
+    extensions: [".ts", ".tsx", ".js", ".json"],
     alias: {
       '~': Path.resolve(__dirname, '../src'),
     },
@@ -55,6 +56,11 @@ module.exports = {
         test: /\.(ttf|eot|svg|woff(2)?)(\?[a-z0-9=&.]+)?$/,
         include: [Path.join(__dirname, "src/images")],
         loader: "file-loader"
+      },
+      {
+        test: /\.tsx?$/,
+        use: 'ts-loader',
+        exclude: /node_modules/,
       },
       {
         test: /\.(ico|jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2)(\?.*)?$/,
