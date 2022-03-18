@@ -36,6 +36,7 @@ module.exports = {
     new BundleTracker({filename: './webpack-stats.json'}),
   ],
   resolve: {
+    extensions: [".ts", ".tsx", ".js", ".json"],
     alias: {
       '~': Path.resolve(__dirname, '../src'),
     },

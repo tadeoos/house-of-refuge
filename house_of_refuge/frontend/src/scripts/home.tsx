@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState } from 'react';
 import ReactDOM from 'react-dom';
 import styled from 'styled-components';
@@ -16,7 +17,6 @@ import {
 import { colors } from '../theme';
 import Share from '../pages/Share';
 import Find from '../pages/Find';
-import React from 'react';
 
 const StyledApp = styled.div`
   font-family: 'proxima-nova', sans-serif;
