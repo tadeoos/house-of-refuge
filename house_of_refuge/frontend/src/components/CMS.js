@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from "react";
 import TextWrapper from '../typography/TextWrapper';
 import H5 from '../typography/H5';
+import {useParams} from "react-router-dom";
 
 
-const CMS = ({ id }) => {
-
-    console.log('!!!!!!!!!!!!!!!!!!!', id);
+const CMS = () => {
+    const params = useParams();
 
     const [titlePrimary, setTitlePrimary] = useState('');
     const [contentPrimary, setContentPrimary] = useState('');
