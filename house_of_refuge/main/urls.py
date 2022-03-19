@@ -7,6 +7,7 @@ import house_of_refuge.main.views as views
 app_name = "main"
 urlpatterns = [
     path("", views.home, name="home"),
+    path("page/<str:page_name>", views.home, name="home"),
     path("drogowskaz/", login_required(TemplateView.as_view(template_name="main/guidepost.html")), name="guidepost"),
     path("healthz/", views.healthcheck, name="health"),
     path("statsy/", views.activity_stats_view, name="health"),

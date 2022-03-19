@@ -18,7 +18,7 @@ const StyledLink = styled(Link)`
       background-color: #EDEDED;
       color: inherit;
    }
-  
+
 `;
 
 const Button = styled.button`
@@ -99,6 +99,15 @@ const Menu = () => {
                         secondaryText="редагувати дані"
                     />
                 </StyledLink>
+
+                { ['about-radom-city'].map((title) => {
+                    return <StyledLink to={"/page/" + title} onClick={() => setMiniMenuOpened(!miniMenuOpened)}>
+                        <TextMultiLang
+                            primaryText={title}
+                            secondaryText={title}
+                        />
+                    </StyledLink>;
+                })}
             </MiniMenu>}
             <ExtrernalLink
                 target="_blank"
