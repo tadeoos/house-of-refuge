@@ -279,7 +279,7 @@ const Form = ({
                                       onChange={formik.handleChange}
                                       value={formik.values[field.name]}
                                       min={field.type === 'number' ? 1 : null}
-                                      max={field.type === 'number' ? 100 : null}
+                                      max={field.type === 'number' ? 1000 : null}
                                   />
                       }
                       {field.type === 'checkbox' ? <>
