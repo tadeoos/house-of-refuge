@@ -191,7 +191,7 @@ export const SubmissionList = (
           </div>
         </QuickFilter>
       </div>
-      <div className={"d-flex list-pagination justify-content-between align-items-center border-top"}>
+      <div className={"d-flex list-pagination justify-content-end gap-5 align-items-center border-top"}>
         <div>{`${visibleSubmissions.length} zgłoszeń`}</div>
         <div>
           <Pagination className={"mb-0"}>

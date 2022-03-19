@@ -153,11 +153,11 @@ export function SubmissionRow({sub, activeHandler, user, isGroupCoordinator, isA
     <div className="sub-id position-relative">
       ID ZGŁOSZENIA: {localSub.id}
 
-      <div className="submission-row-collapse" onClick={() => setCollapsed(!collapsed)}>
+      <div className="submission-row-collapse cursor-pointer" onClick={() => setCollapsed(!collapsed)}>
         Zwiń / Rozwiń
       </div>
     </div>
-    <Table className="sub-table" style={{'background-color': 'rgba(255, 255, 255, 0.9)', display: collapsed ? 'none' : 'table'}}>
+    <Table className="sub-table" style={{'background-color': 'rgba(255, 255, 255, 0.95)', display: collapsed ? 'none' : 'table'}}>
       <tbody>
       <tr>
         <th>Imie</th>

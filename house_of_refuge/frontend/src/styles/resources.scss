@@ -106,7 +106,6 @@ a {
   border-radius: 0;
   table-layout: fixed;
 
-  background:
   th {
     padding-left: 2px;
   }
@@ -322,6 +321,10 @@ a {
   right: 10px;
 }
 
+.cursor-pointer {
+  cursor: pointer;
+}
+
 .rename-input {
   &:hover {
     background-color: #d6e9c6 !important;
@@ -500,6 +503,7 @@ a {
 
 .switch {
   width: 100%;
+  max-width: 100px;
 }
 
 .switch-on,
