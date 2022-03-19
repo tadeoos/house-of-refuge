@@ -121,9 +121,9 @@ export const SubmissionList = (
   };
 
   return (<>
-    <div>
+    <div className={"px-5 border-bottom"}>
       <ToastContainer autoClose={2000} />
-      <div className="quick-filters">
+      <div className="quick-filters mt-5">
         <QuickFilter label={"Źródło"}>
           <Select
             multi
@@ -184,12 +184,14 @@ export const SubmissionList = (
             }}
           />
         </QuickFilter>
-        <QuickFilter>
-          <Search />
-          <input className="search-input" onChange={(e) => setSearchQuery(e.target.value.toLowerCase())} />
+        <QuickFilter label={"Szukaj"}>
+          <div className={"d-flex align-items-center gap-2"}>
+            <Search />
+            <input className="search-input" onChange={(e) => setSearchQuery(e.target.value.toLowerCase())} />
+          </div>
         </QuickFilter>
       </div>
-      <div className={"d-flex justify-content-around"}>
+      <div className={"d-flex justify-content-between align-items-center"}>
         <div>
           <p>{`${visibleSubmissions.length} zgłoszeń`}</p>
         </div>
@@ -209,7 +211,7 @@ export const SubmissionList = (
           key={r.id} />)}</div> : null}
     </div>
 
-    <div className="submission-list" ref={subsList}>
+    <div className="submission-list px-2" ref={subsList}>
       {isLoading ?
         <LoadingSpinner /> : visibleSubmissions.slice(SHOW_NUMBER * (page - 1), SHOW_NUMBER * page).map(s =>
           <SubmissionRow user={user} sub={s} key={s.id}

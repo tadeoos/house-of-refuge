@@ -105,6 +105,7 @@ a {
   background-color: white;
   font-size: 12px;
   border-radius: 0;
+  table-layout: fixed;
 
   th {
     padding-left: 2px;
@@ -223,7 +224,8 @@ a {
   outline: 0;
   margin-left: 2px;
   background-color: transparent;
-  max-width: 10vw;
+  min-width: 300px;
+  max-width: 20vw;
 }
 
 .hide {
@@ -452,17 +454,50 @@ a {
 
 .quick-filters {
   display: flex;
-  justify-content: space-between;
+  gap: 5px;
+  width: 100%;
   padding-bottom: 8px;
   border-bottom: 1px solid $our-grey;
 }
 
 .quick-filter {
-  margin: 0 4px;
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+
+  .react-dropdown-select {
+    width: 100%;
+  }
 
   label {
     margin-right: 6px;
   }
+
+  &__children {
+    height: 34px;
+    display: flex;
+
+    > div {
+      width: 100%;
+    }
+  }
+}
+
+.switch {
+  width: 100%;
+}
+
+.switch-on,
+.switch-off {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.switch-off,
+.switch-off:hover {
+  background: #d33e43;
+  color: white;
 }
 
 .host-call-buttons {

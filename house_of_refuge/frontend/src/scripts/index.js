@@ -27,7 +27,7 @@ const CoordinatorsHeader = ({coordinators, helped, hide}) => {
     setPeopleHelped(newHelped);
   }, 120 * 1000);
 
-  return <div className="panel-header" style={hide ? {display: "none"} : {}}>
+  return <div className="panel-header mx-5" style={hide ? {display: "none"} : {}}>
     <div>
       <img src="/static/images/logo.svg" alt="logo" style={{height: "76px", margin: "10px 0"}}/>
     </div>
