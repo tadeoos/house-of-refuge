@@ -83,6 +83,7 @@ THIRD_PARTY_APPS = [
     "django_extensions",
     "import_export",
     "solo",
+    'markdownx',
 ]
 
 LOCAL_APPS = [

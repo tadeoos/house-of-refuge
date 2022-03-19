@@ -38,6 +38,7 @@ urlpatterns = [
     path("api/resource/update/<int:resource_id>", views.update_resource, name="resource_update"),
 
     path("api/send_email_token", views.send_email_with_edit_token, name="send_email_token"),
+    path("api/menu_pages", views.get_menu_pages, name="get_menu_pages"),
 
     path("api/stats/", views.get_stats_data, name="get_stats_data"),
 ]

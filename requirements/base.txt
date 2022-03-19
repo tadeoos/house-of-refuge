@@ -24,4 +24,5 @@ django-webpack-loader==1.4.1
 djangorestframework==3.13.1
 django-extensions==3.1.5  # https://github.com/django-extensions/django-extensions
 django-solo==2.0.0
+django-markdownx==3.0.1
 
