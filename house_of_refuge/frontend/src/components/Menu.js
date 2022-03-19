@@ -84,53 +84,54 @@ const MiniMenu = styled.div`
 
 
 const Menu = () => {
-    const {menu, button, miniMenuOpened, setMiniMenuOpened} = useComponentVisible(true);
+  const {menu, button, miniMenuOpened, setMiniMenuOpened} = useComponentVisible(true);
 
-    const [cmsPages, setCmsPages] = useState([]);
+  const [cmsPages, setCmsPages] = useState([]);
 
-    useEffect(() => {
-        if (miniMenuOpened) {
-            CmsResource.getInstance().getData()
-                .then(data => setCmsPages(data));
-        }
-    }, [miniMenuOpened]);
+  useEffect(() => {
+    if (miniMenuOpened) {
+      CmsResource.getInstance().getData()
+          .then(data => setCmsPages(data));
+    }
+  }, [miniMenuOpened]);
 
-    return (
-        <>
-            <Button ref={button}> <MenuIcon/> </Button>
-            {miniMenuOpened && <MiniMenu ref={menu}>
-                <StyledLink to="/privacy" onClick={() => setMiniMenuOpened(!miniMenuOpened)}>
-                    <TextMultiLang
-                        primaryText="Polityka prywatności"
-                        secondaryText="політика конфіденційності"
-                    />
-                </StyledLink>
-                <StyledLink to="/edit" onClick={() => setMiniMenuOpened(!miniMenuOpened)}>
-                    <TextMultiLang
-                        primaryText="Edycja danych"
-                        secondaryText="редагувати дані"
-                    />
-                </StyledLink>
+  return (
+      <>
+        <Button ref={button}> <MenuIcon/> </Button>
+        {miniMenuOpened && <MiniMenu ref={menu}>
+          {/*<StyledLink to="/privacy" onClick={() => setMiniMenuOpened(!miniMenuOpened)}>*/}
+          {/*  <TextMultiLang*/}
+          {/*      primaryText="Polityka prywatności"*/}
+          {/*      secondaryText="політика конфіденційності"*/}
+          {/*  />*/}
+          {/*</StyledLink>*/}
+          {cmsPages.map((page) => {
+            return <StyledLink key={page.slug} to={"/page/" + page.slug}
+                               onClick={() => setMiniMenuOpened(!miniMenuOpened)}>
+              <TextMultiLang
+                  primaryText={page.menu_title_primary_language}
+                  secondaryText={page.menu_title_secondary_language}
+              />
+            </StyledLink>;
+          })}
+          <StyledLink to="/edit" onClick={() => setMiniMenuOpened(!miniMenuOpened)}>
+            <TextMultiLang
+                primaryText="Edycja danych"
+                secondaryText="редагувати дані"
+            />
+          </StyledLink>
 
-                {cmsPages.map((page) => {
-                    return <StyledLink key={page.slug} to={"/page/" + page.slug}
-                                       onClick={() => setMiniMenuOpened(!miniMenuOpened)}>
-                        <TextMultiLang
-                            primaryText={page.menu_title_primary_language}
-                            secondaryText={page.menu_title_secondary_language}
-                        />
-                    </StyledLink>;
-                })}
-            </MiniMenu>}
-            <ExtrernalLink
-                target="_blank"
-                rel="noopener noreferrer"
-                href="https://www.facebook.com/groups/zasobygrupa"
-            >
-                <LogoFB/>
-            </ExtrernalLink>
-        </>
-    );
+
+        </MiniMenu>}
+        <ExtrernalLink
+            target="_blank"
+            rel="noopener noreferrer"
+            href="https://www.facebook.com/groups/zasobygrupa"
+        >
+          <LogoFB/>
+        </ExtrernalLink>
+      </>
+  );
 };
 
 export default Menu;
