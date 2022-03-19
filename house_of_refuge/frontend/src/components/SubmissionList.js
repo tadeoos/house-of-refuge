@@ -132,7 +132,7 @@ export const SubmissionList = (
             onChange={filterSource}
           />
         </QuickFilter>
-        <QuickFilter label={"Status"}>
+        <QuickFilter label={"Status"} className={"flex-grow-1"}>
           <Select
             multi
             values={statusFilter}
