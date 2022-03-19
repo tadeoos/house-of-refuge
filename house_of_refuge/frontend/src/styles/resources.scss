@@ -102,11 +102,11 @@ a {
 }
 
 .sub-table {
-  background-color: white;
   font-size: 12px;
   border-radius: 0;
   table-layout: fixed;
 
+  background:
   th {
     padding-left: 2px;
   }
@@ -118,6 +118,16 @@ a {
       vertical-align: middle;
     }
   }
+}
+
+.list-pagination {
+  position: fixed;
+  z-index: 1000;
+  background: white;
+  bottom: 0;
+  left: 0;
+  padding: 10px;
+  width: 100%;
 }
 
 .resource-row {
@@ -306,6 +316,12 @@ a {
   }
 }
 
+.submission-row-collapse {
+  position: absolute;
+  top: 0;
+  right: 10px;
+}
+
 .rename-input {
   &:hover {
     background-color: #d6e9c6 !important;
@@ -457,7 +473,6 @@ a {
   gap: 5px;
   width: 100%;
   padding-bottom: 8px;
-  border-bottom: 1px solid $our-grey;
 }
 
 .quick-filter {

@@ -21,17 +21,18 @@ import {BrowserRouter, Route, Routes, useSearchParams} from "react-router-dom";
 
 const CoordinatorsHeader = ({coordinators, helped, hide}) => {
   const [peopleHelped, setPeopleHelped] = useState(helped);
+  const [collapsed, setCollapsed] = useState(false);
 
   useInterval(async () => {
     const newHelped = await getHelped();
     setPeopleHelped(newHelped);
   }, 120 * 1000);
 
-  return <div className="panel-header mx-5" style={hide ? {display: "none"} : {}}>
+  return <div className="panel-header mx-5 mt-1" style={hide ? {display: "none"} : {}}>
     <div>
-      <img src="/static/images/logo.svg" alt="logo" style={{height: "76px", margin: "10px 0"}}/>
+      <img src="/static/images/logo.svg" alt="logo" style={{height: "76px", margin: "10px 0", display: collapsed ? 'none' : 'block'}}/>
     </div>
-    <div className="coordinators">
+    <div className="coordinators" style={{ display: collapsed ? 'none' : 'block' }}>
       <div className="d-flex justify-content-around">
         <div className={"mx-5 text-center"}>
           <h5>Koordynatorzy Zachodni</h5>
@@ -47,7 +48,13 @@ const CoordinatorsHeader = ({coordinators, helped, hide}) => {
             dziś {peopleHelped} osobom {"🙏".repeat(Math.floor(peopleHelped / 10))}</h5>
           </div> : <></>}
     </div>
-    <div><a href="/accounts/logout">wyloguj się</a></div>
+    <div>
+      <span className={"mx-2 btn btn-primary btn-sm"} onClick={() => setCollapsed(!collapsed)}>
+        { collapsed ? 'pokaż ' : 'ukryj ' }
+        nagłówek
+      </span>
+      <a className={"btn btn-danger btn-sm"} href="/accounts/logout">wyloguj się</a>
+    </div>
   </div>;
 };
 

@@ -60,13 +60,13 @@ export function SubmissionRow({sub, activeHandler, user, isGroupCoordinator, isA
   const [status, setStatus] = useState(sub.status);
   const [note, setNote] = useState(sub.note);
   const [localSub, setLocalSub] = useState(sub);
+  const [collapsed, setCollapsed] = useState(false);
 
   useEffect(() => {
     setLocalSub(sub);
     setNote(sub.note);
     setStatus(sub.status);
   }, [sub]);
-
 
   const btnHandler = () => {
     if (readOnly) {
@@ -95,7 +95,7 @@ export function SubmissionRow({sub, activeHandler, user, isGroupCoordinator, isA
     } else if (localSub.status === "cancelled") {
       return "NIEAKTUALNE";
     } else {
-      return <Button size={"sm"} onClick={btnHandler}>{isActive ? "Zwolnij" : "Szukaj Hosta"}</Button>;
+      return <Button className={"w-100"} size={"sm"} onClick={btnHandler}>{isActive ? "Zwolnij" : "Szukaj Hosta"}</Button>;
     }
   };
 
@@ -150,8 +150,14 @@ export function SubmissionRow({sub, activeHandler, user, isGroupCoordinator, isA
   return <div
       className={`submission-row ${getStatusClass(localSub)}
       ${localSub.accomodation_in_the_future ? "sub-in-future" : ""} ${isActive ? "sub-active" : ""}`}>
-    <p className="sub-id">ID ZGŁOSZENIA: {localSub.id}</p>
-    <Table className="sub-table">
+    <div className="sub-id position-relative">
+      ID ZGŁOSZENIA: {localSub.id}
+
+      <div className="submission-row-collapse" onClick={() => setCollapsed(!collapsed)}>
+        Zwiń / Rozwiń
+      </div>
+    </div>
+    <Table className="sub-table" style={{'background-color': 'rgba(255, 255, 255, 0.9)', display: collapsed ? 'none' : 'table'}}>
       <tbody>
       <tr>
         <th>Imie</th>
