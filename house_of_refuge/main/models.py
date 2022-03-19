@@ -539,6 +539,9 @@ class MenuPage(TimeStampedModel):
     content_secondary_language = MarkdownxField(help_text=MARKDOWN_FIELD_HELP_TEXT, blank=True, default="")
     published = models.BooleanField(default=False)
 
+    def __str__(self):
+        return f"{self.menu_title_primary_language} ({self.slug})"
+
     def as_json(self):
         return {
             "slug": self.slug,
