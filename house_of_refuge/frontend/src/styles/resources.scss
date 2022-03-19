@@ -480,7 +480,7 @@ a {
 
 .quick-filter {
   display: flex;
-  flex: 1 1 0;
+  min-width: 130px;
   flex-direction: column;
 
   .react-dropdown-select {
@@ -492,7 +492,7 @@ a {
   }
 
   &__children {
-    height: 34px;
+    min-height: 34px;
     display: flex;
 
     > div {
