@@ -10,6 +10,7 @@ from django.urls import reverse
 from django.utils import timezone
 from django.utils.crypto import get_random_string
 from django.utils.functional import cached_property
+from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 from markdownx.models import MarkdownxField
 from markdownx.utils import markdownify
@@ -522,12 +523,20 @@ class SiteConfiguration(SingletonModel):
         verbose_name = _("Site Configuration")
 
 
+MARKDOWN_FIELD_HELP_TEXT = mark_safe(
+    _("You can use <a href='https://docs.github.com/en/"
+      "get-started/writing-on-github/getting-started-with"
+      "-writing-and-formatting-on-github/basic-writing-and-formatting-syntax'"
+      " target='_blank'>Markdown</a> here.")
+)
+
+
 class MenuPage(TimeStampedModel):
-    slug = models.SlugField(max_length=128)
+    slug = models.SlugField(max_length=128, unique=True)
     menu_title_primary_language = models.CharField(max_length=512)
-    menu_title_secondary_language = models.CharField(max_length=512)
-    content_primary_language = MarkdownxField()
-    content_secondary_language = MarkdownxField(help_text=_("The same content in secondary language"))
+    menu_title_secondary_language = models.CharField(max_length=512, blank=False)
+    content_primary_language = MarkdownxField(help_text=MARKDOWN_FIELD_HELP_TEXT)
+    content_secondary_language = MarkdownxField(help_text=MARKDOWN_FIELD_HELP_TEXT, blank=True, default="")
     published = models.BooleanField(default=False)
 
     def as_json(self):
@@ -538,4 +547,3 @@ class MenuPage(TimeStampedModel):
             "content_primary_language": markdownify(self.content_primary_language),
             "content_secondary_language": markdownify(self.content_secondary_language),
         }
-
