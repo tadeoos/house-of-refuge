@@ -17,8 +17,7 @@ const StyledBigButton = styled.div`
 `;
 
 const Primary = styled.span`
-   font-size: 54px;
-   font-size: 42.5px;
+   font-size: 32px;
    font-weight: 700;
 
    @media (max-width: 600px) {
@@ -28,7 +27,7 @@ const Primary = styled.span`
 `;
 
 const Secondary = styled.div`
-   font-size: 30px;
+   font-size: 18px;
    text-align: center;
    margin-top: -10px;
 

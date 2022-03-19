@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Logo from './Logo.js';
@@ -5,19 +6,33 @@ import Menu from './Menu.js';
 import { Link } from "react-router-dom";
 
 const LogoWrapper = styled.div`
-  position: ${p => p.sticky ? 'fixed' : 'absolute'}; 
-  background-color: ${p => p.sticky ? '#F7F7F7' : 'transparent'}; 
-  top: 0;
   width: 100%;
-  height: 38px;
+  visibility: ${p => p.sticky ? 'hidden' : 'visible'};
 
   > a {
     display: block;
-    margin: auto; 
-    margin-top: ${p => p.sticky ? '5px' : '16px'}; 
+    margin: auto;
+    margin-top: ${p => p.sticky ? '5px' : '16px'};
     width:  ${p => p.sticky ? '105px' : '90px'};
   }
- 
+`;
+
+const CompactLogoWrapper = styled.div`
+  position: fixed;
+  background-color: #F7F7F7;
+  top: 0;
+  left: 0;
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  height: 40px;
+
+  > a {
+    display: block;
+    margin: auto;
+    width: 105px;
+  }
 `;
 
 const Header = () => {
@@ -33,13 +48,21 @@ const Header = () => {
     };
   }, []);
 
+  const showCompactLogoWrapper = scrollPosition > 90;
   return (
     <>
-      <LogoWrapper sticky={scrollPosition > 90}>
+      <LogoWrapper sticky={showCompactLogoWrapper}>
         <Link to="/">
-          <Logo compact={scrollPosition > 90} />
+          <Logo compact={false} />
         </Link>
       </LogoWrapper>
+      { showCompactLogoWrapper &&
+          <CompactLogoWrapper>
+            <Link to="/">
+              <Logo compact={true} />
+            </Link>
+          </CompactLogoWrapper>
+      }
       <Menu />
     </>
   );

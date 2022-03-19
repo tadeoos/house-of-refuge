@@ -19,13 +19,14 @@ import Find from '../pages/Find';
 
 const StyledApp = styled.div`
   font-family: 'proxima-nova', sans-serif;
-  max-width: 1400px;
   color: #212121;
   margin: auto;
   display: flex;
-  min-height: 100%;
-  justify-content: center;
-  padding-top: 240px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  gap: 75px;
+  min-height: 100vh;
 
   .Footer {
     justify-content: flex-end;
@@ -33,12 +34,9 @@ const StyledApp = styled.div`
   `;
 
 const ButtonWrap = styled.div`
-  margin-top: -240px;
   display: flex;
   flex-direction: column;
-  display: flex;
   justify-content: center;
-  align-items: center;
   gap: 30px;
 
   > a {
@@ -55,24 +53,24 @@ const App = (props) => {
 
   return (
     <StyledApp>
-      <Header />
+      <Header/>
       <Routes>
         <Route index element={<>
-          <ButtonWrap>
+          <ButtonWrap className={"mb-5 flex-grow-1"}>
             <Link to="/share">
               <BigButton
-                primaryText="Udostępniam nocleg"
-                secondaryText="Можу надати житло"
-                backgroundColor="#0066cc"
-                color={colors.white}
+                  primaryText="Udostępniam nocleg"
+                  secondaryText="Можу надати житло"
+                  backgroundColor="#0066cc"
+                  color={colors.white}
               />
             </Link>
             <Link to="/find">
               <BigButton
-                primaryText="Потребує житло"
-                secondaryText="Szukam noclegu"
-                color={colors.veryDarkGrey}
-                backgroundColor={colors.optimisticYellow}
+                  primaryText="Потребує житло"
+                  secondaryText="Szukam noclegu"
+                  color={colors.veryDarkGrey}
+                  backgroundColor={colors.optimisticYellow}
               />
             </Link>
             <div className={"border-bottom w-100 my-3"}/>
@@ -90,19 +88,18 @@ const App = (props) => {
         <Route path="/find" element={<Find  user={user} />} />
         <Route path="/jazda/stolik" element={<>
           <Form
-            primaryText="Потребує житло"
-            secondaryText="Szukam noclegu"
-            fields={fields2}
-            validationSchema={validationSchema2}
-            url='/api/zglos'
-            successInfo='Дякуємо за подання.'
-            user={user}
+              primaryText="Потребує житло"
+              secondaryText="Szukam noclegu"
+              fields={fields2}
+              validationSchema={validationSchema2}
+              url='/api/zglos'
+              successInfo='Дякуємо за подання.'
+              user={user}
           />
         </>} />
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/edit" element={<Edit {...props} />} />
       </Routes>
-
     </StyledApp>
   );
 };
