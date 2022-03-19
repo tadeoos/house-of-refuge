@@ -51,7 +51,7 @@ def housing_list(request):
 
 
 @ensure_csrf_cookie
-def home(request):
+def home(request, **kwargs):
     user = None
     if not request.user.is_anonymous:
         user = request.user
