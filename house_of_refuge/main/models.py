@@ -11,6 +11,8 @@ from django.utils import timezone
 from django.utils.crypto import get_random_string
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
+from markdownx.models import MarkdownxField
+from markdownx.utils import markdownify
 from model_utils.models import TimeStampedModel
 
 # Create your models here.
@@ -518,3 +520,22 @@ class SiteConfiguration(SingletonModel):
 
     class Meta:
         verbose_name = _("Site Configuration")
+
+
+class MenuPage(TimeStampedModel):
+    slug = models.SlugField(max_length=128)
+    menu_title_primary_language = models.CharField(max_length=512)
+    menu_title_secondary_language = models.CharField(max_length=512)
+    content_primary_language = MarkdownxField()
+    content_secondary_language = MarkdownxField(help_text=_("The same content in secondary language"))
+    published = models.BooleanField(default=False)
+
+    def as_json(self):
+        return {
+            "slug": self.slug,
+            "menu_title_primary_language": self.menu_title_primary_language,
+            "menu_title_secondary_language": self.menu_title_secondary_language,
+            "content_primary_language": markdownify(self.content_primary_language),
+            "content_secondary_language": markdownify(self.content_secondary_language),
+        }
+
