@@ -26,7 +26,7 @@ const StyledApp = styled.div`
   min-height: 100%;
   justify-content: center;
   padding-top: 240px;
-  
+
   .Footer {
     justify-content: flex-end;
   }
@@ -39,21 +39,12 @@ const ButtonWrap = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  
+  gap: 30px;
+
   > a {
     color: inherit;
     text-decoration: none;
     display: flex;
-  }
-
-  > * {
-      &:first-child {
-        margin-bottom: 30px;
-
-        @media (max-width: 600px) {
-          margin-bottom: 20px;
-        }
-      }
   }
 `;
 
@@ -72,8 +63,8 @@ const App = (props) => {
               <BigButton
                 primaryText="Udostępniam nocleg"
                 secondaryText="Можу надати житло"
-                outlined
-                color={colors.veryDarkGrey}
+                backgroundColor="#0066cc"
+                color={colors.white}
               />
             </Link>
             <Link to="/find">
@@ -81,7 +72,16 @@ const App = (props) => {
                 primaryText="Потребує житло"
                 secondaryText="Szukam noclegu"
                 color={colors.veryDarkGrey}
-                backgroundColor="#FFD200"
+                backgroundColor={colors.optimisticYellow}
+              />
+            </Link>
+            <div className={"border-bottom w-100 my-3"}/>
+            <Link to="/">
+              <BigButton
+                  primaryText="Хочу поїхати в іншу країну в Європі"
+                  secondaryText="Chcę jechać do innego kraju w Europie"
+                  outlined
+                  color={colors.veryDarkGrey}
               />
             </Link>
           </ButtonWrap>

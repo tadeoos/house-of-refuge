@@ -9,7 +9,7 @@ const StyledBigButton = styled.div`
    border: ${p => p.outlined ? `4px solid ${p.color}` : 'initial'};
    border-radius: 70px;
    transition:  border-radius 0.3s;
-   
+
    :hover {
        border-radius: 30px;
    }
@@ -28,11 +28,10 @@ const Primary = styled.span`
 `;
 
 const Secondary = styled.div`
-   font-size: 21px;
    font-size: 30px;
    text-align: center;
    margin-top: -10px;
-   
+
    @media (max-width: 600px) {
     margin-top: -2px;
     font-size: 16px;
