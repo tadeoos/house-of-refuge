@@ -7,6 +7,7 @@ import house_of_refuge.main.views as views
 app_name = "main"
 urlpatterns = [
     path("", views.home, name="home"),
+    path("page/<str:page_name>", views.home, name="home"),
     path("drogowskaz/", login_required(TemplateView.as_view(template_name="main/guidepost.html")), name="guidepost"),
     path("healthz/", views.healthcheck, name="health"),
     path("statsy/", views.activity_stats_view, name="health"),
@@ -37,6 +38,7 @@ urlpatterns = [
     path("api/resource/update/<int:resource_id>", views.update_resource, name="resource_update"),
 
     path("api/send_email_token", views.send_email_with_edit_token, name="send_email_token"),
+    path("api/menu_pages", views.get_menu_pages, name="get_menu_pages"),
 
     path("api/stats/", views.get_stats_data, name="get_stats_data"),
 ]

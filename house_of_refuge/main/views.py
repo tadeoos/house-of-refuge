@@ -22,7 +22,7 @@ from house_of_refuge.main.utils import send_mail
 # Create your views here.
 from .models import (
     HousingResource, Submission, SubStatus, Coordinator, ObjectChange, END_OF_DAY, SubSource,
-    SiteConfiguration, Status,
+    SiteConfiguration, Status, MenuPage,
 )
 from .serializers import SubmissionSerializer, HousingResourceSerializer
 
@@ -51,7 +51,7 @@ def housing_list(request):
 
 
 @ensure_csrf_cookie
-def home(request):
+def home(request, **kwargs):
     user = None
     if not request.user.is_anonymous:
         user = request.user
@@ -407,3 +407,9 @@ def get_helped_count(request):
         for sub in Submission.objects.for_happy_message()
     ])
     return JsonResponse({"count": people_helped})
+
+
+@require_http_methods(["GET"])
+def get_menu_pages(reqeust):
+    pages = [page.as_json() for page in MenuPage.objects.filter(published=True)]
+    return JsonResponse(pages, safe=False)

@@ -29,7 +29,7 @@ services:
       minInstances: 1
       maxInstances: 4
       targetMemoryPercent: 90 # optional if targetCPUPercent is set (valid: 1-90)
-      targetCPUPercent: 90 # optional if targetMemory is set (valid: 1-90)
+      targetCPUPercent: 80 # optional if targetMemory is set (valid: 1-90)
     envVars:
       - key: DATABASE_URL
         fromDatabase:

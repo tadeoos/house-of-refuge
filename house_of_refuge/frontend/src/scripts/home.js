@@ -16,6 +16,7 @@ import {
 import { colors } from '../theme';
 import Share from '../pages/Share';
 import Find from '../pages/Find';
+import CMS from "../components/CMS";
 
 const StyledApp = styled.div`
   font-family: 'proxima-nova', sans-serif;
@@ -27,7 +28,6 @@ const StyledApp = styled.div`
   justify-content: space-between;
   gap: 75px;
   min-height: 100vh;
-
   .Footer {
     justify-content: flex-end;
   }
@@ -38,7 +38,6 @@ const ButtonWrap = styled.div`
   flex-direction: column;
   justify-content: center;
   gap: 30px;
-
   > a {
     color: inherit;
     text-decoration: none;
@@ -99,6 +98,7 @@ const App = (props) => {
         </>} />
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/edit" element={<Edit {...props} />} />
+        <Route path="/page/:id" element={<CMS {...props} />} />
       </Routes>
     </StyledApp>
   );

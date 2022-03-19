@@ -121,7 +121,7 @@ export const SubmissionList = (
   };
 
   return (<>
-    <div>
+    <div className={"px-5 border-bottom"}>
       <ToastContainer autoClose={2000} />
       <div className="quick-filters">
         <QuickFilter label={"Źródło"}>
@@ -184,17 +184,17 @@ export const SubmissionList = (
             }}
           />
         </QuickFilter>
-        <QuickFilter>
-          <Search />
-          <input className="search-input" onChange={(e) => setSearchQuery(e.target.value.toLowerCase())} />
+        <QuickFilter label={"Szukaj"}>
+          <div className={"d-flex align-items-center gap-2"}>
+            <Search />
+            <input className="search-input" onChange={(e) => setSearchQuery(e.target.value.toLowerCase())} />
+          </div>
         </QuickFilter>
       </div>
-      <div className={"d-flex justify-content-around"}>
+      <div className={"d-flex list-pagination justify-content-end gap-5 align-items-center border-top"}>
+        <div>{`${visibleSubmissions.length} zgłoszeń`}</div>
         <div>
-          <p>{`${visibleSubmissions.length} zgłoszeń`}</p>
-        </div>
-        <div className="mt-2">
-          <Pagination>
+          <Pagination className={"mb-0"}>
             <Pagination.First disabled={page <= 1} onClick={() => setPage(1)} />
             <Pagination.Prev disabled={page <= 1} onClick={() => setPage(p => p - 1)} />
             <Pagination.Item active>{page}</Pagination.Item>
@@ -209,7 +209,7 @@ export const SubmissionList = (
           key={r.id} />)}</div> : null}
     </div>
 
-    <div className="submission-list" ref={subsList}>
+    <div className="submission-list px-2 mb-5" ref={subsList}>
       {isLoading ?
         <LoadingSpinner /> : visibleSubmissions.slice(SHOW_NUMBER * (page - 1), SHOW_NUMBER * page).map(s =>
           <SubmissionRow user={user} sub={s} key={s.id}
