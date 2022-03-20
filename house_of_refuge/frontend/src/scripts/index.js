@@ -138,12 +138,6 @@ const App = ({subs, userData, coordinators, helped}) => {
     }
   }, [sourceFilter, statusFilter, droppedFilter, peopleFilter, activeNow, onlyUsers, onlyTodays]);
 
-
-  // const {search} = useLocation();
-  // const latestChange = useRef(0);
-
-  console.log("query:", searchParams.toString(), peopleFilter);
-
   useEffect(() => {
     const handler = () => {
       setTabVisible(!document.hidden);
@@ -152,7 +146,7 @@ const App = ({subs, userData, coordinators, helped}) => {
     return function cleanupListener() {
       document.removeEventListener('visibilitychange', handler);
     };
-  });
+  }, []);
 
   useInterval(async () => {
     if (!tabVisible) {
