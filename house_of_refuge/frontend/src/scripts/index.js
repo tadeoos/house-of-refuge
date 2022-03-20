@@ -63,6 +63,7 @@ const App = ({subs, userData, coordinators, helped}) => {
   let [searchParams, setSearchParams] = useSearchParams();
 
 
+  const [tabVisible, setTabVisible] = useState(true);
   const [activeSub, setActiveSub] = useState(null);
   const [sourceFilter, setSourceFilter] = useState(searchParams.getAll("z").map((i) => SOURCE_OPTIONS[i]));
   const [statusFilter, setStatusFilter] = useState(searchParams.getAll("s").map(i => SUB_STATE_OPTIONS[i]));
@@ -143,7 +144,21 @@ const App = ({subs, userData, coordinators, helped}) => {
 
   console.log("query:", searchParams.toString(), peopleFilter);
 
+  useEffect(() => {
+    const handler = () => {
+      setTabVisible(!document.hidden);
+    };
+    document.addEventListener('visibilitychange', handler);
+    return function cleanupListener() {
+      document.removeEventListener('visibilitychange', handler);
+    };
+  });
+
   useInterval(async () => {
+    if (!tabVisible) {
+      return;
+    }
+
     if (activeSub) {
       const latest = parseFloat(await getLatestHostTimestamp());
       console.log("latest", latest, latestHostChange);
