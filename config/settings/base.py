@@ -329,3 +329,12 @@ REST_FRAMEWORK = {
 }
 
 BASE_URL = "http://localhost:8000"
+
+SHELTER_MAP_URL = env(
+    "SHELTER_MAP_URL",
+    default="https://naszwybor.maps.arcgis.com/apps/instant/minimalist/index.html?appid=e9950e5f60df4827bdb1ad09fea0d999",
+)
+SHELTER_FORM_URL = env(
+    "SHELTER_FORM_URL",
+    default="https://survey123.arcgis.com/share/3a2702ff056d4079b4f0b21e6276f89e",
+)

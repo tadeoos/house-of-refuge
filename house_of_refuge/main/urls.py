@@ -1,6 +1,7 @@
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.urls import path
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, RedirectView
 
 import house_of_refuge.main.views as views
 
@@ -14,6 +15,10 @@ urlpatterns = [
     path("share", views.home, name="home-share"),
     path("find", views.home, name="home-find"),
     path("privacy/", views.home, name="home-priv"),
+
+    path("map/", RedirectView.as_view(url=settings.SHELTER_MAP_URL, permanent=True)),
+    path("shelter/", RedirectView.as_view(url=settings.SHELTER_FORM_URL, permanent=True)),
+
     path("edit/", views.edit, name="host-edit"),
     path("jazda/", views.housing_list, name="jazda"),
     path("jazda/stolik/", login_required(views.home), name="home-stolik"),

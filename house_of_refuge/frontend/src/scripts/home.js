@@ -73,14 +73,14 @@ const App = (props) => {
               />
             </Link>
             <div className={"border-bottom w-100 my-3"}/>
-            <Link to="/">
+            <a href="/map">
               <BigButton
                   primaryText="Хочу поїхати в іншу країну в Європі"
                   secondaryText="Chcę jechać do innego kraju w Europie"
                   outlined
                   color={colors.veryDarkGrey}
               />
-            </Link>
+            </a>
           </ButtonWrap>
         </>} />
         <Route path="/share" element={<Share />} />
@@ -96,7 +96,6 @@ const App = (props) => {
               user={user}
           />
         </>} />
-        <Route path="/privacy" element={<Privacy />} />
         <Route path="/edit" element={<Edit {...props} />} />
         <Route path="/page/:id" element={<CMS {...props} />} />
       </Routes>
