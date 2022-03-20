@@ -11,6 +11,7 @@ from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render
 from django.template.loader import get_template
 from django.utils import timezone
+from django.utils.translation import gettext as _
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.http import require_http_methods
 from rest_framework import status
@@ -97,13 +98,13 @@ def resource_match_found(request):
         # error
         return JsonResponse({
             "status": "error",
-            "message": "This submission already have a diiferent resource",
+            "message": _("This submission already have a diiferent resource"),
             "object": sub.as_prop(),
         }, status=400)
     if sub.matcher != request.user:
         return JsonResponse({
             "status": "error",
-            "message": f"This submission is already processed by {sub.matcher}!",
+            "message": format(_("This submission is already processed by {matcher}!"), matcher=sub.matcher),
             "object": sub.as_prop(),
         }, status=400)
     sub.resource = resource
@@ -117,7 +118,7 @@ def resource_match_found(request):
 
     return JsonResponse({
         "status": "success",
-        "message": "Poszło!",
+        "message": _("Yay!"),
         "object": sub.as_prop()}
     )
 
@@ -136,7 +137,7 @@ def update_resource_note(request, resource_id, **kwargs):
     resource.save()
     return JsonResponse({
         "status": "success",
-        "message": "Note updated!",
+        "message": _("Note updated!"),
         "object": resource.as_prop()}
     )
 
@@ -147,16 +148,14 @@ def send_email_with_edit_token(request):
     email = request.data["email"]
     replies = HousingResource.objects.filter(email__iexact=email).order_by('id')
     if replies:
-        subject = "Link do edycji zgłoszenia"
+        subject = _("Link for editing the submission")
         email_text_content = get_template("emails/host_edit.txt").render(
             dict(replies=replies, multiple=len(replies) > 1)
         )
         send_mail(
             subject=subject,
             message=email_text_content,
-            from_email="Grupa Zasoby <powiadomienia@grupazasoby.pl>",
             recipient_list=[email],
-            reply_to=["grupazasoby@gmail.com"]
         )
     return Response({}, status=status.HTTP_204_NO_CONTENT)
 
@@ -183,9 +182,7 @@ def create_resource(request):
                 send_mail(
                     subject="Zgłoszenie przyjęte!",
                     message=email_text_content,
-                    from_email="Grupa Zasoby <powiadomienia@grupazasoby.pl>",
                     recipient_list=[obj.email],
-                    reply_to=["grupazasoby@gmail.com"]
                 )
             except Exception as e:
                 logger.error(f"Mail sending error for id={obj.id}", exc_info=e)
@@ -219,7 +216,7 @@ def update_sub(request, sub_id):
                 # someone wants to start working on already taken sub
                 return JsonResponse(
                     {"data": None,
-                     "message": "ktoś już szuka tego zgłoszenia",
+                     "message": _("Someone is already searching for this request"),
                      "status": "error"}, status=400)
             else:
                 is_coordinator = Coordinator.objects.filter(user=request.user).exists()
@@ -227,13 +224,13 @@ def update_sub(request, sub_id):
                 if not is_coordinator:
                     return JsonResponse(
                         {"data": None,
-                         "message": "To zgłoszenie jest procesowane przez kogoś innego",
+                         "message": _("Someone is already processing this request"),
                          "status": "error"}, status=400)
                 elif sub.resource:
                     #  we never want to free up sub with host
                     return JsonResponse(
                         {"data": None,
-                         "message": "to zgłoszenie ma już hosta",
+                         "message": _("This request already has a host"),
                          "status": "error"}, status=400)
                 else:
                     setattr(sub, field, value)

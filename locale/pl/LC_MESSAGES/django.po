@@ -1,0 +1,815 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-03-20 16:06+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n"
+"%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n"
+"%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+
+#: house_of_refuge/main/admin.py:46
+msgid "Mark for deletion"
+msgstr "Oznacz jako do usunięcia"
+
+#: house_of_refuge/main/models.py:28
+msgid "House"
+msgstr "Dom"
+
+#: house_of_refuge/main/models.py:29
+msgid "Apartment"
+msgstr "Mieszkanie"
+
+#: house_of_refuge/main/models.py:30
+msgid "Room"
+msgstr "Pokój"
+
+#: house_of_refuge/main/models.py:31
+msgid "Couch"
+msgstr "Kanapa"
+
+#: house_of_refuge/main/models.py:32
+msgid "Mattress"
+msgstr "Materac"
+
+#: house_of_refuge/main/models.py:36
+msgid "Warsaw"
+msgstr "Warszawa"
+
+#: house_of_refuge/main/models.py:37
+msgid "Poland"
+msgstr "Polska"
+
+#: house_of_refuge/main/models.py:38
+msgid "None"
+msgstr "Brak"
+
+#: house_of_refuge/main/models.py:42 house_of_refuge/main/models.py:389
+msgid "Fresh"
+msgstr "Świeżak"
+
+#: house_of_refuge/main/models.py:43
+msgid "Taken"
+msgstr "Zajęta"
+
+#: house_of_refuge/main/models.py:44
+msgid "Calling"
+msgstr "Dzwonimy"
+
+#: house_of_refuge/main/models.py:45
+msgid "Ignore"
+msgstr "Ignoruj"
+
+#: house_of_refuge/main/models.py:46
+msgid "For deletion"
+msgstr "Do usunięcia"
+
+#: house_of_refuge/main/models.py:81 house_of_refuge/main/models.py:433
+msgid "Full name"
+msgstr "Imię i nazwisko"
+
+#: house_of_refuge/main/models.py:85
+msgid "Something about you"
+msgstr "Powiedz coś o sobie"
+
+#: house_of_refuge/main/models.py:86
+msgid "how old are you? who do you live with (if you'll host at your place)?"
+msgstr "ile masz lat? Z kim mieszkasz (jeśli przyjmujesz kogoś u siebie)?"
+
+#: house_of_refuge/main/models.py:91 house_of_refuge/main/models.py:255
+msgid "Resource"
+msgstr "Zasób"
+
+#: house_of_refuge/main/models.py:95
+msgid "City and zip code"
+msgstr "Miasto i kod pocztowy"
+
+#: house_of_refuge/main/models.py:99
+msgid "Zip code"
+msgstr "Kod pocztowy"
+
+#: house_of_refuge/main/models.py:103
+msgid "Address"
+msgstr "Adres"
+
+#: house_of_refuge/main/models.py:104
+msgid "street, building number, appartment number"
+msgstr "ulica, numer budynku, numer mieszkania"
+
+#: house_of_refuge/main/models.py:110 house_of_refuge/main/models.py:115
+msgid "Max number of people to accomodate"
+msgstr "Maksymalna liczba ludzi do przyjęcia"
+
+#: house_of_refuge/main/models.py:111 house_of_refuge/main/models.py:116
+msgid ""
+"How many people can you support while providing them adequate living "
+"conditions?"
+msgstr "Ile osób jesteś w stanie wesprzeć tak, by miały godne warunki pobytu?"
+
+#: house_of_refuge/main/models.py:122
+msgid "Age"
+msgstr "Wiek"
+
+#: house_of_refuge/main/models.py:128 house_of_refuge/main/models.py:484
+msgid "Languages"
+msgstr "Języki"
+
+#: house_of_refuge/main/models.py:134
+msgid "When to call?"
+msgstr "Kiedy można dzwonić?"
+
+#: house_of_refuge/main/models.py:140
+msgid "Are there pets in the house?"
+msgstr "Czy są w domu zwierzęta?"
+
+#: house_of_refuge/main/models.py:146
+msgid "Can accomodate pets?"
+msgstr "Czy przyjmie zwierzęta?"
+
+#: house_of_refuge/main/models.py:150
+msgid "Costs"
+msgstr "Koszty"
+
+#: house_of_refuge/main/models.py:151
+msgid "Costs of stay - rent, fees, rental costs or free stay"
+msgstr "Koszty pobytu - czynsz, opłaty, koszty najmu lub darmowy pobyt"
+
+#: house_of_refuge/main/models.py:155
+msgid "Availability"
+msgstr "Dostępność"
+
+#: house_of_refuge/main/models.py:156
+msgid "When can you start providing the accomodation?"
+msgstr "Od kiedy udostępniasz nocleg?"
+
+#: house_of_refuge/main/models.py:160
+msgid "Accommodation length"
+msgstr "Okres pobytu"
+
+#: house_of_refuge/main/models.py:161
+msgid "For how long can you provide the accomodation?"
+msgstr "Na jak długo udostępniasz nocleg?"
+
+#: house_of_refuge/main/models.py:165
+msgid "Details"
+msgstr "Szczegóły"
+
+#: house_of_refuge/main/models.py:166
+msgid ""
+"A bunch of information about the place - presence of animals, languages "
+"spoken by tenants, availability of bed linen and towels, others"
+msgstr ""
+"Garść informacji o miejscu - obecność zwierząt, języki obce lokatorów i "
+"lokatorek, dostępna pościel i ręczniki, inne"
+
+#: house_of_refuge/main/models.py:171
+msgid "Transport"
+msgstr "Transport"
+
+#: house_of_refuge/main/models.py:175 house_of_refuge/main/models.py:437
+msgid "Phone number"
+msgstr "Numer telefonu"
+
+#: house_of_refuge/main/models.py:181
+msgid "Backup phone number"
+msgstr "Twój numer telefonu"
+
+#: house_of_refuge/main/models.py:182
+msgid "An additional contact person"
+msgstr "Dodatkowa osoba kontaktowa)"
+
+#: house_of_refuge/main/models.py:186 house_of_refuge/main/models.py:383
+msgid "Email"
+msgstr "Email"
+
+#: house_of_refuge/main/models.py:193
+msgid "Extra details"
+msgstr "Dodatkowe szczegóły"
+
+#: house_of_refuge/main/models.py:199 house_of_refuge/main/models.py:508
+msgid "Status"
+msgstr "Status"
+
+#: house_of_refuge/main/models.py:207
+msgid "Owner"
+msgstr "Właściciel"
+
+#: house_of_refuge/main/models.py:211
+msgid "Will pick the people up"
+msgstr "Przyjedzie odebrać"
+
+#: house_of_refuge/main/models.py:217 house_of_refuge/main/models.py:502
+msgid "Note"
+msgstr "Notatka"
+
+#: house_of_refuge/main/models.py:221
+msgid "Cherry"
+msgstr "Wiśnia"
+
+#: house_of_refuge/main/models.py:225
+#: house_of_refuge/templates/account/email.html:27
+msgid "Verified"
+msgstr "Zweryfikowane"
+
+#: house_of_refuge/main/models.py:229
+msgid "Is dropped"
+msgstr "Spadło"
+
+#: house_of_refuge/main/models.py:235
+msgid "Got hot"
+msgstr "Stało się gorące"
+
+#: house_of_refuge/main/models.py:239
+msgid "This host offers longer stay"
+msgstr "Gospodarz oferuje moliwość dłuszego pobytu"
+
+#: house_of_refuge/main/models.py:240
+msgid "Turtle"
+msgstr "Żółw"
+
+#: house_of_refuge/main/models.py:246
+msgid "Token"
+msgstr "Token"
+
+#: house_of_refuge/main/models.py:256
+msgid "Resources"
+msgstr "Zasoby"
+
+#: house_of_refuge/main/models.py:382
+msgid "Site"
+msgstr "Strona"
+
+#: house_of_refuge/main/models.py:384
+msgid "Terrain"
+msgstr "Teren"
+
+#: house_of_refuge/main/models.py:385
+msgid "Other"
+msgstr "Inne"
+
+#: house_of_refuge/main/models.py:390
+msgid "Searching"
+msgstr "Szukamy"
+
+#: house_of_refuge/main/models.py:391
+msgid "Host found"
+msgstr "Gospodarz znaleziony"
+
+#: house_of_refuge/main/models.py:392
+msgid "Gone"
+msgstr "Zniknęła"
+
+#: house_of_refuge/main/models.py:393
+msgid "Success"
+msgstr "Sukces"
+
+#: house_of_refuge/main/models.py:394
+msgid "Cancelled"
+msgstr "Nieaktualne"
+
+#: house_of_refuge/main/models.py:441
+msgid "The number of people"
+msgstr "Liczba osób"
+
+#: house_of_refuge/main/models.py:445
+msgid "Length of stay"
+msgstr "Długość pobytu"
+
+#: house_of_refuge/main/models.py:446
+msgid "For how long (in days)?"
+msgstr "Na jak długo? (liczba dni)"
+
+#: house_of_refuge/main/models.py:450
+msgid "Description"
+msgstr "Opis"
+
+#: house_of_refuge/main/models.py:451
+msgid ""
+"Describe the group, age of every person, their relationships (family, "
+"friends?), indicate whether it can be broken into smaller groups"
+msgstr ""
+"Opisz grupę, podaj wiek wszystkich osób, relacje ich łączące (rodzina, "
+"przyjaciele?), zaznacz czy można ich rozbić na mniejsze"
+
+#: house_of_refuge/main/models.py:459
+msgid "Nationality"
+msgstr "Narodowość"
+
+#: house_of_refuge/main/models.py:465
+msgid "Traveling with pets"
+msgstr "Podróżuje ze zwierzętami"
+
+#: house_of_refuge/main/models.py:471
+msgid "Can stay with pets"
+msgstr "Może mieszkać ze zwierzętami"
+
+#: house_of_refuge/main/models.py:472
+msgid "Can the person stay with pets (e.g., due to allergies)?"
+msgstr "Czy osoba może spać w miejscu ze zwierzętami? (np. alergie)"
+
+#: house_of_refuge/main/models.py:478
+msgid "Contact person"
+msgstr "Osoba kontaktowa"
+
+#: house_of_refuge/main/models.py:485
+msgid "Languages that the person speaks"
+msgstr "Języki w których mówi osoba"
+
+#: house_of_refuge/main/models.py:491
+msgid "Since when the support is needed"
+msgstr "Od kiedy potrzebuje wsparcia"
+
+#: house_of_refuge/main/models.py:495
+msgid "Transport needed"
+msgstr "Potrzebny transport"
+
+#: house_of_refuge/main/models.py:514
+msgid "Person in charge (legacy)"
+msgstr "Kto ogarnia (stare)"
+
+#: house_of_refuge/main/models.py:523
+msgid "Receiver of the submission"
+msgstr "Przyjmujący zgłoszenie"
+
+#: house_of_refuge/main/models.py:532 house_of_refuge/main/models.py:737
+msgid "Coordinator"
+msgstr "Koordynator"
+
+#: house_of_refuge/main/models.py:541
+msgid "Who found the host"
+msgstr "Kto znalazł gospodarza"
+
+#: house_of_refuge/main/models.py:549
+msgid "Resource (Host)"
+msgstr "Zasób (Gospodarz)"
+
+#: house_of_refuge/main/models.py:553
+msgid "Priority"
+msgstr "Priorytet"
+
+#: house_of_refuge/main/models.py:559
+msgid "Source"
+msgstr "Źródło"
+
+#: house_of_refuge/main/models.py:563
+msgid "Should be deleted"
+msgstr "Do usuniędia"
+
+#: house_of_refuge/main/models.py:568
+msgid "Finished at"
+msgstr "Zakończone o"
+
+#: house_of_refuge/main/models.py:579 house_of_refuge/main/models.py:756
+msgid "Submission"
+msgstr "Zgłoszenie"
+
+#: house_of_refuge/main/models.py:580
+msgid "Submissions"
+msgstr "Zgłoszenia"
+
+#: house_of_refuge/main/models.py:671
+msgid "Dropped from submission"
+msgstr "Spadło ze zgłoszenia"
+
+#: house_of_refuge/main/models.py:673
+msgid "Host found by"
+msgstr "Gospodarz znaleziony przez"
+
+#: house_of_refuge/main/models.py:680
+msgid "Dropped at"
+msgstr "Spadło o"
+
+#: house_of_refuge/main/models.py:720
+msgid "Remote"
+msgstr "Zdalna"
+
+#: house_of_refuge/main/models.py:721
+msgid "Station"
+msgstr "Dworzec"
+
+#: house_of_refuge/main/models.py:728 house_of_refuge/main/models.py:749
+msgid "User"
+msgstr "Użytkownik"
+
+#: house_of_refuge/main/models.py:733
+msgid "Group"
+msgstr "Grupa"
+
+#: house_of_refuge/main/models.py:738
+msgid "Coordinators"
+msgstr "Koordynatorzy"
+
+#: house_of_refuge/main/models.py:763
+msgid "Host"
+msgstr "Gospodarz"
+
+#: house_of_refuge/main/models.py:767
+msgid "Change"
+msgstr "Zmiana"
+
+#: house_of_refuge/main/models.py:776
+msgid "Record Change"
+msgstr "Zmiana Rekordu"
+
+#: house_of_refuge/main/models.py:777
+msgid "Record Changes"
+msgstr "Zmiany Rekordów"
+
+#: house_of_refuge/main/models.py:782
+msgid "submission throttling"
+msgstr "limity zgłoszeń"
+
+#: house_of_refuge/main/models.py:783
+msgid ""
+"Max number of open/searching submissions. Set to 0 to disable throttling."
+msgstr ""
+"maksmymalna liczba zgłoszeń udostępniania/szukania. Ustaw na 0 żeby wyłączyć "
+"limit."
+
+#: house_of_refuge/main/models.py:786
+msgid "submission throttling active since"
+msgstr "limit zgłoszeń aktywny od"
+
+#: house_of_refuge/main/models.py:787
+msgid ""
+"Only submissions created after this date will be counted in calculating "
+"throttling limit"
+msgstr ""
+"Tylko zgłoszenia utworzone po tej dacie będą liczone przy wyliczaniu limitów "
+"zgłoszeń"
+
+#: house_of_refuge/main/models.py:791 house_of_refuge/main/models.py:794
+msgid "Site Configuration"
+msgstr "Konfiguracja Strony"
+
+#: house_of_refuge/main/models.py:798
+msgid ""
+"You can use <a href='https://docs.github.com/en/get-started/writing-on-"
+"github/getting-started-with-writing-and-formatting-on-github/basic-writing-"
+"and-formatting-syntax' target='_blank'>Markdown</a> here."
+msgstr ""
+"Możesz tu używać <a href='https://docs.github.com/en/get-started/writing-on-"
+"github/getting-started-with-writing-and-formatting-on-github/basic-writing-"
+"and-formatting-syntax' target='_blank'>Markdowna</a>."
+
+#: house_of_refuge/main/models.py:809
+msgid "Identifier"
+msgstr "Identyfikator"
+
+#: house_of_refuge/main/models.py:813
+msgid "Title in the primary language"
+msgstr "Tytuł w języku głównym"
+
+#: house_of_refuge/main/models.py:818
+msgid "Title in the secondary language"
+msgstr "Tytuł w języku dodatkowym"
+
+#: house_of_refuge/main/models.py:822
+msgid "Content in the primary language"
+msgstr "Treść w języku głównym"
+
+#: house_of_refuge/main/models.py:828
+msgid "Content in the secondary language"
+msgstr "Treść w języku dodatkowym"
+
+#: house_of_refuge/main/models.py:832
+msgid "Published"
+msgstr "Opublikowano"
+
+#: house_of_refuge/main/models.py:848
+msgid "Menu Page"
+msgstr "Strona w Menu"
+
+#: house_of_refuge/main/models.py:849
+msgid "Menu Pages"
+msgstr "Strony w Menu"
+
+#: house_of_refuge/main/views.py:101
+msgid "This submission already have a diiferent resource"
+msgstr "To zgłoszenia ma już inny zasób"
+
+#: house_of_refuge/main/views.py:107
+#, python-brace-format
+msgid "This submission is already processed by {matcher}!"
+msgstr "To zgłoszenie jest już przetwarzane przez {matcher}!"
+
+#: house_of_refuge/main/views.py:121
+msgid "Yay!"
+msgstr "Poszło!"
+
+#: house_of_refuge/main/views.py:140
+msgid "Note updated!"
+msgstr "Notatka zaktualizowana!"
+
+#: house_of_refuge/main/views.py:151
+msgid "Link for editing the submission"
+msgstr "Link do edycji zgłoszenia"
+
+#: house_of_refuge/main/views.py:219
+msgid "Someone is already searching for this request"
+msgstr "Ktoś już szuka tego zgłoszenia"
+
+#: house_of_refuge/main/views.py:227
+msgid "Someone is already processing this request"
+msgstr "To zgłoszenie jest procesowane przez kogoś innego"
+
+#: house_of_refuge/main/views.py:233
+msgid "This request already has a host"
+msgstr "To zgłoszenie ma już hosta"
+
+#: house_of_refuge/templates/account/account_inactive.html:5
+#: house_of_refuge/templates/account/account_inactive.html:8
+msgid "Account Inactive"
+msgstr "Konto Nieaktywne"
+
+#: house_of_refuge/templates/account/account_inactive.html:10
+msgid "This account is inactive."
+msgstr "To konto jest nieaktywne."
+
+#: house_of_refuge/templates/account/email.html:7
+msgid "Account"
+msgstr "Konto"
+
+#: house_of_refuge/templates/account/email.html:10
+msgid "E-mail Addresses"
+msgstr "Adres email"
+
+#: house_of_refuge/templates/account/email.html:13
+msgid "The following e-mail addresses are associated with your account:"
+msgstr ""
+
+#: house_of_refuge/templates/account/email.html:29
+msgid "Unverified"
+msgstr ""
+
+#: house_of_refuge/templates/account/email.html:31
+msgid "Primary"
+msgstr ""
+
+#: house_of_refuge/templates/account/email.html:37
+msgid "Make Primary"
+msgstr ""
+
+#: house_of_refuge/templates/account/email.html:38
+msgid "Re-send Verification"
+msgstr ""
+
+#: house_of_refuge/templates/account/email.html:39
+msgid "Remove"
+msgstr ""
+
+#: house_of_refuge/templates/account/email.html:46
+msgid "Warning:"
+msgstr ""
+
+#: house_of_refuge/templates/account/email.html:46
+msgid ""
+"You currently do not have any e-mail address set up. You should really add "
+"an e-mail address so you can receive notifications, reset your password, etc."
+msgstr ""
+
+#: house_of_refuge/templates/account/email.html:51
+msgid "Add E-mail Address"
+msgstr ""
+
+#: house_of_refuge/templates/account/email.html:56
+msgid "Add E-mail"
+msgstr ""
+
+#: house_of_refuge/templates/account/email.html:66
+msgid "Do you really want to remove the selected e-mail address?"
+msgstr ""
+
+#: house_of_refuge/templates/account/email_confirm.html:6
+#: house_of_refuge/templates/account/email_confirm.html:10
+msgid "Confirm E-mail Address"
+msgstr ""
+
+#: house_of_refuge/templates/account/email_confirm.html:16
+#, python-format
+msgid ""
+"Please confirm that <a href=\"mailto:%(email)s\">%(email)s</a> is an e-mail "
+"address for user %(user_display)s."
+msgstr ""
+
+#: house_of_refuge/templates/account/email_confirm.html:20
+msgid "Confirm"
+msgstr ""
+
+#: house_of_refuge/templates/account/email_confirm.html:27
+#, python-format
+msgid ""
+"This e-mail confirmation link expired or is invalid. Please <a href="
+"\"%(email_url)s\">issue a new e-mail confirmation request</a>."
+msgstr ""
+
+#: house_of_refuge/templates/account/login.html:7
+#: house_of_refuge/templates/account/login.html:11
+#: house_of_refuge/templates/account/login.html:56
+#: house_of_refuge/templates/base.html:88
+msgid "Sign In"
+msgstr ""
+
+#: house_of_refuge/templates/account/login.html:17
+msgid "Please sign in with one of your existing third party accounts:"
+msgstr ""
+
+#: house_of_refuge/templates/account/login.html:19
+#, python-format
+msgid ""
+"Or, <a href=\"%(signup_url)s\">sign up</a> for a %(site_name)s account and "
+"sign in below:"
+msgstr ""
+
+#: house_of_refuge/templates/account/login.html:32
+msgid "or"
+msgstr ""
+
+#: house_of_refuge/templates/account/login.html:41
+#, python-format
+msgid ""
+"If you have not created an account yet, then please <a href=\"%(signup_url)s"
+"\">sign up</a> first."
+msgstr ""
+
+#: house_of_refuge/templates/account/login.html:55
+msgid "Forgot Password?"
+msgstr ""
+
+#: house_of_refuge/templates/account/logout.html:5
+#: house_of_refuge/templates/account/logout.html:8
+#: house_of_refuge/templates/account/logout.html:17
+#: house_of_refuge/templates/base.html:77
+msgid "Sign Out"
+msgstr ""
+
+#: house_of_refuge/templates/account/logout.html:10
+msgid "Are you sure you want to sign out?"
+msgstr ""
+
+#: house_of_refuge/templates/account/password_change.html:6
+#: house_of_refuge/templates/account/password_change.html:9
+#: house_of_refuge/templates/account/password_change.html:14
+#: house_of_refuge/templates/account/password_reset_from_key.html:5
+#: house_of_refuge/templates/account/password_reset_from_key.html:8
+#: house_of_refuge/templates/account/password_reset_from_key_done.html:4
+#: house_of_refuge/templates/account/password_reset_from_key_done.html:7
+msgid "Change Password"
+msgstr ""
+
+#: house_of_refuge/templates/account/password_reset.html:7
+#: house_of_refuge/templates/account/password_reset.html:11
+#: house_of_refuge/templates/account/password_reset_done.html:6
+#: house_of_refuge/templates/account/password_reset_done.html:9
+msgid "Password Reset"
+msgstr ""
+
+#: house_of_refuge/templates/account/password_reset.html:16
+msgid ""
+"Forgotten your password? Enter your e-mail address below, and we'll send you "
+"an e-mail allowing you to reset it."
+msgstr ""
+
+#: house_of_refuge/templates/account/password_reset.html:21
+msgid "Reset My Password"
+msgstr ""
+
+#: house_of_refuge/templates/account/password_reset.html:24
+msgid "Please contact us if you have any trouble resetting your password."
+msgstr ""
+
+#: house_of_refuge/templates/account/password_reset_done.html:15
+msgid ""
+"We have sent you an e-mail. Please contact us if you do not receive it "
+"within a few minutes."
+msgstr ""
+
+#: house_of_refuge/templates/account/password_reset_from_key.html:8
+msgid "Bad Token"
+msgstr ""
+
+#: house_of_refuge/templates/account/password_reset_from_key.html:12
+#, python-format
+msgid ""
+"The password reset link was invalid, possibly because it has already been "
+"used.  Please request a <a href=\"%(passwd_reset_url)s\">new password reset</"
+"a>."
+msgstr ""
+
+#: house_of_refuge/templates/account/password_reset_from_key.html:18
+msgid "change password"
+msgstr ""
+
+#: house_of_refuge/templates/account/password_reset_from_key.html:21
+#: house_of_refuge/templates/account/password_reset_from_key_done.html:8
+msgid "Your password is now changed."
+msgstr ""
+
+#: house_of_refuge/templates/account/password_set.html:6
+#: house_of_refuge/templates/account/password_set.html:9
+#: house_of_refuge/templates/account/password_set.html:14
+msgid "Set Password"
+msgstr ""
+
+#: house_of_refuge/templates/account/signup.html:6
+msgid "Signup"
+msgstr ""
+
+#: house_of_refuge/templates/account/signup.html:9
+#: house_of_refuge/templates/account/signup.html:19
+#: house_of_refuge/templates/base.html:83
+msgid "Sign Up"
+msgstr ""
+
+#: house_of_refuge/templates/account/signup.html:11
+#, python-format
+msgid ""
+"Already have an account? Then please <a href=\"%(login_url)s\">sign in</a>."
+msgstr ""
+
+#: house_of_refuge/templates/account/signup_closed.html:5
+#: house_of_refuge/templates/account/signup_closed.html:8
+msgid "Sign Up Closed"
+msgstr ""
+
+#: house_of_refuge/templates/account/signup_closed.html:10
+msgid "We are sorry, but the sign up is currently closed."
+msgstr ""
+
+#: house_of_refuge/templates/account/verification_sent.html:5
+#: house_of_refuge/templates/account/verification_sent.html:8
+#: house_of_refuge/templates/account/verified_email_required.html:5
+#: house_of_refuge/templates/account/verified_email_required.html:8
+msgid "Verify Your E-mail Address"
+msgstr ""
+
+#: house_of_refuge/templates/account/verification_sent.html:10
+msgid ""
+"We have sent an e-mail to you for verification. Follow the link provided to "
+"finalize the signup process. Please contact us if you do not receive it "
+"within a few minutes."
+msgstr ""
+
+#: house_of_refuge/templates/account/verified_email_required.html:12
+msgid ""
+"This part of the site requires us to verify that\n"
+"you are who you claim to be. For this purpose, we require that you\n"
+"verify ownership of your e-mail address. "
+msgstr ""
+
+#: house_of_refuge/templates/account/verified_email_required.html:16
+msgid ""
+"We have sent an e-mail to you for\n"
+"verification. Please click on the link inside this e-mail. Please\n"
+"contact us if you do not receive it within a few minutes."
+msgstr ""
+
+#: house_of_refuge/templates/account/verified_email_required.html:20
+#, python-format
+msgid ""
+"<strong>Note:</strong> you can still <a href=\"%(email_url)s\">change your e-"
+"mail address</a>."
+msgstr ""
+"<strong>Uwaga:</strong> możesz nadal <a href=\"%(email_url)s\">zmianić "
+"swójadres email</a>."
+
+#: house_of_refuge/users/admin.py:18
+msgid "Personal info"
+msgstr "Informacje osobiste"
+
+#: house_of_refuge/users/admin.py:20
+msgid "Permissions"
+msgstr "Uprawnienia"
+
+#: house_of_refuge/users/admin.py:31
+msgid "Important dates"
+msgstr "Istotne daty"
+
+#: house_of_refuge/users/apps.py:7
+msgid "Users"
+msgstr "Użytkownicy"
+
+#: house_of_refuge/users/forms.py:25
+#: house_of_refuge/users/tests/test_forms.py:39
+msgid "This username has already been taken."
+msgstr "Ta nazwa użytkownika jest już zajęta."
+
+#: house_of_refuge/users/models.py:17
+msgid "Name of User"
+msgstr "Nazwa użytkownika"
+
+#: house_of_refuge/users/views.py:25
+msgid "Information successfully updated"
+msgstr "Informacje zapisane poprawnie"

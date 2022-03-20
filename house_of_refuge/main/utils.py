@@ -3,6 +3,7 @@ from datetime import timedelta
 
 from django.core.mail import get_connection, EmailMultiAlternatives
 from django.utils import timezone
+from django.conf import settings
 
 
 def ago(**kwargs):
@@ -23,8 +24,8 @@ def get_phone_number_display(phone_str):
     return re.sub(r'[\d\+\(][\s\d\-\(\)+]+[\d\)]', switch_phone, phone_str)
 
 
-def send_mail(subject, message, from_email, recipient_list,
-              fail_silently=False, auth_user=None, auth_password=None,
+def send_mail(subject, message, recipient_list, from_email=None, 
+              fail_silently=False, auth_user=None, auth_password=None, reply_to=None,
               connection=None, html_message=None, **kwargs):
     """
     Easy wrapper for sending a single message to a recipient list. All members
@@ -33,6 +34,7 @@ def send_mail(subject, message, from_email, recipient_list,
     If from_email is None, use the DEFAULT_FROM_EMAIL setting.
     If auth_user is None, use the EMAIL_HOST_USER setting.
     If auth_password is None, use the EMAIL_HOST_PASSWORD setting.
+    if reply_to is None, use REPLY_TO_EMAIL setting.
 
     Note: The API for this method is frozen. New code wanting to extend the
     functionality should use the EmailMessage class directly.
@@ -42,7 +44,9 @@ def send_mail(subject, message, from_email, recipient_list,
         password=auth_password,
         fail_silently=fail_silently,
     )
-    mail = EmailMultiAlternatives(subject, message, from_email, recipient_list, connection=connection, **kwargs)
+    if reply_to is None:
+        reply_to = [settings.REPLY_TO_EMAIL]
+    mail = EmailMultiAlternatives(subject, message, from_email, recipient_list, connection=connection, reply_to=reply_to, **kwargs)
     if html_message:
         mail.attach_alternative(html_message, 'text/html')
 
