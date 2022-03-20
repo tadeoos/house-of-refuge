@@ -73,7 +73,7 @@ const App = (props) => {
                   backgroundColor={colors.optimisticYellow}
               />
             </Link>
-            <div className={"border-bottom w-100 my-3"}/>
+            <div className={"w-100 my-3"}/>
             <Link to="/map">
               <BigButton
                   primaryText="Хочу поїхати в іншу країну в Європі"
