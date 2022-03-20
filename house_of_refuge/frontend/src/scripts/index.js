@@ -152,7 +152,7 @@ const App = ({subs, userData, coordinators, helped}) => {
     return function cleanupListener() {
       document.removeEventListener('visibilitychange', handler);
     };
-  });
+  }, []);
 
   useInterval(async () => {
     if (!tabVisible) {
