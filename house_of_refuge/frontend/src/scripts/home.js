@@ -17,6 +17,7 @@ import { colors } from '../theme';
 import Share from '../pages/Share';
 import Find from '../pages/Find';
 import CMS from "../components/CMS";
+import Map from "../components/Map";
 
 const StyledApp = styled.div`
   font-family: 'proxima-nova', sans-serif;
@@ -73,14 +74,14 @@ const App = (props) => {
               />
             </Link>
             <div className={"border-bottom w-100 my-3"}/>
-            <a href="/map">
+            <Link to="/map">
               <BigButton
                   primaryText="Хочу поїхати в іншу країну в Європі"
                   secondaryText="Chcę jechać do innego kraju w Europie"
                   outlined
                   color={colors.veryDarkGrey}
               />
-            </a>
+            </Link>
           </ButtonWrap>
         </>} />
         <Route path="/share" element={<Share />} />
@@ -98,6 +99,7 @@ const App = (props) => {
         </>} />
         <Route path="/edit" element={<Edit {...props} />} />
         <Route path="/page/:id" element={<CMS {...props} />} />
+        <Route path="/map" element={<Map {...props} />} />
       </Routes>
     </StyledApp>
   );
