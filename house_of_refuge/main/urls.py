@@ -17,7 +17,6 @@ urlpatterns = [
     path("find", views.home, name="home-find"),
     path("privacy/", views.home, name="home-priv"),
 
-    path("map/", RedirectView.as_view(url=settings.SHELTER_MAP_URL, permanent=True)),
     path("shelter/", RedirectView.as_view(url=settings.SHELTER_FORM_URL, permanent=True)),
 
     path("edit/", views.edit, name="host-edit"),
