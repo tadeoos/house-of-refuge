@@ -97,7 +97,6 @@ const App = (props) => {
               user={user}
           />
         </>} />
-        <Route path="/privacy" element={<Privacy />} />
         <Route path="/edit" element={<Edit {...props} />} />
         <Route path="/page/:id" element={<CMS {...props} />} />
         <Route path="/map" element={<Map {...props} />} />
