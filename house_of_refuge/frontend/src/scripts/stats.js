@@ -36,7 +36,7 @@ const BarHourChart = ({submissions, yAxisMax, maxValueCallback, uniqueId, defaul
   const labels = [...Array(24).keys()];
 
   const allDays = [...new Set(submissions.map(s => s.day))];
-  console.log("days: ", allDays);
+
 
   useEffect(() => {
 

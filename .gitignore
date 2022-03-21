@@ -331,3 +331,4 @@ house_of_refuge/media/
 local
 
 house_of_refuge/frontend/webpack-stats.json
+house_of_refuge/frontend/yarn.lock

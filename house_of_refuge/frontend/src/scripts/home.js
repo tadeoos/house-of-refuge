@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import Header from '../components/Header.js';
 import BigButton from '../components/BigButton.js';
 import Form from '../components/Form.js';
-import Privacy from '../components/Privacy.js';
 import Edit from '../components/Edit.js';
 import { fields2, validationSchema2 } from './formSchema';
 import {
@@ -18,6 +17,7 @@ import Share from '../pages/Share';
 import Find from '../pages/Find';
 import CMS from "../components/CMS";
 import Map from "../components/Map";
+import '../i18n/config';
 
 const StyledApp = styled.div`
   font-family: 'proxima-nova', sans-serif;

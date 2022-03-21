@@ -112,7 +112,7 @@ export const SubmissionList = (
   };
 
   const peopleStatusChange = (values) => {
-    console.log("setting poeople: ", values);
+
     if (values.length) {
       setPeopleFilter(values);
     } else {

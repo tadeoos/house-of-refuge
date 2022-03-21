@@ -7,11 +7,13 @@ import { fields1, validationSchema1 } from '../scripts/formSchema';
 import * as yup from 'yup';
 import { StyledForm, Label, Input, Button, Alert, Success } from '../components/FormComponents';
 import { useSearchParams } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
 
 const Edit = () => {
   const [success, setSuccess] = useState(false);
   const [formData, setFormData] = useState(null);
   const [searchParams, setSearchParams] = useSearchParams();
+  const { t, i18n } = useTranslation();
 
   useEffect(() => {
     if (searchParams.has("t")) {
@@ -29,7 +31,7 @@ const Edit = () => {
           },
         })
           .catch(error => {
-            console.log("ERROR: ", error);
+
           })
           .then(res => {
             setFormData(res.data.formData);
@@ -60,7 +62,7 @@ const Edit = () => {
         },
       })
         .catch(error => {
-          console.log("ERROR: ", error);
+
         })
         .then(res => {
           if (res.status === 204) {
@@ -79,9 +81,11 @@ const Edit = () => {
       {success ? <Success> Sprawdź swojego maila </Success> : formData ?
         <Form
           formData={formData}
-          primaryText="Udostępniam nocleg"
-          secondaryText="Можу надати житло"
+          primaryText={t("i_provide_accomodation")}
+          secondaryText={uat('i_provide_accomodation')}
           fields={fields1}
+          localeNamespace='fields1'
+          fixedLocale={false}
           validationSchema={validationSchema1}
           url='/api/stworz_zasob'
           successInfo='Zmodyfikowalismy Twoje zgłoszenie.'

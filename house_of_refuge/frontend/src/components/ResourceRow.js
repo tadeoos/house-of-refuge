@@ -143,7 +143,7 @@ export const ResourceRow = ({resource, isExpanded, onMatch, user, activeSub, com
         'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken')
       }, body: JSON.stringify({"note": value}) // body data type must match "Content-Type" header
     }).then(response => response.json()).then(data => {
-      console.log('Response: ', data);
+
       // toast(`${data.message}`, {type: data.status});
       setNote(value);
     }).catch((error) => {

@@ -29,17 +29,17 @@ const statusAsNumber = (value) => {
 
 
 const updateSub = (sub, fields, onCorrect = null) => {
-  console.log('sub update:', fields);
+
   fetch(`/api/sub/update/${sub.id}`, {
     method: 'POST', // *GET, POST, PUT, DELETE, etc.
     headers: {
       'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken')
     }, body: JSON.stringify({fields: fields}) // body data type must match "Content-Type" header
   }).then(response => response.json()).then(data => {
-    console.log('Response: ', data);
+
     if (data.status === "success") {
       if (onCorrect) {
-        console.log("doing on correct");
+
         onCorrect();
       }
     }
@@ -72,7 +72,7 @@ export function SubmissionRow({sub, activeHandler, user, isGroupCoordinator, isA
     if (readOnly) {
       return;
     }
-    console.log("btn handler clicked");
+
     activeHandler(sub, isActive);
   };
 
@@ -100,13 +100,13 @@ export function SubmissionRow({sub, activeHandler, user, isGroupCoordinator, isA
   };
 
   const updateStatus = (value) => {
-    console.log("Updating sub value: ", value);
+
     const newStatus = value[0].value;
     if (newStatus !== localSub.status) {
       updateSub(localSub, {"status": newStatus}, () => setStatus(newStatus));
       setLocalSub((s) => ({...s, status: newStatus}));
     } else {
-      console.log("would update but we're smart now..");
+
     }
   };
 
@@ -125,14 +125,14 @@ export function SubmissionRow({sub, activeHandler, user, isGroupCoordinator, isA
 
 
   const setCoordinator = () => {
-    console.log("sub status update");
+
     fetch(`/api/sub/update/${localSub.id}`, {
       method: 'POST', // *GET, POST, PUT, DELETE, etc.
       headers: {
         'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken')
       }, body: JSON.stringify({fields: {"coordinator_id": user.id}}) // body data type must match "Content-Type" header
     }).then(response => response.json()).then(data => {
-      console.log('Response: ', data);
+
       // toast(`${data.message}`, {type: data.status});
       setLocalSub(s => ({...s, coordinator: user}));
     }).catch((error) => {
@@ -185,8 +185,8 @@ export function SubmissionRow({sub, activeHandler, user, isGroupCoordinator, isA
                  value={localSub.when}
                  onChange={(e) => {
                    const value = e.target.value;
-                   console.log("value: ", value);
-                   console.log("local sub: ", localSub.when);
+
+
                    if (e && localSub.when !== value) {
                      updateSub(localSub,
                          {"when": value},
