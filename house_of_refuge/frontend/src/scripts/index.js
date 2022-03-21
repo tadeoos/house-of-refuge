@@ -85,7 +85,7 @@ const App = ({subs, userData, coordinators, helped}) => {
   const [latestHostChange, setLatestHostChange] = useState(0);
 
   // useEffect(() => {
-  //   console.log("parsing");
+  //
   //   parseQueryParams(searchParams);
   // }, []);
 
@@ -155,12 +155,12 @@ const App = ({subs, userData, coordinators, helped}) => {
 
     if (activeSub) {
       const latest = parseFloat(await getLatestHostTimestamp());
-      console.log("latest", latest, latestHostChange);
+
       if (latest > latestHostChange) {
-        console.log("UPDATING HOSTS");
+
         const response = await fetch(`/api/zasoby?since=${latestHostChange}`);
         const result = await response.json();
-        console.log("got data", result.data);
+
         const changedHosts = result.data;
         const changedIds = changedHosts.map(s => s.id);
         setHosts((currentHosts) => [
@@ -169,39 +169,39 @@ const App = ({subs, userData, coordinators, helped}) => {
         );
         setLatestHostChange(latest);
       } else {
-        console.log("nothing");
+
       }
     } else {
       // update submissions
       const latest = parseFloat(await getLatestSubId());
-      console.log("latest", latest, latestSubChange);
+
       if (latest > latestSubChange) {
-        console.log("UPDATING SUBS");
+
         const response = await fetch(`/api/zgloszenia?since=${latestSubChange}`);
         const result = await response.json();
-        console.log("got data", result.data);
+
         const newSubs = result.data.submissions;
         const newSubsIds = newSubs.map(s => s.id);
-        console.log("new subs: ", newSubs);
-        console.log("new sub ids: ", newSubsIds);
+
+
         setSubmissions((cS) => [...cS.filter(s => !newSubsIds.includes(s.id)), ...newSubs]);
         // do latest for dropped
         setDroppedHosts(result.data.dropped);
         setLatestSubChange(latest);
       } else {
-        console.log("nothing");
+
       }
     }
 
   }, getRandomInt(1000, 1200));
 
 
-  console.log("IsCoordinator: ", isCoordinator, coordIds, userData);
+
 
   const clearActiveSub = () => setActiveSub(null);
 
   const subIsTaken = (sub, isActive = false, discard = false) => {
-    console.log("sub taken");
+
     let fields;
     if (isActive) {
       // no match found... we're clearing the status
@@ -217,7 +217,7 @@ const App = ({subs, userData, coordinators, helped}) => {
         'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken')
       }, body: JSON.stringify({"fields": fields})
     }).then(response => response.json()).then(data => {
-      console.log('Response: ', data);
+
       toast(`${data.message}`, {type: data.status});
       if (!isActive) {
         setActiveSub(data.data);

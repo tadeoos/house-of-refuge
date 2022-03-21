@@ -18,7 +18,7 @@ const Find = ({ user }) => {
             url: '/api/check_limit',
         })
             .catch(error => {
-                console.log("ERROR: ", error);
+
             })
             .then(res => {
                 setLoading(false);
@@ -39,6 +39,8 @@ const Find = ({ user }) => {
                         validationSchema={validationSchema2}
                         url='/api/zglos'
                         successInfo='Дякуємо за подання.'
+                        localeNamespace='fields2'
+                        fixedLocale="ua"
                         user={user}
                         canAddMore={true}
                     /> :

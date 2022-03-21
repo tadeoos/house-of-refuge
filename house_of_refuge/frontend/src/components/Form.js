@@ -20,7 +20,7 @@ import {
 } from '../components/FormComponents';
 import {Link} from "react-router-dom";
 import { useTranslation } from 'react-i18next';
-
+import '../i18n/config';
 
 
 const Primary = styled.div`
@@ -206,8 +206,8 @@ const Form = ({
           }
         });
   };
-  console.log('localeNamespace', localeNamespace);
-  console.log('fixedLocale', fixedLocale);
+
+
   return (
       success ? <div><Success> {successInfo} </Success>
             {canAddMore &&
@@ -286,8 +286,7 @@ const Form = ({
                                       onChange={formik.handleChange}
                                       value={formik.values[field.name]}
                                       min={field.type === 'number' ? 1 : null}
-                                      max={field.type === 'number' ? 1000 : null}
-                                  />
+                                      max={field.type === 'number' ? 1000 : null}/>
                       }
                       {field.type === 'checkbox' ? <>
                         <Label type="checkbox" htmlFor={field.name}>{tr(field.name)}</Label>

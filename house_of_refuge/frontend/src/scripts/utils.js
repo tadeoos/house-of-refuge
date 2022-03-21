@@ -26,14 +26,14 @@ export const shouldShowHost = (resource, userId) => {
 };
 
 export const updateResource = (resource, fields, onSuccess = null) => {
-  console.log('resource update: ', fields);
+
   fetch(`/api/resource/update/${resource.id}`, {
     method: 'POST', // *GET, POST, PUT, DELETE, etc.
     headers: {
       'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken')
     }, body: JSON.stringify({fields: fields}) // body data type must match "Content-Type" header
   }).then(response => response.json()).then(data => {
-    console.log('Response: ', data);
+
     if (data.message) {
       toast(`${data.message}`, {type: data.status});
     }

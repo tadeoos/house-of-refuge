@@ -86,7 +86,7 @@ export const ResourceList = ({initialResources, sub, subHandler, user, clearActi
         'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken')
       }, body: JSON.stringify({resource: resource.id, sub: sub.id, ...payload}) // body data type must match "Content-Type" header
     }).then(response => response.json()).then(data => {
-      console.log('Response: ', data);
+
       toast(`${data.message}`, {type: data.status});
       clearActiveSub();
     }).catch((error) => {
@@ -200,10 +200,10 @@ export const ResourceList = ({initialResources, sub, subHandler, user, clearActi
                 }}
             />
           </QuickFilter>
-          <QuickFilter label={"Szukaj"}>
+          <QuickFilter label={"Szukaj"} className={"flex-grow-1"}>
             <div className={"d-flex align-items-center"}>
               <Search/>
-              <input className="search-input" onChange={(e) => setSearchQuery(e.target.value.toLowerCase())}/>
+              <input className="search-input flex-grow-1" onChange={(e) => setSearchQuery(e.target.value.toLowerCase())}/>
             </div>
           </QuickFilter>
         </div>

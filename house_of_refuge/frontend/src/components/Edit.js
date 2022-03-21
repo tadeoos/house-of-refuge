@@ -31,7 +31,7 @@ const Edit = () => {
           },
         })
           .catch(error => {
-            console.log("ERROR: ", error);
+
           })
           .then(res => {
             setFormData(res.data.formData);
@@ -62,7 +62,7 @@ const Edit = () => {
         },
       })
         .catch(error => {
-          console.log("ERROR: ", error);
+
         })
         .then(res => {
           if (res.status === 204) {
