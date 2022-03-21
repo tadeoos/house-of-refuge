@@ -1,6 +1,6 @@
 [MASTER]
 load-plugins=pylint_django, pylint_celery
-django-settings-module=config.settings.base
+django-settings-module=config.settings.test
 [FORMAT]
 max-line-length=120
 

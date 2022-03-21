@@ -11,7 +11,7 @@ from django.utils import timezone
 from django.utils.crypto import get_random_string
 from django.utils.functional import cached_property
 from django.utils.safestring import mark_safe
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import gettext_lazy as _, gettext
 from markdownx.models import MarkdownxField
 from markdownx.utils import markdownify
 from model_utils.models import TimeStampedModel
@@ -25,11 +25,11 @@ User = get_user_model()
 
 
 class HousingType(models.TextChoices):
-    HOME = "home", _("Dom")
-    FLAT = "flat", _("Mieszkanie")
-    ROOM = "room", _("Pokój")
-    COUCH = "couch", _("Kanapa")
-    MATTRESS = "mattress", _("Materac")
+    HOME = "home", _("House")
+    FLAT = "flat", _("Apartment")
+    ROOM = "room", _("Room")
+    COUCH = "couch", _("Couch")
+    MATTRESS = "mattress", _("Mattress")
 
 
 class TransportRange(models.TextChoices):
@@ -39,11 +39,11 @@ class TransportRange(models.TextChoices):
 
 
 class Status(models.TextChoices):
-    NEW = "new", _("Świeżak")
-    TAKEN = "taken", _("Zajęta")
-    CALLING = "calling", _("Dzwonimy")
-    IGNORE = "ignore", _("Ignoruj")
-    SHOULD_DELETE = "should_delete", _("Do usunięcia")
+    NEW = "new", _("Fresh")
+    TAKEN = "taken", _("Taken")
+    CALLING = "calling", _("Calling")
+    IGNORE = "ignore", _("Ignore")
+    SHOULD_DELETE = "should_delete", _("For deletion")
 
 
 class HousingResourceManager(Manager):
@@ -75,45 +75,176 @@ def generate_token():
 
 
 class HousingResource(TimeStampedModel):
-    name = models.CharField(max_length=512, null=False, verbose_name="Imię i nazwisko")
-    about_info = models.TextField(max_length=2048)
-    resource = models.CharField(choices=HousingType.choices, max_length=1024)
-    city_and_zip_code = models.CharField(max_length=512)
-    zip_code = models.CharField(max_length=8)
-    address = models.CharField(max_length=512)  # ulica numer domu..
-    people_to_accommodate_raw = models.CharField(max_length=1024, blank=True, default="")
+    name = models.CharField(
+        max_length=512,
+        null=False,
+        verbose_name=_("Full name"),
+    )
+    about_info = models.TextField(
+        max_length=2048,
+        verbose_name=_("Something about you"),
+        help_text=_("how old are you? who do you live with (if you'll host at your place)?"),
+    )
+    resource = models.CharField(
+        choices=HousingType.choices,
+        max_length=1024,
+        verbose_name=_("Resource"),
+    )
+    city_and_zip_code = models.CharField(
+        max_length=512,
+        verbose_name=_("City and zip code"),
+    )
+    zip_code = models.CharField(
+        max_length=8,
+        verbose_name=_("Zip code"),
+    )
+    address = models.CharField(
+        max_length=512,
+        verbose_name=_("Address"),
+        help_text=_("street, building number, appartment number"),
+    )
+    people_to_accommodate_raw = models.CharField(
+        max_length=1024,
+        blank=True,
+        default="",
+        verbose_name=_("Max number of people to accomodate"),
+        help_text=_("How many people can you support while providing them adequate living conditions?"),
+    )
     people_to_accommodate = models.IntegerField(
-        default=0
-    )  # Ile osób jesteś w stanie wesprzeć tak, by miały godne warunki pobytu?
-    age = models.CharField(max_length=512, default="", blank=True)
-    languages = models.CharField(max_length=512, default="", blank=True)
-    when_to_call = models.CharField(max_length=1024, default="", blank=True)
-    living_with_pets = models.CharField(max_length=1024, null=True, blank=True)
-    can_take_person_with_pets = models.CharField(max_length=512, null=True, blank=True)
-
-    costs = models.CharField(max_length=1024)
-    availability = models.DateField(default=timezone.now)
+        default=0,
+        verbose_name=_("Max number of people to accomodate"),
+        help_text=_("How many people can you support while providing them adequate living conditions?"),
+    )
+    age = models.CharField(
+        max_length=512,
+        default="",
+        blank=True,
+        verbose_name=_("Age"),
+    )
+    languages = models.CharField(
+        max_length=512,
+        default="",
+        blank=True,
+        verbose_name=_("Languages"),
+    )
+    when_to_call = models.CharField(
+        max_length=1024,
+        default="",
+        blank=True,
+        verbose_name=_("When to call?"),
+    )
+    living_with_pets = models.CharField(
+        max_length=1024,
+        null=True,
+        blank=True,
+        verbose_name=_("Are there pets in the house?"),
+    )
+    can_take_person_with_pets = models.CharField(
+        max_length=512,
+        null=True,
+        blank=True,
+        verbose_name=_("Can accomodate pets?"),
+    )
+    costs = models.CharField(
+        max_length=1024,
+        verbose_name=_("Costs"),
+        help_text=_("Costs of stay - rent, fees, rental costs or free stay"),
+    )
+    availability = models.DateField(
+        default=timezone.now,
+        verbose_name=_("Availability"),
+        help_text=_("When can you start providing the accomodation?"),
+    )
     accommodation_length = models.CharField(
-        max_length=1024
-    )  # Na jak długo udostępniasz nocleg?
+        max_length=1024,
+        verbose_name=_("Accommodation length"),
+        help_text=_("For how long can you provide the accomodation?"),
+    )
     details = models.TextField(
-        max_length=2048
-    )  # Garść informacji o miejscu (obecność zwierząt, języki obce lokatorów i lokatorek, dostępna pościel i ręczniki, inne) *
-    transport = models.CharField(choices=TransportRange.choices, max_length=16)
-    phone_number = models.CharField(max_length=128)
-    backup_phone_number = models.CharField(max_length=128, default="", blank=True)
-    email = models.EmailField(unique=False)
-    extra = models.CharField(max_length=2048, null=True, default="", blank=True)
-    status = models.CharField(choices=Status.choices, default=Status.NEW, max_length=32)
-    owner = models.ForeignKey(User, on_delete=models.SET_NULL, default=None, null=True, blank=True)
-    will_pick_up_now = models.BooleanField(default=False)
-    note = models.TextField(max_length=2048, default="", blank=True)
-    cherry = models.BooleanField(default=False)
-    verified = models.BooleanField(default=False)
-    is_dropped = models.BooleanField(default=False)
-    got_hot = models.DateTimeField(default=None, null=True, blank=True)
-    turtle = models.BooleanField(default=False, help_text=_("This host offers longer stay"), verbose_name=_("Turtle"))
-    token = models.CharField(max_length=64, unique=True, default=generate_token)
+        max_length=2048,
+        verbose_name=_("Details"),
+        help_text=_("A bunch of information about the place - presence of animals, languages spoken by tenants, availability of bed linen and towels, others"),
+    )
+    transport = models.CharField(
+        choices=TransportRange.choices,
+        max_length=16,
+        verbose_name=_("Transport"),
+    )
+    phone_number = models.CharField(
+        max_length=128,
+        verbose_name=_("Phone number"),
+    )
+    backup_phone_number = models.CharField(
+        max_length=128,
+        default="",
+        blank=True,
+        verbose_name=_("Backup phone number"),
+        help_text=_("An additional contact person"),
+    )
+    email = models.EmailField(
+        unique=False,
+        verbose_name=_("Email"),
+    )
+    extra = models.CharField(
+        max_length=2048,
+        null=True,
+        default="",
+        blank=True,
+        verbose_name=_("Extra details"),
+    )
+    status = models.CharField(
+        choices=Status.choices,
+        default=Status.NEW,
+        max_length=32,
+        verbose_name=_("Status"),
+    )
+    owner = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        default=None,
+        null=True,
+        blank=True,
+        verbose_name=_("Owner"),
+    )
+    will_pick_up_now = models.BooleanField(
+        default=False,
+        verbose_name=_("Will pick the people up"),
+    )
+    note = models.TextField(
+        max_length=2048,
+        default="",
+        blank=True,
+        verbose_name=_("Note"),
+    )
+    cherry = models.BooleanField(
+        default=False,
+        verbose_name=_("Cherry"),
+    )
+    verified = models.BooleanField(
+        default=False,
+        verbose_name=_("Verified"),
+    )
+    is_dropped = models.BooleanField(
+        default=False,
+        verbose_name=_("Is dropped"),
+    )
+    got_hot = models.DateTimeField(
+        default=None,
+        null=True,
+        blank=True,
+        verbose_name=_("Got hot"),
+    )
+    turtle = models.BooleanField(
+        default=False,
+        help_text=_("This host offers longer stay"),
+        verbose_name=_("Turtle"),
+    )
+    token = models.CharField(
+        max_length=64,
+        unique=True,
+        default=generate_token,
+        verbose_name=_("Token"),
+    )
 
     objects = HousingResourceManager()
 
@@ -121,8 +252,8 @@ class HousingResource(TimeStampedModel):
         return f"{self.id} {self.name} {self.phone_number} {self.full_address} {self.pk}"
 
     class Meta:
-        verbose_name = "Zasób"
-        verbose_name_plural = "Zasoby"
+        verbose_name = _("Resource")
+        verbose_name_plural = _("Resources")
         indexes = [
             models.Index(fields=['modified']),
         ]
@@ -248,19 +379,19 @@ class HousingResource(TimeStampedModel):
 
 
 class SubSource(models.TextChoices):
-    WEBFORM = "webform", _("Strona")
+    WEBFORM = "webform", _("Site")
     MAIL = "mail", _("Email")
-    TERRAIN = "terrain", _("Zachodni")
-    OTHER = "other", _("Inny")
+    TERRAIN = "terrain", _("Terrain")
+    OTHER = "other", _("Other")
 
 
 class SubStatus(models.TextChoices):
-    NEW = "new", _("Świeżak")
-    SEARCHING = "searching", _("Szukamy")
-    IN_PROGRESS = "in_progress", _("Host znaleziony")
-    GONE = "gone", _("Zniknęła")
-    SUCCESS = "success", _("Sukces")
-    CANCELLED = "cancelled", _("Nieaktualne")
+    NEW = "new", _("Fresh")
+    SEARCHING = "searching", _("Searching")
+    IN_PROGRESS = "in_progress", _("Host found")
+    GONE = "gone", _("Gone")
+    SUCCESS = "success", _("Success")
+    CANCELLED = "cancelled", _("Cancelled")
 
 
 END_OF_DAY = 5
@@ -296,39 +427,148 @@ class SubmissionManager(Manager):
 
 
 class Submission(TimeStampedModel):
-    name = models.CharField(max_length=512, null=False, verbose_name="Imię i nazwisko")
-    phone_number = models.CharField(max_length=128)
-    people = models.CharField(max_length=128)
-    how_long = models.CharField(max_length=128)
-    description = models.CharField(max_length=2048, help_text="Opisz grupę, podaj wiek wszystkich osób,"
-                                                              " relacje ich łączące (rodzina, przyjaciele?), "
-                                                              "zaznacz czy można ich rozbić na mniejsze")
-    origin = models.CharField(max_length=512, blank=True, default="")
-    traveling_with_pets = models.CharField(max_length=1024, null=True, blank=True)
-    can_stay_with_pets = models.CharField(max_length=512, null=True, blank=True)  # zrobic dropdown na froncie do tego?
-    contact_person = models.CharField(max_length=1024, null=True, blank=True)
-    languages = models.CharField(max_length=1024, null=True, blank=True)
-    when = models.DateField(default=timezone.now, null=True, blank=True, help_text="Od kiedy potrzebuje")
-    transport_needed = models.BooleanField(default=True)
-    # ponizej dla zalogowanych
-    note = models.CharField(max_length=2048, default="", blank=True)
-    status = models.CharField(choices=SubStatus.choices, default=Status.NEW, max_length=32)
-    person_in_charge_old = models.CharField(max_length=512, default="", blank=True)
-    receiver = models.ForeignKey(User, on_delete=models.SET_NULL, default=None, blank=True, null=True,
-                                 related_name="received_subs", help_text="Przyjmujący zgłoszenie")
-    coordinator = models.ForeignKey(User, on_delete=models.SET_NULL, default=None, blank=True, null=True,
-                                    related_name="coord_subs", help_text="Łącznik")
-    matcher = models.ForeignKey(User, on_delete=models.SET_NULL, default=None, blank=True, null=True,
-                                related_name="matched_subs", help_text="Kto znalazł hosta")
-    resource = models.ForeignKey(HousingResource, on_delete=models.SET_NULL, default=None, blank=True, null=True,
-                                 help_text="Zasób (Host)")
-    priority = models.IntegerField(default=1)
-    source = models.CharField(choices=SubSource.choices, default=SubSource.WEBFORM, max_length=64)
-    should_be_deleted = models.BooleanField(default=False)
+    name = models.CharField(
+        max_length=512,
+        null=False,
+        verbose_name=_("Full name"),
+    )
+    phone_number = models.CharField(
+        max_length=128,
+        verbose_name=_("Phone number"),
+    )
+    people = models.CharField(
+        max_length=128,
+        verbose_name=_("The number of people"),
+    )
+    how_long = models.CharField(
+        max_length=128,
+        verbose_name=_("Length of stay"),
+        help_text=_("For how long (in days)?"),
+    )
+    description = models.CharField(
+        max_length=2048,
+        verbose_name=_("Description"),
+        help_text=_("Describe the group, age of every person, "
+            "their relationships (family, friends?), "
+            "indicate whether it can be broken into smaller groups"),
+        )
+    origin = models.CharField(
+        max_length=512,
+        blank=True,
+        default="",
+        verbose_name=_("Nationality"),
+    )
+    traveling_with_pets = models.CharField(
+        max_length=1024,
+        null=True,
+        blank=True,
+        verbose_name=_("Traveling with pets"),
+    )
+    can_stay_with_pets = models.CharField(
+        max_length=512,
+        null=True,
+        blank=True,
+        verbose_name=_("Can stay with pets"),
+        help_text=_("Can the person stay with pets (e.g., due to allergies)?"),
+    )  # does this need a dropdown on the frontend?
+    contact_person = models.CharField(
+        max_length=1024,
+        null=True,
+        blank=True,
+        verbose_name=_("Contact person"),
+    )
+    languages = models.CharField(
+        max_length=1024,
+        null=True,
+        blank=True,
+        verbose_name=_("Languages"),
+        help_text=_("Languages that the person speaks"),
+    )
+    when = models.DateField(
+        default=timezone.now,
+        null=True,
+        blank=True,
+        verbose_name=_("Since when the support is needed"),
+    )
+    transport_needed = models.BooleanField(
+        default=True,
+        verbose_name=_("Transport needed"),
+    )
+    # following fields are for logged in users
+    note = models.CharField(
+        max_length=2048,
+        default="",
+        blank=True,
+        verbose_name=_("Note"),
+    )
+    status = models.CharField(
+        choices=SubStatus.choices,
+        default=Status.NEW,
+        max_length=32,
+        verbose_name=_("Status"),
+    )
+    person_in_charge_old = models.CharField(
+        max_length=512,
+        default="",
+        blank=True,
+        verbose_name=_("Person in charge (legacy)"),
+    )
+    receiver = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        default=None,
+        blank=True,
+        null=True,
+        related_name="received_subs",
+        verbose_name=_("Receiver of the submission"),
+    )
+    coordinator = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        default=None,
+        blank=True,
+        null=True,
+        related_name="coord_subs",
+        verbose_name=_("Coordinator"),
+    )
+    matcher = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        default=None,
+        blank=True,
+        null=True,
+        related_name="matched_subs",
+        verbose_name=_("Who found the host"),
+    )
+    resource = models.ForeignKey(
+        HousingResource,
+        on_delete=models.SET_NULL,
+        default=None,
+        blank=True,
+        null=True,
+        verbose_name=_("Resource (Host)"),
+        )
+    priority = models.IntegerField(
+        default=1,
+        verbose_name=_("Priority"),
+    )
+    source = models.CharField(
+        choices=SubSource.choices,
+        default=SubSource.WEBFORM,
+        max_length=64,
+        verbose_name=_("Source"),
+    )
+    should_be_deleted = models.BooleanField(
+        default=False,
+        verbose_name=_("Should be deleted"),
+    )
+    finished_at = models.DateTimeField(
+        null=True,
+        blank=True,
+        verbose_name=_("Finished at"),
+    )
 
-    finished_at = models.DateTimeField(null=True, blank=True)
-
-    # TODO: dorobić last status update?
+    # TODO: add last status update?
 
     objects = SubmissionManager()
 
@@ -336,8 +576,8 @@ class Submission(TimeStampedModel):
         return f"{self.id} {self.name} {self.people} na {self.how_long}"
 
     class Meta:
-        verbose_name = "Zgłoszenie"
-        verbose_name_plural = "Zgłoszenia"
+        verbose_name = _("Submission")
+        verbose_name_plural = _("Submissions")
         ordering = ['-priority', 'created']
         indexes = [
             models.Index(fields=['modified']),
@@ -426,17 +666,20 @@ class Submission(TimeStampedModel):
         self.status = SubStatus.CANCELLED
         if self.resource:
             self.resource.is_dropped = True
-            note_append = f"Spad ze zgłoszenia {self.id}; host znaleziony przez: {self.resource.owner}"
-            try:
-                self.resource.note += f" \n{note_append}"
-            except TypeError:
-                self.resource.note = note_append
+            self.resource.note += format(
+                "\n{}: {}; {}: {}",
+                gettext("Dropped from submission"),
+                self.id,
+                gettext("Host found by"),
+                self.resource.owner,
+            )
             self.clear_resource()
             self.resource = None
-        try:
-            self.note += f' \nDropped at {timezone.now().strftime("%Y-%m-%d %H:%M:%S")}'
-        except TypeError:
-            self.note = f'Dropped at {timezone.now().strftime("%Y-%m-%d %H:%M:%S")}'
+        self.note += format(
+            "\n{}: {}",
+            gettext("Dropped at"),
+            timezone.now().strftime("%Y-%m-%d %H:%M:%S"),
+        )
         self.save()
 
     def as_prop(self):
@@ -474,27 +717,55 @@ class Submission(TimeStampedModel):
 
 
 class Groups(models.TextChoices):
-    REMOTE = "remote", _("Zdalna")
-    STATION = "station", _("Dworzec")
+    REMOTE = "remote", _("Remote")
+    STATION = "station", _("Station")
 
 
 class Coordinator(TimeStampedModel):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    group = models.CharField(choices=Groups.choices, max_length=32)
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        verbose_name=_("User"),
+    )
+    group = models.CharField(
+        choices=Groups.choices,
+        max_length=32,
+        verbose_name=_("Group"),
+    )
 
     class Meta:
-        verbose_name = "Koordynator"
-        verbose_name_plural = "Koordynatorzy"
+        verbose_name = _("Coordinator")
+        verbose_name_plural = _("Coordinators")
 
     def as_json(self):
         return dict(user=self.user.as_json(), group=self.group)
 
 
 class ObjectChange(TimeStampedModel):
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    submission = models.ForeignKey(Submission, on_delete=models.SET_NULL, null=True, related_name="changes")
-    host = models.ForeignKey(HousingResource, on_delete=models.SET_NULL, null=True, related_name="changes")
-    change = models.CharField(max_length=2048)
+    user = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        verbose_name=_("User"),
+    )
+    submission = models.ForeignKey(
+        Submission,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name="changes",
+        verbose_name=_("Submission"),
+    )
+    host = models.ForeignKey(
+        HousingResource,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name="changes",
+        verbose_name=_("Host"),
+    )
+    change = models.CharField(
+        max_length=2048,
+        verbose_name=_("Change"),
+    )
 
     def __str__(self):
         return f"{self.user}: {self.change}" \
@@ -502,8 +773,8 @@ class ObjectChange(TimeStampedModel):
                f" (host={getattr(self.host, 'id', None)})"
 
     class Meta:
-        verbose_name = "Zmiana Rekordu"
-        verbose_name_plural = "Zmiany Rekordów"
+        verbose_name = _("Record Change")
+        verbose_name_plural = _("Record Changes")
 
 
 class SiteConfiguration(SingletonModel):
@@ -517,7 +788,7 @@ class SiteConfiguration(SingletonModel):
                     "counted in calculating throttling limit"))
 
     def __str__(self):
-        return "Site Configuration"
+        return gettext("Site Configuration")
 
     class Meta:
         verbose_name = _("Site Configuration")
@@ -532,12 +803,34 @@ MARKDOWN_FIELD_HELP_TEXT = mark_safe(
 
 
 class MenuPage(TimeStampedModel):
-    slug = models.SlugField(max_length=128, unique=True)
-    menu_title_primary_language = models.CharField(max_length=512)
-    menu_title_secondary_language = models.CharField(max_length=512, blank=False)
-    content_primary_language = MarkdownxField(help_text=MARKDOWN_FIELD_HELP_TEXT)
-    content_secondary_language = MarkdownxField(help_text=MARKDOWN_FIELD_HELP_TEXT, blank=True, default="")
-    published = models.BooleanField(default=False)
+    slug = models.SlugField(
+        max_length=128,
+        unique=True,
+        verbose_name=_("Identifier"),
+    )
+    menu_title_primary_language = models.CharField(
+        max_length=512,
+        verbose_name=_("Title in the primary language"),
+    )
+    menu_title_secondary_language = models.CharField(
+        max_length=512,
+        blank=False,
+        verbose_name=_("Title in the secondary language"),
+    )
+    content_primary_language = MarkdownxField(
+        help_text=MARKDOWN_FIELD_HELP_TEXT,
+        verbose_name=_("Content in the primary language"),
+    )
+    content_secondary_language = MarkdownxField(
+        help_text=MARKDOWN_FIELD_HELP_TEXT,
+        blank=True,
+        default="",
+        verbose_name=_("Content in the secondary language"),
+    )
+    published = models.BooleanField(
+        default=False,
+        verbose_name=_("Published"),
+    )
 
     def __str__(self):
         return f"{self.menu_title_primary_language} ({self.slug})"
@@ -550,3 +843,7 @@ class MenuPage(TimeStampedModel):
             "content_primary_language": markdownify(self.content_primary_language),
             "content_secondary_language": markdownify(self.content_secondary_language),
         }
+
+    class Meta:
+        verbose_name = _("Menu Page")
+        verbose_name_plural = _("Menu Pages")

@@ -45,7 +45,6 @@ DATABASES = {
     "default": env.db(
         "DATABASE_URL",
         default="postgres://postgres:postgres@localhost:5432/house_of_refuge",
-       #  default="postgres:///house_of_refuge",
     ),
 }
 DATABASES["default"]["ATOMIC_REQUESTS"] = False
@@ -140,7 +139,6 @@ MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
-    "django.middleware.locale.LocaleMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -236,6 +234,7 @@ EMAIL_BACKEND = env(
 )
 # https://docs.djangoproject.com/en/dev/ref/settings/#email-timeout
 EMAIL_TIMEOUT = 5
+REPLY_TO_EMAIL = "webmaster@localhost"
 
 # ADMIN
 # ------------------------------------------------------------------------------
