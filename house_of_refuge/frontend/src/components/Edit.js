@@ -67,8 +67,6 @@ const Edit = () => {
         .then(res => {
           if (res.status === 204) {
             setSuccess(true);
-          } else {
-            setError(true);
           }
         });
     }
