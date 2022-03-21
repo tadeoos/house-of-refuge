@@ -317,7 +317,7 @@ const Form = ({
                                         max={24}/>
                                 </CustomIntRange>
                             }
-                            {['number', 'text', 'textarea'].includes(field.type) &&
+                            {['number', 'text', 'textarea', 'date'].includes(field.type) &&
                                 <Input
                                     id={field.name}
                                     name={field.name}
