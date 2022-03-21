@@ -11,4 +11,4 @@ npm run build --prefix house_of_refuge/frontend
 
 python manage.py collectstatic --no-input
 python manage.py migrate
-python manage.py compilemessages
+django-admin compilemessages
