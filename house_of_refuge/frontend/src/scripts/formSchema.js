@@ -58,6 +58,7 @@ export const fields1 = [
     {
         name: 'people_to_accommodate',
         label: 'Ile osób jesteś w stanie wesprzeć tak, by miały godne warunki pobytu?',
+        subHeading: 'Z kim mieszkasz (jeśli przyjmujesz kogoś u siebie)?',
         type: 'number'
     },
     {
@@ -90,6 +91,7 @@ export const fields1 = [
     {
         name: 'accommodation_length',
         label: 'Na jak długo udostępniasz nocleg? (liczba dni)',
+        subHeading: 'Maksymalnie 1000 dni',
         type: 'number'
     },
     {
@@ -101,6 +103,7 @@ export const fields1 = [
     {
         name: 'living_with_pets',
         label: 'Czy mieszkasz ze zwierzętami?',
+        subHeading: 'Jeśli tak, wpisz z jakimi',
         type: 'text'
     },
     {
@@ -153,40 +156,29 @@ export const fields1 = [
 ];
 
 export const validationSchema1 = () => yup.object({
-    name: yup.string().required('Pole wymagane'),
-    about_info: yup.string().required('Pole wymagane'),
+    name: yup.string().required('Pole wymagane').max(512),
+    about_info: yup.string().required('Pole wymagane').max(2048),
     resource: yup.string().required('Pole wymagane'),
-    city: yup.string().required('Pole wymagane'),
-    zip_code: yup.string().required('Pole wymagane'),
-    address: yup.string().required('Pole wymagane'),
+    city: yup.string().required('Pole wymagane').max(512),
+    zip_code: yup.string().required('Pole wymagane').max(8),
+    address: yup.string().required('Pole wymagane').max(512),
     people_to_accommodate: yup.number().required('Pole wymagane'),
     age: yup.number().required('Pole wymagane'),
-    languages: yup.string().required('Pole wymagane'),
+    languages: yup.string().required('Pole wymagane').max(512),
     when_to_call: yup.string().required('Pole wymagane'),
-    costs: yup.string().required('Pole wymagane'),
+    costs: yup.string().required('Pole wymagane').max(1024),
     availability: yup.date().required('Pole wymagane'),
-    accommodation_length: yup.number().required('Pole wymagane'),
-    details: yup.string().required('Pole wymagane'),
-    living_with_pets: yup.string().required('Pole wymagane'),
-    can_take_person_with_pets: yup.string().required('Pole wymagane'),
+    accommodation_length: yup.number().required('Pole wymagane').min(1).max(1000),
+    details: yup.string().required('Pole wymagane').max(2048),
+    living_with_pets: yup.string().required('Pole wymagane').max(1024),
+    can_take_person_with_pets: yup.string().required('Pole wymagane').max(512),
     transport: yup.string().required('Pole wymagane'),
-    phone_number: yup
-        .string()
-        .matches(/[\s#0-9_\-+/().]/, 'Niepoprawny numer telefonu')
-        .required('Pole wymagane'),
-    backup_phone_number: yup
-        .string()
-        .matches(/[\s#0-9_\-+/().]/, 'Niepoprawny numer telefonu')
-        .required('Pole wymagane'),
-    email: yup
-        .string()
-        .email('Niepoprawny adres email')
-        .required('Pole wymagane'),
-    // extra: yup.string().required('Pole wymagane'),
+    phone_number: yup.string().required('Pole wymagane')
+        .matches(/[\s#0-9_\-+/().]/, 'Niepoprawny numer telefonu'),
+    backup_phone_number: yup.string().required('Pole wymagane')
+        .matches(/[\s#0-9_\-+/().]/, 'Niepoprawny numer telefonu'),
+    email: yup.string().email('Niepoprawny adres email').required('Pole wymagane'),
 });
-
-
-
 
 export const fields2 = [
     {
@@ -300,13 +292,11 @@ export const fields2 = [
                 label: 'Inne',
             },
         ]
-    },
-
-
+    }
 ];
 
 export const validationSchema2 = ({ publicOnly }) => yup.object({
-    name: yup.string().required('Pole wymagane'),
+    name: yup.string().required('Pole wymagane').max(512),
     phone_number: yup
         .string()
         .matches(/[\s#0-9_\-+/().]/, 'Niepoprawny numer telefonu')

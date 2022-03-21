@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import styled from 'styled-components';
 import Header from '../components/Header.js';
@@ -17,6 +17,7 @@ import Share from '../pages/Share';
 import Find from '../pages/Find';
 import CMS from "../components/CMS";
 import Map from "../components/Map";
+import {ToastContainer} from "react-toastify";
 import '../i18n/config';
 
 const StyledApp = styled.div`
@@ -53,6 +54,7 @@ const App = (props) => {
 
   return (
     <StyledApp>
+      <ToastContainer autoClose={5000}/>
       <Header/>
       <Routes>
         <Route index element={<>
