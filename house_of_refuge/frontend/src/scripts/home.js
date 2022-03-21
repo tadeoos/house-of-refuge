@@ -7,8 +7,6 @@ import Form from '../components/Form.js';
 import Privacy from '../components/Privacy.js';
 import Edit from '../components/Edit.js';
 import { fields2, validationSchema2 } from './formSchema';
-import { useTranslation } from 'react-i18next';
-import '../i18n/config';
 import {
   BrowserRouter,
   Routes,
@@ -18,44 +16,33 @@ import {
 import { colors } from '../theme';
 import Share from '../pages/Share';
 import Find from '../pages/Find';
+import CMS from "../components/CMS";
+import Map from "../components/Map";
 
 const StyledApp = styled.div`
   font-family: 'proxima-nova', sans-serif;
-  max-width: 1400px;
   color: #212121;
   margin: auto;
   display: flex;
-  min-height: 100%;
-  justify-content: center;
-  padding-top: 180px;
-  
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  gap: 75px;
+  min-height: 100vh;
   .Footer {
     justify-content: flex-end;
   }
   `;
 
 const ButtonWrap = styled.div`
-  margin-top: -180px;
   display: flex;
   flex-direction: column;
-  display: flex;
   justify-content: center;
-  align-items: center;
-  
+  gap: 30px;
   > a {
     color: inherit;
     text-decoration: none;
     display: flex;
-  }
-
-  > * {
-      &:first-child {
-        margin-bottom: 30px;
-
-        @media (max-width: 600px) {
-          margin-bottom: 20px;
-        }
-      }
   }
 `;
 
@@ -63,29 +50,36 @@ const ButtonWrap = styled.div`
 
 const App = (props) => {
   const [user] = useState(props.userData);
-  const { t, i18n } = useTranslation(); // translation controlled through current state of lang selector
-  const uat = i18n.getFixedT('ua','common'); // translation fixed for UA lang (non-modifiable through selector)
- 
+
   return (
     <StyledApp>
-      <Header />
+      <Header/>
       <Routes>
         <Route index element={<>
-          <ButtonWrap>
+          <ButtonWrap className={"mb-5 flex-grow-1"}>
             <Link to="/share">
               <BigButton
-                primaryText={t("i_provide_accomodation")}
-                secondaryText={uat('i_provide_accomodation')}
-                outlined
-                color={colors.veryDarkGrey}
+                  primaryText="Udostępniam nocleg"
+                  secondaryText="Можу надати житло"
+                  backgroundColor="#0066cc"
+                  color={colors.white}
               />
             </Link>
             <Link to="/find">
               <BigButton
-                primaryText={uat('im_looking_for_accomodation')}
-                secondaryText={t("im_looking_for_accomodation")}
-                color={colors.veryDarkGrey}
-                backgroundColor="#FFD200"
+                  primaryText="Потребує житло"
+                  secondaryText="Szukam noclegu"
+                  color={colors.veryDarkGrey}
+                  backgroundColor={colors.optimisticYellow}
+              />
+            </Link>
+            <div className={"w-100 my-3"}/>
+            <Link to="/map">
+              <BigButton
+                  primaryText="Хочу поїхати в іншу країну в Європі"
+                  secondaryText="Chcę jechać do innego kraju w Europie"
+                  outlined
+                  color={colors.veryDarkGrey}
               />
             </Link>
           </ButtonWrap>
@@ -94,21 +88,19 @@ const App = (props) => {
         <Route path="/find" element={<Find  user={user} />} />
         <Route path="/jazda/stolik" element={<>
           <Form
-            primaryText={uat('im_looking_for_accomodation')}
-            secondaryText={t("im_looking_for_accomodation")}
-            fields={fields2}
-            localeNamespace='fields2'
-            fixedLocale='ua'
-            validationSchema={validationSchema2}
-            url='/api/zglos'
-            successInfo={uat('thank_you_for_submission')}
-            user={user}
+              primaryText="Потребує житло"
+              secondaryText="Szukam noclegu"
+              fields={fields2}
+              validationSchema={validationSchema2}
+              url='/api/zglos'
+              successInfo='Дякуємо за подання.'
+              user={user}
           />
         </>} />
-        <Route path="/privacy" element={<Privacy />} />
         <Route path="/edit" element={<Edit {...props} />} />
+        <Route path="/page/:id" element={<CMS {...props} />} />
+        <Route path="/map" element={<Map {...props} />} />
       </Routes>
-
     </StyledApp>
   );
 };

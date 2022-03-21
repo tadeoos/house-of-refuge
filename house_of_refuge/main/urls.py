@@ -1,18 +1,24 @@
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.urls import path
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, RedirectView
 
 import house_of_refuge.main.views as views
 
 app_name = "main"
 urlpatterns = [
     path("", views.home, name="home"),
+    path("page/<str:page_name>", views.home, name="home"),
+    path("map/", views.home, name="home"),
     path("drogowskaz/", login_required(TemplateView.as_view(template_name="main/guidepost.html")), name="guidepost"),
     path("healthz/", views.healthcheck, name="health"),
     path("statsy/", views.activity_stats_view, name="health"),
     path("share", views.home, name="home-share"),
     path("find", views.home, name="home-find"),
     path("privacy/", views.home, name="home-priv"),
+
+    path("shelter/", RedirectView.as_view(url=settings.SHELTER_FORM_URL, permanent=True)),
+
     path("edit/", views.edit, name="host-edit"),
     path("jazda/", views.housing_list, name="jazda"),
     path("jazda/stolik/", login_required(views.home), name="home-stolik"),
@@ -37,6 +43,7 @@ urlpatterns = [
     path("api/resource/update/<int:resource_id>", views.update_resource, name="resource_update"),
 
     path("api/send_email_token", views.send_email_with_edit_token, name="send_email_token"),
+    path("api/menu_pages", views.get_menu_pages, name="get_menu_pages"),
 
     path("api/stats/", views.get_stats_data, name="get_stats_data"),
 ]

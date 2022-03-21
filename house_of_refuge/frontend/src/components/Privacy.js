@@ -1,26 +1,6 @@
-import styled from 'styled-components';
 import TextWrapper from '../typography/TextWrapper';
-import H2 from '../typography/H2';
-import H3 from '../typography/H3';
 import H4 from '../typography/H4';
 import H5 from '../typography/H5';
-
-const StyledPrivacy = styled.div`
-  color: #898F9C;
-  font-size: 15px;
-  max-width: 650px;
-  margin: auto;
-
-  h3 {
-      margin-bottom: 36px;
-  }
-
-  p {
-      text-align: initial;
-      max-width: initial;
-      margin: 1em 0;
-  }
-`;
 
 
 const Privacy = () => {

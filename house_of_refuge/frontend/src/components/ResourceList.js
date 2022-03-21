@@ -160,8 +160,10 @@ export const ResourceList = ({initialResources, sub, subHandler, user, clearActi
 
   return (<>
         <ToastContainer autoClose={2000}/>
-        {activeSub && <SubmissionRow sub={activeSub} activeHandler={subHandler} user={user} isActive={true}/>}
-        <div className="quick-filters">
+        <div className={"mx-5"}>
+          {activeSub && <SubmissionRow sub={activeSub} activeHandler={subHandler} user={user} isActive={true}/>}
+        </div>
+        <div className="quick-filters px-5">
           <QuickFilter label={"Na terenie warszawy"}>
             <BootstrapSwitchButton
                 size={"sm"}
@@ -198,12 +200,14 @@ export const ResourceList = ({initialResources, sub, subHandler, user, clearActi
                 }}
             />
           </QuickFilter>
-          <QuickFilter>
-            <Search/>
-            <input className="search-input" onChange={(e) => setSearchQuery(e.target.value.toLowerCase())}/>
+          <QuickFilter label={"Szukaj"}>
+            <div className={"d-flex align-items-center"}>
+              <Search/>
+              <input className="search-input" onChange={(e) => setSearchQuery(e.target.value.toLowerCase())}/>
+            </div>
           </QuickFilter>
         </div>
-        <div className={"d-flex justify-content-around"}>
+        <div className={"d-flex justify-content-between align-items-center mx-5"}>
           <div>
             <p>{`${visibleResources.length} zasobów`}</p>
           </div>
@@ -217,7 +221,7 @@ export const ResourceList = ({initialResources, sub, subHandler, user, clearActi
             </Pagination>
           </div>
         </div>
-        <div className="resource-list-table">
+        <div className="resource-list-table mx-2">
           <div className={"column-headers mt-3"}>
             <div className={"col dol-head r-id-col"}>ID</div>
             {Object.values(columnsData).map(colData => <

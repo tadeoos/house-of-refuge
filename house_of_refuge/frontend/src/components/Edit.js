@@ -77,8 +77,7 @@ const Edit = () => {
 
 
   return (
-
-    <>
+    <div className={"flex-grow-1"}>
       {success ? <Success> Sprawdź swojego maila </Success> : formData ?
         <Form
           formData={formData}
@@ -112,7 +111,7 @@ const Edit = () => {
           </Button>
 
         </StyledForm>}
-    </>
+    </div>
   );
 };
 

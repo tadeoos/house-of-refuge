@@ -12,50 +12,41 @@
 {% block content %}
   <div id="react"></div>
   <div class="row">
-    {#    <div class="col-3 table-responsive">#}
-    {#      <table class="table table-bordered">#}
-    {#        <tr>#}
-    {#          <th colspan="2">Top Przyjmujący</th>#}
-    {#        </tr>#}
-    {#        {% for user in top_receivers %}#}
-    {#          <tr>#}
-    {#            <td>{{ user.name }}</td>#}
-    {#            <td>{{ user.mc }}</td>#}
-    {#          </tr>#}
-    {#        {% endfor %}#}
-    {#      </table>#}
-    {#    </div>#}
-    {#    <div class="col-3 table-responsive">#}
-    {#      <table class="table table-bordered">#}
-    {#        <tr>#}
-    {#          <th colspan="2">Top Znajdujący</th>#}
-    {#        </tr>#}
-    {#        {% for user in top_matchers %}#}
-    {#          <tr>#}
-    {#            <td>{{ user.name }}</td>#}
-    {#            <td>{{ user.mc }}</td>#}
-    {#          </tr>#}
-    {#        {% endfor %}#}
-    {#      </table>#}
-    {#    </div>#}
-    {#    <div class="col-3 table-responsive">#}
-    {#      <table class="table table-bordered">#}
-    {#        <tr>#}
-    {#          <th colspan="2">Top Łącznicy</th>#}
-    {#        </tr>#}
-    {#        {% for user in top_coords %}#}
-    {#          <tr>#}
-    {#            <td>{{ user.name }}</td>#}
-    {#            <td>{{ user.mc }}</td>#}
-    {#          </tr>#}
-    {#        {% endfor %}#}
-    {#      </table>#}
-    {#    </div>#}
-    <div class="col-12 table-responsive">
+    <div class="col-6 table-responsive">
       <table class="table table-bordered table-striped table-sm">
+        <tr>
+          <th colspan="3">Zasoby</th>
+        </tr>
         <tr>
           <td colspan="2">Liczba wszystkich hostów</td>
           <td>{{ all_hosts }}</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td colspan="">Dostępni teraz</td>
+          <td> {{ active_hosts }} </td>
+        </tr>
+        <tr>
+          <td></td>
+          <td colspan="">Żółwie</td>
+          <td> {{ turtle_hosts }} </td>
+        </tr>
+        <tr>
+          <td></td>
+          <td colspan="">Dostępne żółwie</td>
+          <td> {{ active_turtle_hosts }} </td>
+        </tr>
+        <tr>
+          <td></td>
+          <td colspan="">Zignorowani</td>
+          <td> {{ cancelled_hosts }} </td>
+        </tr>
+      </table>
+    </div>
+    <div class="col-6 table-responsive">
+      <table class="table table-bordered table-striped table-sm">
+        <tr>
+          <th colspan="3">Zgłoszenia</th>
         </tr>
         <tr>
           <td colspan="2">Liczba wszystkich zgłoszeń</td>

@@ -17,52 +17,44 @@ import {ResourceList} from "../components/ResourceList";
 import {SOURCE_OPTIONS, SubmissionList} from "../components/SubmissionList";
 import useInterval from "use-interval";
 import {BrowserRouter, Route, Routes, useSearchParams} from "react-router-dom";
-import { useTranslation } from 'react-i18next';
-import '../i18n/config';
+
 
 const CoordinatorsHeader = ({coordinators, helped, hide}) => {
   const [peopleHelped, setPeopleHelped] = useState(helped);
-  const { t, i18n } = useTranslation('backoffice');
-  const lngs = {
-    en: { nativeName: 'English' },
-    pl: { nativeName: 'Polski' }
-  };
+  const [collapsed, setCollapsed] = useState(false);
+
   useInterval(async () => {
     const newHelped = await getHelped();
     setPeopleHelped(newHelped);
   }, 120 * 1000);
 
-  return <div className="panel-header" style={hide ? {display: "none"} : {}}>
+  return <div className="panel-header mx-5 mt-1" style={hide ? {display: "none"} : {}}>
     <div>
-      <img src="/static/images/logo.svg" alt="logo" style={{height: "76px", margin: "10px 0"}}/>
+      <img src="/static/images/logo.svg" alt="logo" style={{height: "76px", margin: "10px 0", display: collapsed ? 'none' : 'block'}}/>
     </div>
-    <div className="coordinators">
+    <div className="coordinators" style={{ display: collapsed ? 'none' : 'block' }}>
       <div className="d-flex justify-content-around">
         <div className={"mx-5 text-center"}>
-          <h5>{t('terrain_coordinators')}</h5>
+          <h5>Koordynatorzy Zachodni</h5>
           <ol>{(coordinators.station || []).map(c => <li key={c.user.id}>{c.user.display}</li>)}</ol>
         </div>
         <div className={"mx-5 text-center"}>
-          <h5>{t('remote_coordinators')}</h5>
+          <h5>Koordynatorzy Zdalni</h5>
           <ol>{(coordinators.remote || []).map(c => <li key={c.user.id}>{c.user.display}</li>)}</ol>
         </div>
       </div>
       {peopleHelped ?
-          <div><h5 className="good-message">
-            {t('today_we_helped_count', {pplHelpedCount: peopleHelped})} {"🙏".repeat(Math.floor(peopleHelped / 10))}</h5>
+          <div><h5 className="good-message">Pomogliśmy
+            dziś {peopleHelped} osobom {"🙏".repeat(Math.floor(peopleHelped / 10))}</h5>
           </div> : <></>}
     </div>
     <div>
-      {Object.keys(lngs).map((lng) => (
-          <button key={lng}
-                  style={{ fontWeight: i18n.resolvedLanguage === lng ? 'bold' : 'normal' }} 
-                  type="submit" 
-                  onClick={() => i18n.changeLanguage(lng)}>
-          {lngs[lng].nativeName}
-          </button>
-      ))}
+      <span className={"mx-2 btn btn-primary btn-sm"} onClick={() => setCollapsed(!collapsed)}>
+        { collapsed ? 'pokaż ' : 'ukryj ' }
+        nagłówek
+      </span>
+      <a className={"btn btn-danger btn-sm"} href="/accounts/logout">wyloguj się</a>
     </div>
-    <div><a href="/accounts/logout">{t('log_out')}</a></div>
   </div>;
 };
 
@@ -70,6 +62,8 @@ const CoordinatorsHeader = ({coordinators, helped, hide}) => {
 const App = ({subs, userData, coordinators, helped}) => {
   let [searchParams, setSearchParams] = useSearchParams();
 
+
+  const [tabVisible, setTabVisible] = useState(true);
   const [activeSub, setActiveSub] = useState(null);
   const [sourceFilter, setSourceFilter] = useState(searchParams.getAll("z").map((i) => SOURCE_OPTIONS[i]));
   const [statusFilter, setStatusFilter] = useState(searchParams.getAll("s").map(i => SUB_STATE_OPTIONS[i]));
@@ -144,13 +138,21 @@ const App = ({subs, userData, coordinators, helped}) => {
     }
   }, [sourceFilter, statusFilter, droppedFilter, peopleFilter, activeNow, onlyUsers, onlyTodays]);
 
-
-  // const {search} = useLocation();
-  // const latestChange = useRef(0);
-
-  console.log("query:", searchParams.toString(), peopleFilter);
+  useEffect(() => {
+    const handler = () => {
+      setTabVisible(!document.hidden);
+    };
+    document.addEventListener('visibilitychange', handler);
+    return function cleanupListener() {
+      document.removeEventListener('visibilitychange', handler);
+    };
+  }, []);
 
   useInterval(async () => {
+    if (!tabVisible) {
+      return;
+    }
+
     if (activeSub) {
       const latest = parseFloat(await getLatestHostTimestamp());
       console.log("latest", latest, latestHostChange);

@@ -7,11 +7,12 @@ from import_export import resources
 from import_export.admin import ImportExportModelAdmin
 from import_export.fields import Field
 from import_export.widgets import DateTimeWidget, DateWidget, Widget
+from markdownx.admin import MarkdownxModelAdmin
 from solo.admin import SingletonModelAdmin
 
 from .models import (
     HousingResource, HousingType, TransportRange, Submission, Coordinator, Status, ObjectChange,
-    SiteConfiguration,
+    SiteConfiguration, MenuPage,
 )
 
 
@@ -254,3 +255,9 @@ class CoordinatorAdmin(ModelAdmin):
 
 
 admin.site.register(SiteConfiguration, SingletonModelAdmin)
+
+
+@admin.register(MenuPage)
+class MenuPageAdmin(MarkdownxModelAdmin):
+    list_display = ("slug", "menu_title_primary_language", "published")
+    list_editable = ('published',)

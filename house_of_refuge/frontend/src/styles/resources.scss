@@ -102,9 +102,9 @@ a {
 }
 
 .sub-table {
-  background-color: white;
   font-size: 12px;
   border-radius: 0;
+  table-layout: fixed;
 
   th {
     padding-left: 2px;
@@ -117,6 +117,16 @@ a {
       vertical-align: middle;
     }
   }
+}
+
+.list-pagination {
+  position: fixed;
+  z-index: 1000;
+  background: white;
+  bottom: 0;
+  left: 0;
+  padding: 10px;
+  width: 100%;
 }
 
 .resource-row {
@@ -223,7 +233,8 @@ a {
   outline: 0;
   margin-left: 2px;
   background-color: transparent;
-  max-width: 10vw;
+  min-width: 300px;
+  max-width: 20vw;
 }
 
 .hide {
@@ -302,6 +313,16 @@ a {
       }
     }
   }
+}
+
+.submission-row-collapse {
+  position: absolute;
+  top: 0;
+  right: 10px;
+}
+
+.cursor-pointer {
+  cursor: pointer;
 }
 
 .rename-input {
@@ -447,22 +468,55 @@ a {
   font-family: proxima-nova, sans-serif;
   display: flex;
   justify-content: space-between;
-  align-items: baseline;
+  align-items: start;
 }
 
 .quick-filters {
   display: flex;
-  justify-content: space-between;
+  gap: 5px;
+  width: 100%;
   padding-bottom: 8px;
-  border-bottom: 1px solid $our-grey;
 }
 
 .quick-filter {
-  margin: 0 4px;
+  display: flex;
+  min-width: 130px;
+  flex-direction: column;
+
+  .react-dropdown-select {
+    width: 100%;
+  }
 
   label {
     margin-right: 6px;
   }
+
+  &__children {
+    min-height: 34px;
+    display: flex;
+
+    > div {
+      width: 100%;
+    }
+  }
+}
+
+.switch {
+  width: 100%;
+  max-width: 100px;
+}
+
+.switch-on,
+.switch-off {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.switch-off,
+.switch-off:hover {
+  background: #d33e43;
+  color: white;
 }
 
 .host-call-buttons {

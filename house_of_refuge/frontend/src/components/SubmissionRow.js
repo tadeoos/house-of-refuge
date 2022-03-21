@@ -4,7 +4,6 @@ import {getCookie, getPickUpDisplay, SUB_STATE_OPTIONS} from "../scripts/utils";
 import Select from "react-dropdown-select";
 import {EditableField} from "./Shared";
 import {toast} from "react-toastify";
-import { useTranslation } from 'react-i18next';
 
 const getStatusDisplay = (status) => {
   const option = SUB_STATE_OPTIONS.filter(o => o.value === status)[0];
@@ -61,14 +60,13 @@ export function SubmissionRow({sub, activeHandler, user, isGroupCoordinator, isA
   const [status, setStatus] = useState(sub.status);
   const [note, setNote] = useState(sub.note);
   const [localSub, setLocalSub] = useState(sub);
-  const { t } = useTranslation('backoffice');
+  const [collapsed, setCollapsed] = useState(false);
 
   useEffect(() => {
     setLocalSub(sub);
     setNote(sub.note);
     setStatus(sub.status);
   }, [sub]);
-
 
   const btnHandler = () => {
     if (readOnly) {
@@ -95,9 +93,9 @@ export function SubmissionRow({sub, activeHandler, user, isGroupCoordinator, isA
     } else if (localSub.matcher && !isActive && !isOwner) {
       return <Button size={"sm"} disabled>{localSub.matcher.display}</Button>;
     } else if (localSub.status === "cancelled") {
-      return t('out_of_date');
+      return "NIEAKTUALNE";
     } else {
-      return <Button size={"sm"} onClick={btnHandler}>{isActive ? t('set_free') : t('search_for_host')}</Button>;
+      return <Button className={"w-100"} size={"sm"} onClick={btnHandler}>{isActive ? "Zwolnij" : "Szukaj Hosta"}</Button>;
     }
   };
 
@@ -152,20 +150,26 @@ export function SubmissionRow({sub, activeHandler, user, isGroupCoordinator, isA
   return <div
       className={`submission-row ${getStatusClass(localSub)}
       ${localSub.accomodation_in_the_future ? "sub-in-future" : ""} ${isActive ? "sub-active" : ""}`}>
-    <p className="sub-id">{t('submission_id')}: {localSub.id}</p>
-    <Table className="sub-table">
+    <div className="sub-id position-relative">
+      ID ZGŁOSZENIA: {localSub.id}
+
+      <div className="submission-row-collapse cursor-pointer" onClick={() => setCollapsed(!collapsed)}>
+        Zwiń / Rozwiń
+      </div>
+    </div>
+    <Table className="sub-table" style={{'background-color': 'rgba(255, 255, 255, 0.95)', display: collapsed ? 'none' : 'table'}}>
       <tbody>
       <tr>
-        <th>{t('name')}</th>
+        <th>Imie</th>
         <td>{localSub.name}</td>
-        <th>{t('people_count')}</th>
+        <th>Ile Osób?</th>
         <td>{localSub.people}</td>
-        <th>{t('how_long')}</th>
+        <th>Jak dlugo?</th>
         <td>
           <EditableField value={localSub.how_long} onRename={
             (value) => updateSub(localSub, {"how_long": value}, () => setLocalSub((s) => ({...s, how_long: value})))}/>
         </td>
-        <th>{t('phone')}</th>
+        <th>Telefon</th>
         <td><EditableField
             value={localSub.phone_number}
             onRename={(phone) => updateSub(localSub, {"phone_number": phone}, () => setLocalSub(s => ({
@@ -174,7 +178,7 @@ export function SubmissionRow({sub, activeHandler, user, isGroupCoordinator, isA
             })))}/></td>
       </tr>
       <tr>
-        <th>{t('since_when')}</th>
+        <th>Od Kiedy?</th>
         <td>
           {statusAsNumber(localSub.status) < 2 ?
           <input type="date" required min={new Date().toJSON().slice(0, 10)}
@@ -191,27 +195,27 @@ export function SubmissionRow({sub, activeHandler, user, isGroupCoordinator, isA
                    }
                  }}/> : localSub.when}
         </td>
-        <th>{t('description')}:</th>
+        <th>Opis:</th>
         <td>{localSub.description}</td>
-        <th>{t('languages')}</th>
+        <th>Języki</th>
         <td>{localSub.languages}</td>
-        <th>{t('nationality')}</th>
+        <th>Narodowość</th>
         <td>{localSub.origin}</td>
       </tr>
       <tr>
-        <th>{t('has_pets')}</th>
+        <th>Ma zwierzęta</th>
         <td>{localSub.traveling_with_pets}</td>
-        <th>{t('can_sleep_with_pets')}</th>
+        <th>Czy może spać ze zwierzętami?</th>
         <td>{localSub.can_stay_with_pets}</td>
-        <th>{t('needs_transport')}</th>
-        <td>{localSub.transport_needed ? t('yes') :  t('no')}</td>
-        <th>{t('note')}</th>
+        <th>Potrzebuje transportu?</th>
+        <td>{localSub.transport_needed ? "tak" : "nie"}</td>
+        <th>Notka</th>
         <td>
           <EditableField value={note} onRename={(note) => updateSub(localSub, {"note": note}, () => setNote(note))}/>
         </td>
       </tr>
       {localSub.resource && <tr className="tr-host">
-        <th>{t('host')}</th>
+        <th>HOST</th>
         <td>{localSub.resource.name}</td>
         <td>{localSub.resource.address}</td>
         <td>{localSub.resource.phone_number}</td>
@@ -219,14 +223,14 @@ export function SubmissionRow({sub, activeHandler, user, isGroupCoordinator, isA
         <td colSpan={3}>{localSub.resource.note}</td>
       </tr>}
       <tr>
-        <th>{t('submitting_person')}</th>
+        <th>Osoba zgłaszająca</th>
         <td>{localSub.receiver?.display || localSub.contact_person}</td>
-        <th>{["searching", "new"].includes(localSub.status) ? t('looking_for_host') : t('host_found_by')}</th>
+        <th>{["searching", "new"].includes(localSub.status) ? "Hosta szuka" : "Host znaleziony przez"}</th>
         <td>{localSub.matcher?.display || getActionBtn()}</td>
-        <th>{t('connection')}</th>
+        <th>Łącznik</th>
         <td>{localSub.coordinator?.display || (localSub.matcher ? getActionBtn() : "")}</td>
         <th>
-          {t('status')}
+          Status
         </th>
         <td>
           {isGroupAdmin ? <Select
@@ -247,38 +251,38 @@ export function SubmissionRow({sub, activeHandler, user, isGroupCoordinator, isA
         </td>
         <td colSpan={4}/>
         <td className={"text-center"} colSpan={2}><Button variant={"primary"} size={"sm"}
-                                                          onClick={btnHandler}>{t('set_free')}</Button>
+                                                          onClick={btnHandler}>Zwolnij</Button>
         </td>
       </tr>}
       {isGroupAdmin && !isActive && !readOnly && <tr className="no-striping">
-        <th>{t('coordinators_actions')}</th>
+        <th>Akcje koordynatora</th>
         <td colSpan={1} className={"text-center"}>
           <Dropdown>
             <Dropdown.Toggle variant="secondary" size={"sm"}>
-              {t('change_source')}
+              Zmień źródło
             </Dropdown.Toggle>
 
             <Dropdown.Menu>
               <Dropdown.Item disabled={localSub.source === "terrain"}
-                             onClick={() => updateSub(localSub, {source: "terrain"})}>{t('source_option_terrain')}</Dropdown.Item>
+                             onClick={() => updateSub(localSub, {source: "terrain"})}>Zachodni</Dropdown.Item>
               <Dropdown.Item disabled={localSub.source === "webform"}
-                             onClick={() => updateSub(localSub, {source: "webform"})}>{t('source_option_webform')}</Dropdown.Item>
+                             onClick={() => updateSub(localSub, {source: "webform"})}>Strona</Dropdown.Item>
               <Dropdown.Item disabled={localSub.source === "mail"}
-                             onClick={() => updateSub(localSub, {source: "mail"})}>{t('source_option_mail')}</Dropdown.Item>
+                             onClick={() => updateSub(localSub, {source: "mail"})}>Email</Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
         </td>
         <td colSpan={2} className={"text-center"}>
           {localSub.matcher &&
-              <Button variant={"secondary"} size={"sm"} onClick={freeUpMatcher}>{t('set_submission_free')}</Button>}
+              <Button variant={"secondary"} size={"sm"} onClick={freeUpMatcher}>Zwolnij zgłoszenie</Button>}
         </td>
         <td colSpan={2} className={"text-center"}>
           {localSub.coordinator &&
-              <Button variant={"secondary"} size={"sm"} onClick={freeUpCoord}>{t('set_connection_free')}</Button>}
+              <Button variant={"secondary"} size={"sm"} onClick={freeUpCoord}>Zwolnij łącznika</Button>}
         </td>
       </tr>}
       </tbody>
     </Table>
-    <p className="sub-id">{t('received_at', {timestamp: localSub.created})}</p>
+    <p className="sub-id">Przyjęte: {localSub.created}</p>
   </div>;
 }

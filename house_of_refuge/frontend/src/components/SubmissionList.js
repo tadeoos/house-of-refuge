@@ -10,7 +10,6 @@ import { ResourceRow } from "./ResourceRow";
 import { orderBy } from "lodash";
 import { QuickFilter } from "./QuickFilter";
 import { Pagination } from "react-bootstrap";
-import { useTranslation } from 'react-i18next';
 
 export const SOURCE_OPTIONS = [
   { label: "Strona", value: "webform" },
@@ -52,7 +51,6 @@ export const SubmissionList = (
   const [page, setPage] = useState(1);
   const lastPage = useMemo(() => Math.ceil(visibleSubmissions.length / SHOW_NUMBER), [visibleSubmissions]);
   const subsList = useRef(null);
-  const { t } = useTranslation('backoffice');
 
   const subBelongsToUser = (s) => {
     if (s.receiver?.id === user.id) {
@@ -123,10 +121,10 @@ export const SubmissionList = (
   };
 
   return (<>
-    <div>
+    <div className={"px-5 border-bottom"}>
       <ToastContainer autoClose={2000} />
       <div className="quick-filters">
-        <QuickFilter label={t('source')}>
+        <QuickFilter label={"Źródło"}>
           <Select
             multi
             values={sourceFilter}
@@ -134,7 +132,7 @@ export const SubmissionList = (
             onChange={filterSource}
           />
         </QuickFilter>
-        <QuickFilter label={t('status')}>
+        <QuickFilter label={"Status"} className={"flex-grow-1"}>
           <Select
             multi
             values={statusFilter}
@@ -142,7 +140,7 @@ export const SubmissionList = (
             onChange={filterStatus}
           />
         </QuickFilter>
-        <QuickFilter label={t('people_count')}>
+        <QuickFilter label={"Liczba osób"}>
           <Select
             multi
             values={peopleFilter}
@@ -150,7 +148,7 @@ export const SubmissionList = (
             onChange={peopleStatusChange}
           />
         </QuickFilter>
-        <QuickFilter label={t('disappeared')}>
+        <QuickFilter label={"Zniknięte"}>
           <BootstrapSwitchButton
             size={"sm"}
             checked={droppedFilter}
@@ -159,7 +157,7 @@ export const SubmissionList = (
             }}
           />
         </QuickFilter>
-        <QuickFilter label={t('accepted_today')}>
+        <QuickFilter label={"Przyjęte dzisiaj"}>
           <BootstrapSwitchButton
             size={"sm"}
             checked={todayFilterValue}
@@ -168,7 +166,7 @@ export const SubmissionList = (
             }}
           />
         </QuickFilter>
-        <QuickFilter label={t('active_today')}>
+        <QuickFilter label={"Aktywne dzisiaj"}>
           <BootstrapSwitchButton
             size={"sm"}
             checked={activeNow}
@@ -177,7 +175,7 @@ export const SubmissionList = (
             }}
           />
         </QuickFilter>
-        <QuickFilter label={t('only_mine')}>
+        <QuickFilter label={"Tylko moje"}>
           <BootstrapSwitchButton
             size={"sm"}
             checked={userFilterValue}
@@ -186,17 +184,17 @@ export const SubmissionList = (
             }}
           />
         </QuickFilter>
-        <QuickFilter>
-          <Search />
-          <input className="search-input" onChange={(e) => setSearchQuery(e.target.value.toLowerCase())} />
+        <QuickFilter label={"Szukaj"}>
+          <div className={"d-flex align-items-center gap-2"}>
+            <Search />
+            <input className="search-input" onChange={(e) => setSearchQuery(e.target.value.toLowerCase())} />
+          </div>
         </QuickFilter>
       </div>
-      <div className={"d-flex justify-content-around"}>
+      <div className={"d-flex list-pagination justify-content-end gap-5 align-items-center border-top"}>
+        <div>{`${visibleSubmissions.length} zgłoszeń`}</div>
         <div>
-          <p>{t('entries_count', {submCount: visibleSubmissions.length})}</p>
-        </div>
-        <div className="mt-2">
-          <Pagination>
+          <Pagination className={"mb-0"}>
             <Pagination.First disabled={page <= 1} onClick={() => setPage(1)} />
             <Pagination.Prev disabled={page <= 1} onClick={() => setPage(p => p - 1)} />
             <Pagination.Item active>{page}</Pagination.Item>
@@ -211,7 +209,7 @@ export const SubmissionList = (
           key={r.id} />)}</div> : null}
     </div>
 
-    <div className="submission-list" ref={subsList}>
+    <div className="submission-list px-2 mb-5" ref={subsList}>
       {isLoading ?
         <LoadingSpinner /> : visibleSubmissions.slice(SHOW_NUMBER * (page - 1), SHOW_NUMBER * page).map(s =>
           <SubmissionRow user={user} sub={s} key={s.id}
