@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from "react";
-import {Button, ButtonGroup, Dropdown, Modal, Table} from "react-bootstrap";
+import {useEffect, useState} from "react";
+import {Button, ButtonGroup, Modal, Table} from "react-bootstrap";
 import {getCookie, getPickUpDisplay, updateResource} from "../scripts/utils";
 import {EditableField} from "./Shared";
 import {SubmissionRow} from "./SubmissionRow";
@@ -86,12 +86,6 @@ const MatchModal = ({showModal, handleClose, matchHandle, resource, activeSub}) 
 
 const VISIBLE = ["name", "full_address", "people_to_accommodate", "accommodation_length", "resource"];
 
-const STATUS_OPTIONS = [
-  {label: "Nowy", value: "new"},
-  // {label: "Zajęta", value: "taken"},
-  {label: "Zignoruj", value: "ignore"},
-];
-
 export const RESOURCE_MAP = {
   "home": "Dom", "flat": "Mieszkanie", "room": "Pokój", "couch": "Kanapa", "mattress": "Materac"
 };
@@ -141,13 +135,15 @@ export const ResourceRow = ({resource, isExpanded, onMatch, user, activeSub, com
       headers: {
         'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken')
       }, body: JSON.stringify({"note": value}) // body data type must match "Content-Type" header
-    }).then(response => response.json()).then(data => {
-
-      // toast(`${data.message}`, {type: data.status});
-      setNote(value);
-    }).catch((error) => {
-      console.error('Error:', error);
-    });
+    })
+        .then(response => response.json())
+        .then(() => {
+          // toast(`${data.message}`, {type: data.status});
+          setNote(value);
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+        });
   };
 
   const handleDateChange = (e) => {

@@ -4,9 +4,9 @@ import MenuIcon from './MenuIcon.js';
 import {Link} from "react-router-dom";
 import TextMultiLang from '../components/TextMultiLang';
 import useComponentVisible from '../scripts/useComponentVisible';
-import React, {useContext, useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import {CmsResource} from "./CMS";
-import LangSwitch, {DEFAULT_LANG, LANGS} from "./LangSwitch";
+import LangSwitch, {LANGS} from "./LangSwitch";
 import {HomeContext} from "../scripts/home";
 
 const StyledLink = styled(Link)`

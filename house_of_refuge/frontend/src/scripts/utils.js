@@ -16,7 +16,7 @@ export function getCookie(name) {
   return cookieValue;
 }
 
-export const shouldShowHost = (resource, userId) => {
+export const shouldShowHost = (resource) => {
   if (resource.status === "new") {
     return true;
   } else if (resource.status === "calling") {
