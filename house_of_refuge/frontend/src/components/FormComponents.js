@@ -11,35 +11,35 @@ export const StyledForm = styled.form`
   padding: 6px;
 `;
 
-export  const Label = styled.label`
-    font-weight: 700;
-    font-size: 16.88px;
-    line-height: 19px;
-    margin-top: 28px;
-    margin-left: ${p => p.type === 'checkbox' ? '20px' : 'initial'};
-    position: ${p => p.type === 'checkbox' ? 'absolute' : 'initial'};
-    cursor: ${p => p.type === 'checkbox' ? 'pointer' : 'initial'};
+export const Label = styled.label`
+  font-weight: 700;
+  font-size: 16.88px;
+  line-height: 19px;
+  margin-top: 28px;
+  margin-left: ${p => p.type === 'checkbox' ? '20px' : 'initial'};
+  position: ${p => p.type === 'checkbox' ? 'absolute' : 'initial'};
+  cursor: ${p => p.type === 'checkbox' ? 'pointer' : 'initial'};
 `;
 
 
-export const Input = styled.input.attrs(({ type }) => ({
+export const Input = styled.input.attrs(({type}) => ({
     as: type === 'textarea' ? type : 'input'
-  }))`
-    height: ${p => p.type === 'checkbox' ? '22px' : '44px'};
-    cursor: ${p => p.type === 'checkbox' ? 'pointer' : 'initial'};
-    padding: 0 8px;
-    box-sizing: border-box;
-    border-radius: 3px;
-    border: 1px solid #898F9C;
-    min-height: ${p => p.type === 'textarea' ? '70px' : 'initial'};
-    max-height: ${p => p.type === 'textarea' ? '140px' : 'initial'};
-    padding-top: ${p => p.type === 'textarea' ? '8px' : 'initial'};
-    margin-top: ${p => p.type === 'checkbox' ? '27px' : '10px'};
-  
-  `;
-  
+}))`
+  height: ${p => p.type === 'checkbox' ? '22px' : '44px'};
+  cursor: ${p => p.type === 'checkbox' ? 'pointer' : 'initial'};
+  padding: 0 8px;
+  box-sizing: border-box;
+  border-radius: 3px;
+  border: 1px solid #898F9C;
+  min-height: ${p => p.type === 'textarea' ? '70px' : 'initial'};
+  max-height: ${p => p.type === 'textarea' ? '140px' : 'initial'};
+  padding-top: ${p => p.type === 'textarea' ? '8px' : 'initial'};
+  margin-top: ${p => p.type === 'checkbox' ? '27px' : '10px'};
 
-  export const SubHeading = styled.span`
+`;
+
+
+export const SubHeading = styled.span`
   font-weight: 400;
   font-size: 13.5px;
   line-height: 16px;
@@ -51,9 +51,9 @@ export const CustomIntRange = styled.span`
   justify-content: space-between;
   display: flex;
 
-   > input {
-       width: calc(50% - 8px);
-   }
+  > input {
+    width: calc(50% - 8px);
+  }
 `;
 
 
@@ -70,8 +70,8 @@ export const RadioChoice = styled.label`
   height: 28px;
 
   span {
-      margin-left: 6px;
-      font-size: 14px;
+    margin-left: 6px;
+    font-size: 14px;
   }
 `;
 
@@ -108,7 +108,7 @@ export const Field = styled.div`
   flex-direction: column;
 
   * {
-    color:  ${p => p.alert ? '#D93025' : 'inherit'};
+    color: ${p => p.alert ? '#D93025' : 'inherit'};
   }
 `;
 
