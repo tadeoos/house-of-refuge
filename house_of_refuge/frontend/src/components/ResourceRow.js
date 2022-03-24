@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {Button, ButtonGroup, Dropdown, Modal, Table} from "react-bootstrap";
 import {getCookie, getPickUpDisplay, updateResource} from "../scripts/utils";
-import Select from "react-dropdown-select";
 import {EditableField} from "./Shared";
 import {SubmissionRow} from "./SubmissionRow";
 

@@ -5,20 +5,16 @@ const StyledExternalLink = styled.a`
   text-decoration: none;
 
   :hover {
-      opacity: 0.66;
+    opacity: 0.66;
   }
 `;
 
-const ExternalLink = ({ link, text }) => {
-
-
-
+const ExternalLink = ({link, text}) => {
     return (
         <StyledExternalLink
             target="_blank"
             rel="noopener noreferrer"
-            href={link}
-        >
+            href={link}>
             {text}
         </StyledExternalLink>
     );
