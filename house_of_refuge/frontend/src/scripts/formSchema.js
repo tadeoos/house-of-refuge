@@ -155,30 +155,32 @@ export const fields1 = [
 
 ];
 
-export const validationSchema1 = () => yup.object({
-    name: yup.string().required('Pole wymagane').max(512),
-    about_info: yup.string().required('Pole wymagane').max(2048),
-    resource: yup.string().required('Pole wymagane'),
-    city: yup.string().required('Pole wymagane').max(512),
-    zip_code: yup.string().required('Pole wymagane').max(8),
-    address: yup.string().required('Pole wymagane').max(512),
-    people_to_accommodate: yup.number().required('Pole wymagane'),
-    age: yup.number().required('Pole wymagane'),
-    languages: yup.string().required('Pole wymagane').max(512),
-    when_to_call: yup.string().required('Pole wymagane'),
-    costs: yup.string().required('Pole wymagane').max(1024),
-    availability: yup.date().required('Pole wymagane'),
-    accommodation_length: yup.number().required('Pole wymagane').min(1).max(1000),
-    details: yup.string().required('Pole wymagane').max(2048),
-    living_with_pets: yup.string().required('Pole wymagane').max(1024),
-    can_take_person_with_pets: yup.string().required('Pole wymagane').max(512),
-    transport: yup.string().required('Pole wymagane'),
-    phone_number: yup.string().required('Pole wymagane')
-        .matches(/[\s#0-9_\-+/().]/, 'Niepoprawny numer telefonu'),
-    backup_phone_number: yup.string().required('Pole wymagane')
-        .matches(/[\s#0-9_\-+/().]/, 'Niepoprawny numer telefonu'),
-    email: yup.string().email('Niepoprawny adres email').required('Pole wymagane'),
-});
+export const validationSchema1 = (t) => {
+    return () => yup.object({
+        name: yup.string().required(t('required')).max(512),
+        about_info: yup.string().required(t('required')).max(2048),
+        resource: yup.string().required(t('required')),
+        city: yup.string().required(t('required')).max(512),
+        zip_code: yup.string().required(t('required')).max(8),
+        address: yup.string().required(t('required')).max(512),
+        people_to_accommodate: yup.number().required(t('required')),
+        age: yup.number().required(t('required')),
+        languages: yup.string().required(t('required')).max(512),
+        when_to_call: yup.string().required(t('required')),
+        costs: yup.string().required(t('required')).max(1024),
+        availability: yup.date().required(t('required')),
+        accommodation_length: yup.number().required(t('required')).min(1).max(1000),
+        details: yup.string().required(t('required')).max(2048),
+        living_with_pets: yup.string().required(t('required')).max(1024),
+        can_take_person_with_pets: yup.string().required(t('required')).max(512),
+        transport: yup.string().required(t('required')),
+        phone_number: yup.string().required(t('required'))
+            .matches(/[\s#0-9_\-+/().]/, 'Niepoprawny numer telefonu'),
+        backup_phone_number: yup.string().required(t('required'))
+            .matches(/[\s#0-9_\-+/().]/, 'Niepoprawny numer telefonu'),
+        email: yup.string().email('Niepoprawny adres email').required(t('required')),
+    });
+};
 
 export const fields2 = [
     {

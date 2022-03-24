@@ -23,7 +23,7 @@ const LangButton = styled.button`
   opacity: ${p => p.active ? 1 : 0.42};
 `;
 
-export const LANGS = ['pl', 'uk'];
+export const LANGS = ['pl', 'uk', 'en'];
 export const DEFAULT_LANG = LANGS[0];
 
 const LangSwitch = ({currentLang, languages, changeLang}) => {

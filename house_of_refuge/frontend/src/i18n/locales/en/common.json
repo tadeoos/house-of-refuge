@@ -7,5 +7,6 @@
   "edit_data": "Edit data",
   "delete": "Delete",
   "save": "Save",
-  "cancel": "Cancel"
+  "cancel": "Cancel",
+  "required": "Required"
 }

@@ -4,8 +4,10 @@ import MenuIcon from './MenuIcon.js';
 import {Link} from "react-router-dom";
 import TextMultiLang from '../components/TextMultiLang';
 import useComponentVisible from '../scripts/useComponentVisible';
-import {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {CmsResource} from "./CMS";
+import LangSwitch, {DEFAULT_LANG, LANGS} from "./LangSwitch";
+import {HomeContext} from "../scripts/home";
 
 const StyledLink = styled(Link)`
   text-decoration: none;
@@ -24,9 +26,6 @@ const StyledLink = styled(Link)`
 `;
 
 const Button = styled.button`
-  position: fixed;
-  top: 5px;
-  right: 52px;
   border: none;
   padding: 0;
   margin: 0;
@@ -41,6 +40,14 @@ const Button = styled.button`
     left: 10px;
     right: initial;
   }
+`;
+
+const MenuWrapper = styled.div`
+  position: fixed;
+  display: flex;
+  gap: 10px;
+  top: 5px;
+  right: 52px;
 `;
 
 const ExtrernalLink = styled.a`
@@ -79,59 +86,50 @@ const MiniMenu = styled.div`
   @media (max-width: 600px) {
     left: 14px;
   }
-
 `;
 
 
 const Menu = () => {
-  const {menu, button, miniMenuOpened, setMiniMenuOpened} = useComponentVisible(true);
+    const {menu, button, miniMenuOpened, setMiniMenuOpened} = useComponentVisible(true);
+    const context = useContext(HomeContext);
+    const [cmsPages, setCmsPages] = useState([]);
 
-  const [cmsPages, setCmsPages] = useState([]);
+    useEffect(() => {
+        if (miniMenuOpened) {
+            CmsResource.getInstance().getData()
+                .then(data => setCmsPages(data));
+        }
+    }, [miniMenuOpened]);
 
-  useEffect(() => {
-    if (miniMenuOpened) {
-      CmsResource.getInstance().getData()
-          .then(data => setCmsPages(data));
-    }
-  }, [miniMenuOpened]);
-
-  return (
-      <>
-        <Button ref={button}> <MenuIcon/> </Button>
-        {miniMenuOpened && <MiniMenu ref={menu}>
-          {/*<StyledLink to="/privacy" onClick={() => setMiniMenuOpened(!miniMenuOpened)}>*/}
-          {/*  <TextMultiLang*/}
-          {/*      primaryText="Polityka prywatności"*/}
-          {/*      secondaryText="політика конфіденційності"*/}
-          {/*  />*/}
-          {/*</StyledLink>*/}
-          {cmsPages.map((page) => {
-            return <StyledLink key={page.slug} to={"/page/" + page.slug}
-                               onClick={() => setMiniMenuOpened(!miniMenuOpened)}>
-              <TextMultiLang
-                  primaryText={page.menu_title_primary_language}
-                  secondaryText={page.menu_title_secondary_language}
-              />
-            </StyledLink>;
-          })}
-          <StyledLink to="/edit" onClick={() => setMiniMenuOpened(!miniMenuOpened)}>
-            <TextMultiLang
-                primaryText="Edycja danych"
-                secondaryText="редагувати дані"
-            />
-          </StyledLink>
-
-
-        </MiniMenu>}
-        <ExtrernalLink
-            target="_blank"
-            rel="noopener noreferrer"
-            href="https://www.facebook.com/groups/zasobygrupa"
-        >
-          <LogoFB/>
-        </ExtrernalLink>
-      </>
-  );
+    return (
+        <MenuWrapper>
+            <LangSwitch languages={LANGS}
+                        currentLang={context.selectedLang}
+                        changeLang={(lang) => context.setSelectedLang(lang)}/>
+            <Button ref={button}> <MenuIcon/> </Button>
+            {miniMenuOpened && <MiniMenu ref={menu}>
+                {cmsPages.map((page) => {
+                    return <StyledLink key={page.slug} to={"/page/" + page.slug}
+                                       onClick={() => setMiniMenuOpened(!miniMenuOpened)}>
+                        <TextMultiLang
+                            primaryText={page.menu_title_primary_language}
+                            secondaryText={page.menu_title_secondary_language}/>
+                    </StyledLink>;
+                })}
+                <StyledLink to="/edit" onClick={() => setMiniMenuOpened(!miniMenuOpened)}>
+                    <TextMultiLang
+                        primaryText="Edycja danych"
+                        secondaryText="редагувати дані"/>
+                </StyledLink>
+            </MiniMenu>}
+            <ExtrernalLink
+                target="_blank"
+                rel="noopener noreferrer"
+                href="https://www.facebook.com/groups/zasobygrupa">
+                <LogoFB/>
+            </ExtrernalLink>
+        </MenuWrapper>
+    );
 };
 
 export default Menu;
