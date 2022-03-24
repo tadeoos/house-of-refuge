@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import ReactDOM from 'react-dom';
 import styled from 'styled-components';
 import Header from '../components/Header.js';
-import BigButton from '../components/BigButton.js';
+import {BigButton, FooterButton} from '../components/BigButton.js';
 import Form from '../components/Form.js';
 import Edit from '../components/Edit.js';
 import {fields2, validationSchema2} from './formSchema';
@@ -31,10 +31,6 @@ const StyledApp = styled.div`
   justify-content: space-between;
   gap: 75px;
   min-height: 100vh;
-
-  .Footer {
-    justify-content: flex-end;
-  }
 `;
 
 const ButtonWrap = styled.div`
@@ -52,7 +48,8 @@ const ButtonWrap = styled.div`
 
 const defaultValue = {
     selectedLang: DEFAULT_LANG,
-    setSelectedLang: () => {}
+    setSelectedLang: () => {
+    }
 };
 
 export const HomeContext = React.createContext(defaultValue);
@@ -76,35 +73,29 @@ const App = (props) => {
                 <ToastContainer autoClose={5000}/>
                 <Header/>
                 <Routes>
-                    <Route index element={<>
-                        <ButtonWrap className={"mb-5 flex-grow-1"}>
-                            <Link to="/share">
-                                <BigButton
-                                    primaryText="Udostępniam nocleg"
-                                    secondaryText="Можу надати житло"
-                                    backgroundColor="#0066cc"
-                                    color={colors.white}
-                                />
-                            </Link>
-                            <Link to="/find">
-                                <BigButton
-                                    primaryText="Потребує житло"
-                                    secondaryText="Szukam noclegu"
-                                    color={colors.veryDarkGrey}
-                                    backgroundColor={colors.optimisticYellow}
-                                />
-                            </Link>
-                            <div className={"w-100 my-3"}/>
-                            <Link to="/map">
-                                <BigButton
-                                    primaryText="Хочу поїхати в іншу країну в Європі"
-                                    secondaryText="Chcę jechać do innego kraju w Europie"
-                                    outlined
-                                    color={colors.veryDarkGrey}
-                                />
-                            </Link>
-                        </ButtonWrap>
-                    </>}/>
+                    <Route index element={
+                        <>
+                            <ButtonWrap className={"mb-5 flex-grow-1"}>
+                                <Link to="/share">
+                                    <BigButton
+                                        primaryText="Udostępniam nocleg"
+                                        secondaryText="Можу надати житло"
+                                        outlined={true}
+                                        color={'black'}
+                                    />
+                                </Link>
+                                <Link to="/find">
+                                    <BigButton
+                                        primaryText="Потребує житло"
+                                        secondaryText="Szukam noclegu"
+                                        color={colors.veryDarkGrey}
+                                        backgroundColor={colors.optimisticYellow}
+                                    />
+                                </Link>
+                                <div className={"w-100 my-3"}/>
+                            </ButtonWrap>
+                        </>
+                    }/>
                     <Route path="/share" element={<Share/>}/>
                     <Route path="/find" element={<Find user={user}/>}/>
                     <Route path="/jazda/stolik" element={<>
@@ -121,6 +112,14 @@ const App = (props) => {
                     <Route path="/page/:id" element={<CMS {...props} />}/>
                     <Route path="/map" element={<Map {...props} />}/>
                 </Routes>
+                <ButtonWrap className={"bg-light w-100 d-flex align-items-center justify-content-center"}>
+                    <Link to="/map">
+                        <FooterButton
+                            primaryText="Хочу поїхати в іншу країну в Європі"
+                            secondaryText="Chcę jechać do innego kraju w Europie"
+                            color={colors.veryDarkGrey}/>
+                    </Link>
+                </ButtonWrap>
             </StyledApp>
         </HomeContext.Provider>
     );

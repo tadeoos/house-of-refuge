@@ -13,7 +13,7 @@ const LogoWrapper = styled.div`
     display: block;
     margin: auto;
     margin-top: ${p => p.sticky ? '5px' : '16px'};
-    width: ${p => p.sticky ? '105px' : '90px'};
+    width: ${p => p.sticky ? '105px' : '150px'};
   }
 `;
 
