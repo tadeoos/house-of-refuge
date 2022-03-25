@@ -20,6 +20,7 @@
   "costs": "Costs of accomodation (rent, charges, or is it free)",
   "availability": "From what date is the resource available?",
   "accommodation_length": "For how long is the resource available (no. of days)",
+  "accommodation_length_subHeading": "Maximum 1000 days",
   "details": "Information about the resource",
   "details_subHeading": "Pets, floor, the availability of towels and beddings, etc.",
   "transport": "Are you able to pick up the people you will be hosting?",
