@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import {Button, Dropdown, Table} from "react-bootstrap";
 import {getCookie, getPickUpDisplay, SUB_STATE_OPTIONS} from "../scripts/utils";
 import Select from "react-dropdown-select";

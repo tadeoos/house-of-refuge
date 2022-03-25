@@ -1,9 +1,8 @@
 import "../styles/stats.scss";
 
 import ReactDOM from "react-dom";
-import React, {useCallback, useEffect, useState} from "react";
-import {Chart as ChartJS} from 'chart.js/auto';
-import {Chart, Line, Bar} from 'react-chartjs-2';
+import {useCallback, useEffect, useState} from "react";
+import {Line, Bar} from 'react-chartjs-2';
 import Select from "react-dropdown-select";
 import {Dropdown} from "react-bootstrap";
 import BootstrapSwitchButton from "bootstrap-switch-button-react";
@@ -115,7 +114,7 @@ const BarHourChart = ({submissions, yAxisMax, maxValueCallback, uniqueId, defaul
   </div>;
 };
 
-const App = ({startDate}) => {
+const App = () => {
 
   const [isLoading, setIsLoading] = useState(true);
 

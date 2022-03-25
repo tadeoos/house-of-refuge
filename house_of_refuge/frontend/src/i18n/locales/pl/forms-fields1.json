@@ -20,6 +20,7 @@
   "costs": "Koszty pobytu (czynsz, opłaty, koszty najmu lub darmowy pobyt)",
   "availability": "Od kiedy udostępniasz nocleg?",
   "accommodation_length": "Na jak długo udostępniasz nocleg? (liczba dni)",
+  "accommodation_length_subHeading": "Maksymalnie 1000 dni",
   "details": "Garść informacji o miejscu",
   "details_subHeading": "Obecność zwierząt, języki obce lokatorów i lokatorek, dostępna pościel i ręczniki, inne",
   "transport": "Czy jesteś w stanie przyjechać po osoby, którym udzielisz schronienia?",

@@ -12,14 +12,12 @@ const Find = ({user}) => {
     const [loading, setLoading] = useState(true);
     const [canAddMore, setCanAddMore] = useState(false);
 
-    useEffect(async () => {
-        return await axios({
+    useEffect(() => {
+        const data = {
             method: 'get',
             url: '/api/check_limit',
-        })
-            .catch(error => {
-
-            })
+        };
+        axios(data)
             .then(res => {
                 setLoading(false);
                 setCanAddMore(res.data.can_add);
@@ -39,8 +37,7 @@ const Find = ({user}) => {
                         validationSchema={validationSchema2}
                         url="/api/zglos"
                         successInfo="Дякуємо за подання."
-                        localeNamespace='fields2'
-                        fixedLocale="ua"
+                        localeNamespace="fields2"
                         user={user}
                         canAddMore={true}
                     /> :

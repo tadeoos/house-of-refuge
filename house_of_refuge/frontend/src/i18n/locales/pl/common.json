@@ -2,11 +2,13 @@
 
   "i_provide_accomodation": "Udostępniam nocleg",
   "im_looking_for_accomodation": "Poszukuję noclegu",
+  "im_looking_for_accomodation_in_eu": "Chcę jechać do innego kraju w Europie",
   "submit": "Wyślij",
   "logged_in_user": "Zalogowany user",
   "edit_data": "Edycja danych",
   "privacy_policy_title": "Polityka prywatności",
   "delete": "Usuń",
   "save": "Zapisz",
-  "cancel": "Anuluj"
+  "cancel": "Anuluj",
+  "required": "Wymagane"
 }

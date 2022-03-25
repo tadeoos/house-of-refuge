@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useRef, useState} from "react";
+import {useEffect, useMemo, useRef, useState} from "react";
 import {RESOURCE_MAP, ResourceRow, shortCols} from "./ResourceRow";
 import {Pagination} from "react-bootstrap";
 import {Search, SortDown, SortUp} from "react-bootstrap-icons";

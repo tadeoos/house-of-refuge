@@ -9,11 +9,13 @@ i18n.use(initReactI18next).init({
     en: {
       common: require('./locales/en/common.json'),
       fields1: require('./locales/en/forms-fields1.json'),
+      fields2: require('./locales/en/forms-fields2.json'),
       backoffice: require('./locales/en/backoffice.json')
     },
     pl: {
       common: require('./locales/pl/common.json'),
       fields1: require('./locales/pl/forms-fields1.json'),
+      fields2: require('./locales/pl/forms-fields2.json'),
       backoffice: require('./locales/pl/backoffice.json')
     },
     ua: {

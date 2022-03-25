@@ -1,8 +1,9 @@
 import styled from "styled-components";
+
 export const StyledGlobeIcon = styled.div``;
 
 const GlobeIcon = () => <StyledGlobeIcon>
-    <svg viewBox="0 0 16 16" >
+    <svg viewBox="0 0 16 16">
         <path d="M8,0C3.6,0,0,3.6,0,8c0,4.4,3.6,8,8,8c4.4,0,8-3.6,8-8C16,3.6,12.4,0,8,0z M1,8.5h2.5
 	c0,0.9,0.2,1.8,0.4,2.5H1.7C1.3,10.2,1.1,9.4,1,8.5z M8.5,4V1.1C9,1.5,10,2.4,10.7,4L8.5,4L8.5,4z M11.1,5c0.2,0.7,0.4,1.6,0.4,2.5
 	h-3V5H11.1z M7.3,1.3c0.1-0.1,0.2-0.1,0.2-0.2V4H5.3c0.3-0.6,0.6-1.1,0.9-1.5C6.6,1.9,7,1.5,7.3,1.3z M7.5,5v2.5h-3
