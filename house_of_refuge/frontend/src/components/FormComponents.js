@@ -11,13 +11,12 @@ export const StyledForm = styled.form`
   padding: 6px;
 `;
 
-export  const Label = styled.label`
+export const Label = styled.label`
     font-weight: 700;
     font-size: 16.88px;
     line-height: 19px;
     margin-top: 28px;
     margin-left: ${p => p.type === 'checkbox' ? '20px' : 'initial'};
-    position: ${p => p.type === 'checkbox' ? 'absolute' : 'initial'};
     cursor: ${p => p.type === 'checkbox' ? 'pointer' : 'initial'};
 `;
 
@@ -35,9 +34,9 @@ export const Input = styled.input.attrs(({ type }) => ({
     max-height: ${p => p.type === 'textarea' ? '140px' : 'initial'};
     padding-top: ${p => p.type === 'textarea' ? '8px' : 'initial'};
     margin-top: ${p => p.type === 'checkbox' ? '27px' : '10px'};
-  
+
   `;
-  
+
 
   export const SubHeading = styled.span`
   font-weight: 400;
@@ -105,7 +104,7 @@ export const Alert = styled.div`
 
 export const Field = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: ${p => p.type === 'checkbox' ? 'row' : 'column'};
 
   * {
     color:  ${p => p.alert ? '#D93025' : 'inherit'};

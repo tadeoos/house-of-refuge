@@ -15,5 +15,6 @@
   "source_option_terrain": "Zachodni / Західний вокзал",
   "source_option_webform": "Strona / веб-сайт",
   "source_option_mail": "Email / електронна пошта",
-  "source_option_other": "Inne / інший"
+  "source_option_other": "Inne / інший",
+  "transport_needed": "Мені потрібен транспорт"
 }

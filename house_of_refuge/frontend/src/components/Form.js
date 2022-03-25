@@ -262,7 +262,8 @@ const Form = ({
                     .filter(field => !user ? field : !field.publicOnly)
                     .map(field => {
                         return <Field key={field.name}
-                                      alert={formik.errors[field.name] && formik.touched[field.name]}>
+                                      alert={formik.errors[field.name] && formik.touched[field.name]}
+                                      type={field.type}>
                             {(field.type !== 'hidden' && field.type !== 'checkbox') &&
                                 <>
                                     <Label htmlFor={field.name}>{tr(field.name)}</Label>
@@ -317,7 +318,7 @@ const Form = ({
                                         max={24}/>
                                 </CustomIntRange>
                             }
-                            {['number', 'text', 'textarea', 'date'].includes(field.type) &&
+                            {['number', 'text', 'textarea', 'date', 'checkbox'].includes(field.type) &&
                                 <Input
                                     id={field.name}
                                     name={field.name}
