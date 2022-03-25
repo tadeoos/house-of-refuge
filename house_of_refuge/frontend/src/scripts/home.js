@@ -20,6 +20,7 @@ import Map from "../components/Map";
 import {ToastContainer} from "react-toastify";
 import '../i18n/config';
 import {DEFAULT_LANG} from "../components/LangSwitch";
+import {useTranslation} from "react-i18next";
 
 const StyledApp = styled.div`
   font-family: 'proxima-nova', sans-serif;
@@ -59,11 +60,13 @@ const App = (props) => {
 
     const [user] = useState(props.userData);
     const [lang, setLang] = useState(DEFAULT_LANG);
+    const { t, i18n } = useTranslation('common');
 
     const contextValue = {
         selectedLang: lang,
         setSelectedLang: (lang) => {
             setLang(lang);
+            i18n.changeLanguage(lang);
         }
     };
 
@@ -78,7 +81,7 @@ const App = (props) => {
                             <ButtonWrap className={"mb-5 flex-grow-1"}>
                                 <Link to="/share">
                                     <BigButton
-                                        primaryText="Udostępniam nocleg"
+                                        primaryText={t('i_provide_accomodation')}
                                         secondaryText="Можу надати житло"
                                         outlined={true}
                                         color={'black'}
@@ -87,7 +90,7 @@ const App = (props) => {
                                 <Link to="/find">
                                     <BigButton
                                         primaryText="Потребує житло"
-                                        secondaryText="Szukam noclegu"
+                                        secondaryText={t('im_looking_for_accomodation')}
                                         color={colors.veryDarkGrey}
                                         backgroundColor={colors.optimisticYellow}
                                     />
@@ -116,7 +119,7 @@ const App = (props) => {
                     <Link to="/map">
                         <FooterButton
                             primaryText="Хочу поїхати в іншу країну в Європі"
-                            secondaryText="Chcę jechać do innego kraju w Europie"
+                            secondaryText={t('im_looking_for_accomodation_in_eu')}
                             color={colors.veryDarkGrey}/>
                     </Link>
                 </ButtonWrap>

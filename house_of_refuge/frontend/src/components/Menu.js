@@ -103,7 +103,7 @@ const Menu = () => {
 
     return (
         <MenuWrapper>
-            <LangSwitch languages={LANGS}
+            <LangSwitch languages={['pl', 'en']}
                         currentLang={context.selectedLang}
                         changeLang={(lang) => context.setSelectedLang(lang)}/>
             <Button ref={button}> <MenuIcon/> </Button>
