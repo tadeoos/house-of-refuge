@@ -292,8 +292,10 @@ const Form = ({
                     </Field>;
                   })}
 
-              <div style={{marginBottom: 40}}></div>
-
+              <div style={{marginBottom: 20}}></div>
+              <div style={{marginBottom: 20}} className={"text-center"}>
+                <a href={"/page/privacy"} className={"text-muted"}>Jak przetwarzamy twoje dane?</a>
+              </div>
               <Button
                   type="submit"
                   disabled={formik.isSubmitting}

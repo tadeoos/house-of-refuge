@@ -68,7 +68,7 @@ const CMS = () => {
             { langs.length > 1 && <div className={"d-flex justify-content-end"}>
                 <LangSwitch languages={langs} currentLang={lang} changeLang={(x) => setLang(x)}/>
             </div> }
-            <div className={"d-flex gap-5 w-100"}>
+            <div className={"d-flex gap-5 w-100 px-4"}>
                 <div className={"flex-grow-1"}
                      dangerouslySetInnerHTML={{__html: toggleText(lang, page.content_primary_language, page.content_secondary_language)}}></div>
             </div>
