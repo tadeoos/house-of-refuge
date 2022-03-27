@@ -186,75 +186,75 @@ export const fields2 = [
     {
         name: 'name',
         label: 'Ім’я та прізвище',
-        subHeading: 'name',
+        subHeading: 'Imię i nazwisko',
         type: 'text'
     },
     {
         name: 'phone_number',
         label: 'Ваш номер телефону',
-        subHeading: 'phone_number',
+        subHeading: 'Twój numer telefonu',
         type: 'text'
     },
     {
         name: 'people',
         label: 'Кількість людей',
-        subHeading: 'people',
+        subHeading: 'Liczba osób',
         type: 'number'
     },
     {
         name: 'how_long',
         label: 'На який час необхідне житло? (кількість днів)',
-        subHeading: 'how_long',
+        subHeading: 'Na jak długo? (liczba dni)',
         type: 'number'
     },
     {
         name: 'description',
         label: 'Опишіть групу, вкажіть вік всіх прибулих і відносини між ними (наприклад: сім’я, друзі, одногрупники)',
-        subHeading: 'description',
+        subHeading: 'Opisz grupę, podaj wiek wszystkich osób, relacje ich łączące (np. rodzina, przyjaciele)',
         type: 'text'
     },
     {
         name: 'origin',
         label: 'Національність ',
-        subHeading: 'origin',
+        subHeading: 'Narodowość',
         type: 'text'
     },
     {
         name: 'traveling_with_pets',
         label: 'Ви приїхали з домашніми тваринами?',
-        subHeading: 'traveling_with_pets',
+        subHeading: 'Czy podróżujesz ze zwierzętami',
         type: 'text'
     },
     {
         name: 'can_stay_with_pets',
         label: 'Можете Ви спати в домі де є домашні тварини? (вкажіть алергії)',
-        subHeading: 'can_stay_with_pets',
+        subHeading: 'Czy możesz spać w miejscu ze zwierzętami? (np. alergie)',
         type: 'text'
     },
     {
         publicOnly: true,
         name: 'contact_person',
         label: 'Контактна особа',
-        subHeading: 'contact_person',
+        subHeading: 'Osoba do kontaktu',
         type: 'text'
     },
     {
         name: 'languages',
         label: 'Мови, якими Ви володієте ',
-        subHeading: 'languages',
+        subHeading: 'Języki jakie znasz',
         type: 'text'
     },
     {
         name: 'when',
         label: 'З якого дня Вам необхідне житло?',
-        subHeading: 'when',
+        subHeading: 'Od kiedy dnia potrzebujesz mieszkanie?',
         type: 'date'
     },
     {
         publicOnly: true,
         name: 'transport_needed',
         label: 'Мені потрібен транспорт',
-        subHeading: 'transport',
+        subHeading: 'Potrzebuję transport',
         type: 'checkbox',
     },
     // below for logged in
@@ -262,7 +262,7 @@ export const fields2 = [
         loggedUser: true,
         name: 'note',
         label: 'Додаткові уваги',
-        subHeading: 'note',
+        subHeading: 'Uwagi',
         type: 'text'
     },
     {
@@ -274,24 +274,24 @@ export const fields2 = [
         loggedUser: true,
         name: 'source',
         label: 'Джерело',
-        subHeading: 'source',
+        subHeading: 'Źródło',
         type: 'select',
         options: [
             {
                 value: 'terrain',
-                label: 'source_option_terrain',
+                label: 'Zachodni',
             },
             {
                 value: 'webform',
-                label: 'source_option_webform',
+                label: 'Strona',
             },
             {
                 value: 'mail',
-                label: 'source_option_mail',
+                label: 'Email',
             },
             {
                 value: 'other',
-                label: 'source_option_other',
+                label: 'Inne',
             },
         ]
     }

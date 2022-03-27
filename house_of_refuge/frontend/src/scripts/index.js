@@ -165,7 +165,7 @@ const App = ({subs, userData, coordinators, helped}) => {
         const changedIds = changedHosts.map(s => s.id);
         setHosts((currentHosts) => [
           ...currentHosts.filter(s => !changedIds.includes(s.id)),
-          ...changedHosts.filter(h => shouldShowHost(h, userData.id))]
+          ...changedHosts.filter(h => shouldShowHost(h))]
         );
         setLatestHostChange(latest);
       } else {

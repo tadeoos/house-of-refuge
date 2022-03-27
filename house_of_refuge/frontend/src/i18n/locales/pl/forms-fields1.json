@@ -12,6 +12,7 @@
   "zip_code": "Kod pocztowy",
   "address": "Adres (ulica, numer budynku, numer mieszkania)",
   "people_to_accommodate": "Ile osób jesteś w stanie wesprzeć tak, by miały godne warunki pobytu?",
+  "people_to_accommodate_subHeading": "Z kim mieszkasz (jeśli przyjmujesz kogoś u siebie)?",
   "age": "Ile masz lat?",
   "languages": "Języki jakie znasz",
   "languages_subHeading": "Języki obce lokatorów i lokatorek",
@@ -34,5 +35,6 @@
   "email": "Twój mail",
   "extra": "Dodatkowe uwagi",
   "can_take_person_with_pets": "Czy możesz przyjąć osobę ze zwierzętami?",
-  "living_with_pets": "Czy mieszkasz ze zwierzętami?"
+  "living_with_pets": "Czy mieszkasz ze zwierzętami?",
+  "living_with_pets_subHeading": "Jeśli tak, wpisz z jakimi"
 }

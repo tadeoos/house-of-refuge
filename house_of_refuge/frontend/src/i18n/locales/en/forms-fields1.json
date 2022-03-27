@@ -12,6 +12,7 @@
   "zip_code": "Zip code",
   "address": "Adress (street, number)",
   "people_to_accommodate": "How many people are you able to host in reasonable conditions?",
+  "people_to_accommodate_subHeading": "Describe people living with you",
   "age": "Your age:",
   "languages": "What languages do you speak?",
   "languages_subHeading": "Foreign languages of your cohabitants also count",
@@ -34,5 +35,6 @@
   "email": "Your email",
   "extra": "Any additional comments?",
   "can_take_person_with_pets": "Can you accomodate someone with a pet(s)?",
-  "living_with_pets": "Do you keep pets?"
+  "living_with_pets": "Do you keep pets?",
+  "living_with_pets_subHeading": "If yes, describe them"
 }
