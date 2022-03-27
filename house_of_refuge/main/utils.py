@@ -2,6 +2,7 @@ import re
 from datetime import timedelta
 
 from django.core.mail import get_connection, EmailMultiAlternatives
+from django.template.loader import get_template
 from django.utils import timezone
 
 
@@ -47,3 +48,15 @@ def send_mail(subject, message, from_email, recipient_list,
         mail.attach_alternative(html_message, 'text/html')
 
     return mail.send()
+
+
+def send_goodbye_email(host_email):
+    subject = "Przyszłość Grupy Zasoby"
+    email_text_content = get_template("emails/goodbye.txt").render()
+    send_mail(
+        subject=subject,
+        message=email_text_content,
+        from_email="Grupa Zasoby <powiadomienia@grupazasoby.pl>",
+        recipient_list=[host_email],
+        reply_to=["grupazasoby@gmail.com"]
+    )
