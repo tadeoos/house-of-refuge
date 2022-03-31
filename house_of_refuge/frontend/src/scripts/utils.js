@@ -61,6 +61,7 @@ export const SUB_STATE_OPTIONS = [
   {value: "cancelled", label: "Nieaktualne"}
 ];
 
+
 export const getStatusDisplay = (status) => {
   const option = SUB_STATE_OPTIONS.filter(o => o.value === status)[0];
   return option.label;
