@@ -13,9 +13,9 @@ urlpatterns = [
     path("drogowskaz/", login_required(TemplateView.as_view(template_name="main/guidepost.html")), name="guidepost"),
     path("healthz/", views.healthcheck, name="health"),
     path("statsy/", views.activity_stats_view, name="health"),
-    path("share", views.home, name="home-share"),
-    path("find", views.home, name="home-find"),
-    path("privacy/", views.home, name="home-priv"),
+    # path("share", views.home, name="home-share"),
+    # path("find", views.home, name="home-find"),
+    # path("privacy/", views.home, name="home-priv"),
 
     path("shelter/", RedirectView.as_view(url=settings.SHELTER_FORM_URL, permanent=True)),
 
