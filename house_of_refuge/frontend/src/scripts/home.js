@@ -73,7 +73,7 @@ const App = (props) => {
             <div className={"d-flex"}>
               <ByeDiv>
                 <p>
-                  31 marca skończyliśmy nasze działania. Łącznie udało nam się znaleźć schronienie dla 5500 osób z
+                  31 marca skończyliśmy nasze działania. Łącznie udało nam się znaleźć schronienie dla 5530 osób z
                   Ukrainy. Dziękujemy wszystkim gospodyniom i gospodarzom, którzy otworzyli swoje domy i serca. To, co
                   razem zbudowaliśmy to wartość, która zostanie z nami już na zawsze.</p>
                 <p>
@@ -96,7 +96,7 @@ const App = (props) => {
               </ByeDiv>
               <ByeDiv>
                 <p>
-                  31 березня ми закінчили свою діяльність. Нам вдалося знайти прихисток для 5500 осіб з України. Дякуємо
+                  31 березня ми закінчили свою діяльність. Нам вдалося знайти прихисток для 5530 осіб з України. Дякуємо
                   всім господиням та господарям, які відкрили свої будинки та серця. Те, що ми спільно побудували – це
                   цінність, яка залишиться з нами назавжди.</p>
                 <p>Група у Фейсбуці Zasoby залишається відкритою. Якщо вирішимо повернутися до своєї діяльності, то
