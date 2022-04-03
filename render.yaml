@@ -24,12 +24,12 @@ services:
     startCommand: "NEW_RELIC_CONFIG_FILE=newrelic.ini newrelic-admin run-program gunicorn config.wsgi:application -t 60"
 
 #    startCommand: "NEW_RELIC_CONFIG_FILE=newrelic.ini newrelic-admin run-program gunicorn config.wsgi:application -k gevent --worker-connections=50 --config=gunicorn_config.py"
-#    numInstances: 1 # optional (defaults to 1)
-    scaling:
-      minInstances: 1
-      maxInstances: 4
-      targetMemoryPercent: 90 # optional if targetCPUPercent is set (valid: 1-90)
-      targetCPUPercent: 80 # optional if targetMemory is set (valid: 1-90)
+    numInstances: 1 # optional (defaults to 1)
+#    scaling:
+#      minInstances: 1
+#      maxInstances: 4
+#      targetMemoryPercent: 90 # optional if targetCPUPercent is set (valid: 1-90)
+#      targetCPUPercent: 80 # optional if targetMemory is set (valid: 1-90)
     envVars:
       - key: DATABASE_URL
         fromDatabase:
