@@ -107,29 +107,29 @@ const App = (props) => {
                   друзів чекає комплексна допомога.</p>
                 Якщо все ще потребуєш прихистку, можеш сконтактуватись з:
                 <ul>
-                  <li><a href={'https://ukrainskidom.pl/'}>Domu Ukraińskiego</a>, ul. Zamenhofa 1, infolinia: +48
+                  <li><a href={'https://ukrainskidom.pl/'}>Domu Ukraińskiego</a>, ul. Zamenhofa 1, інфолінія: +48
                     727 805 764 (9:00-21:00)
                   </li>
                   <li><a href={'https://centrumwielokulturowe.waw.pl/ukraina/'}>Centrum Wielokulturowego</a>, ul. Jagiellońska 54 tel.
-                    +48 22 648 11 11, czynne codziennie w godz. od 8:00 do 20:00
+                    +48 22 648 11 11, години роботи кожного дня з 8:00 до 20:00
                   </li>
                   <li>
                     <a href={'https://www.pomocy.waw.pl/przykladowa-strona/osrodki-pomocy-spolecznej/'}>
                       Miejskich Ośrodków Pomocy Społecznej
                     </a>
                   </li>
-                  <li>Całodobowych punktów Informacyjnych na Dworcu Zachodnim Autobusowym (al. Jerozolimskie 142 w
-                    Punkcie
-                    Obsługi Pasażera) i Dworcu Wschodnim (ul. Kijowska 20, hala główna - szklany kontener)
+                  <li>Цілодобові інформаційні пункти на Dworcu Zachodnim Autobusowym (al. Jerozolimskie 142 w
+                    Punkcie Obsługi Pasażera) i Dworcu Wschodnim (ul. Kijowska 20, головна зала – скляний контейнер)
                   </li>
                   <li>
                     <a href={"https://uasos.org/"}>UA SOS</a>
                   </li>
                 </ul>
-                <p>Додатково, діє Варшавська Інфолінія для громадян України (з 08:00 до 20:00): 505 700 701
-                  Якщо знаходишся в небезпечній ситуації або хтось порушує твою гідність, тоді сконтактуйся з <a href={'https://www.strada.org.pl/'}>Fundacją La Strada</a> (+48 605 687 750)<br/>
-                  ❤️
+                <p>Додатково, діє Варшавська Інфолінія для громадян України (з 08:00 до 20:00): 505 700 701</p>
+                <p>
+                  Якщо знаходишся в небезпечній ситуації або хтось порушує твою гідність, тоді сконтактуйся з <a href={'https://www.strada.org.pl/'}>Fundacją La Strada</a> (+48 605 687 750)
                 </p>
+                <p>❤️</p>
               </ByeDiv>
             </div>
           </>}/>
