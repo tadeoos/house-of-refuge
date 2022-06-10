@@ -151,7 +151,8 @@ export function SubmissionRow({sub, activeHandler, user, isGroupCoordinator, isA
       className={`submission-row ${getStatusClass(localSub)}
       ${localSub.accomodation_in_the_future ? "sub-in-future" : ""} ${isActive ? "sub-active" : ""}`}>
     <div className="sub-id position-relative">
-      ID ZGŁOSZENIA: {localSub.id}
+      <span className={"mx-5"}><b>ID ZGŁOSZENIA:</b> {localSub.id}</span>
+      <span><b>Przyjęte:</b> {localSub.created}</span>
 
       <div className="submission-row-collapse cursor-pointer" onClick={() => setCollapsed(!collapsed)}>
         Zwiń / Rozwiń
@@ -241,9 +242,13 @@ export function SubmissionRow({sub, activeHandler, user, isGroupCoordinator, isA
         </td>
       </tr>
       {isCoordinator && !isGroupAdmin && statusAsNumber(localSub.status) < 3 && <tr>
-        <td className={"text-center"} colSpan={2}><Button variant={"secondary"} size={"sm"} onClick={() => updateStatus([{value: "cancelled"}])}>Nieaktualne</Button></td>
+        <td className={"text-center"} colSpan={2}>
+          <Button className={"my-2"} variant={"secondary"} size={"md"} onClick={() => updateStatus([{value: "cancelled"}])}>Nieaktualne</Button>
+        </td>
         <td colSpan={4}/>
-        <td className={"text-center"} colSpan={2}><Button variant={"success"} size={"sm"} onClick={() => updateStatus([{value: "success"}])}>Sukces</Button></td>
+        <td className={"text-center"} colSpan={2}>
+          <Button className={"my-2"} variant={"success"} size={"md"} onClick={() => updateStatus([{value: "success"}])}>Sukces</Button>
+        </td>
       </tr>}
       {isActive && !readOnly && statusAsNumber(localSub.status) < 3 && <tr>
         <td className={"text-center"} colSpan={2}><Button variant={"secondary"} size={"sm"}
@@ -283,6 +288,5 @@ export function SubmissionRow({sub, activeHandler, user, isGroupCoordinator, isA
       </tr>}
       </tbody>
     </Table>
-    <p className="sub-id">Przyjęte: {localSub.created}</p>
   </div>;
 }
